@@ -12,7 +12,10 @@ function chpwd() { echo -ne "\033]0;$(pwd | rev | awk -F \/ '{print "/"$1"/"$2}'
 alias vi="vim"
 alias grep="ggrep"
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 fpath=(/usr/local/share/zsh-completions $fpath)
 typeset -U path fpath cdpath manpath
 setopt no_beep
@@ -69,10 +72,13 @@ if [ -x "`which go`" ]; then
   export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 fi
 
+<<<<<<< HEAD
 # pyenv warning
 
 
 
+=======
+>>>>>>> origin/master
 fpath=(/usr/local/share/zsh-completions $fpath)
 autoload -U compinit
 compinit -u
@@ -88,4 +94,7 @@ setopt hist_ignore_dups
 setopt EXTENDED_HISTORY
 
 typeset -U path PATH
+<<<<<<< HEAD
 alias brew="env PATH=${PATH/\/Users\/rhythnn\/\.pyenv\/shims:/} brew"
+=======
+>>>>>>> origin/master
