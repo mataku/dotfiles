@@ -1,0 +1,12 @@
+click
+Django
+jupyter
+matplotlib
+mecab-python3
+neovim
+networkx
+nltk
+notebook
+numpy
+scikit-learn
+scipy

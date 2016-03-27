@@ -1,24 +1,12 @@
 set encoding=utf-8
-set notitle
-set mouse=a
-set shell=zsh
-set ambiwidth=double
+scriptencoding utf-8
 
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
-set autoindent
-set clipboard=unnamed,autoselect
-set backspace=start,eol,indent
-set expandtab
-set number
-set nowritebackup
-set nobackup
-set noswapfile
 
 if &compatible
   set nocompatible
 endif
+
+" Setup dein
 
 " dir where plugins are installed
 let s:dein_dir = expand('~/.vim/dein')
@@ -35,20 +23,18 @@ set runtimepath+=$GOROOT/misc/vim
 
 
 
-" dein
-
 call dein#begin(s:dein_dir)
 
 call dein#add('Shougo/dein.vim')
-call dein#add('Shougo/vimproc.vim', {
-  \ 'build' : {
-  \   'mac' : 'make -f make_mac.mak',
-  \   'unix': 'gmake',
-  \   },
-  \ })
+"call dein#add('Shougo/vimproc.vim', {
+"  \ 'build' : {
+"  \   'mac' : 'make -f make_mac.mak',
+"  \   'unix': 'gmake',
+"  \   },
+"  \ })
 
 
-" plugin list (toml)
+" Plugin list (toml)
 let s:toml      = '~/.vim/rc/dein.toml'
 let s:lazy_toml = '~/.vim/rc/dein_lazy.toml'
 
@@ -64,7 +50,38 @@ if dein#check_install()
   call dein#install()
 endif
 
+
+" Setting options
+
+set notitle
+set mouse=a
+set shell=zsh
+set ambiwidth=double
+set clipboard=unnamed,autoselect
+set backspace=start,eol,indent
+set number
+set nowritebackup
+set nobackup
+set noswapfile
+set ignorecase
+set wrapscan
+"set showcmd
+set wildmenu
+set ruler
+
+" Indent(default)
+" Each language setting -> indent/XXX.vim
+
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
+set autoindent
+set expandtab
+
 filetype plugin indent on
+
+
+" neocomplete setting
 
 let g:neocomplete#enable_smart_case = 1
 
@@ -86,11 +103,18 @@ endif
 
 if expand("%:t") =~ ".*\.py"
 	let g:neocomplete#enable_at_startup = 1
-	"let g:jedi#popup_select_first = 0
+	" let g:jedi#popup_select_first = 0
 	let g:jedi#completions_enabled = 0
 	let g:jedi#auto_vim_configuration = 0
 	let g:jedi#popup_on_dot = 1
-	"autocmd FileType python let b:did_ftplugin = 1
+	" au FileType python let b:did_ftplugin = 1
+  " let g:syntastic_python_checkers = ["flake8"]
+  " let g:flake8_bulitins="_,apply"
+  let g:flake8_cmd="/usr/local/bin/flake8"
+  " 
+  au BufWritePost *.py call Flake8()
+
+
 endif
 
 if expand("%:t") =~ ",*\.java"
@@ -116,20 +140,20 @@ let g:neocomplete#force_omni_input_patterns.go = '[^. *\t]\.\w*\|\h\w*::'
 
 
 au BufRead,BufNewFile,BufReadPre *.coffee  set filetype=coffee
-autocmd BufWritePost *.coffee silent make!
-autocmd QuickFixCmdPost * nested cwindow | redraw!
+au BufWritePost *.coffee silent make!
+au QuickFixCmdPost * nested cwindow | redraw!
 
 " jedi.vim
-autocmd FileType python setlocal omnifunc=jedi#completions
-autocmd FileType python setlocal completeopt-=preview
+au FileType python setlocal omnifunc=jedi#completions
+au FileType python setlocal completeopt-=preview
 
 
-autocmd FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
+au FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
 
-autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+au FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 
 
-autocmd Filetype coffee,javascript setlocal shiftwidth=2 softtabstop=2 tabstop=2 expandtab autoindent smartindent
+au Filetype coffee,javascript setlocal shiftwidth=2 softtabstop=2 tabstop=2 expandtab autoindent smartindent
 
 syntax enable
 set background=dark

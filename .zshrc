@@ -1,7 +1,25 @@
 export LANG=ja_JP.UTF-8
 autoload -Uz colors
 colors
+plugins=(git)
+#
+#ZSH_THEME="default"
+if [ -e "${HOME}/.zplug" ]; then
+  . ~/.zplug/zplug
+  # githubのレポジトリを指定し, of以下でいるファイル指定
+  zplug "plugins/git", from:oh-my-zsh
+  zplug "jeremyFreeAgent/oh-my-zsh-powerline-theme", of:powerline.zsh-theme
+	if ! zplug check --verbose; then
+		printf "Install? [y/N]: "
+		if read -q; then
+			echo; zplug install
+		fi
+	fi
 
+  zplug load 
+fi
+# POWERLEVEL9K_MODE='compatible'
+#
 function path_remove ()  { 
   export PATH=`echo -n $PATH | awk -v RS=: -v ORS=: '$0 != "'$1'"' | sed 's/:$//'`; }
 
@@ -12,10 +30,7 @@ function chpwd() { echo -ne "\033]0;$(pwd | rev | awk -F \/ '{print "/"$1"/"$2}'
 alias vi="vim"
 alias grep="ggrep"
 
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
 fpath=(/usr/local/share/zsh-completions $fpath)
 typeset -U path fpath cdpath manpath
 setopt no_beep
@@ -61,10 +76,8 @@ eval "$(pyenv init -)"
 
 eval "$(rbenv init - zsh)"
 
-export SCALAENV_ROOT=/usr/local/var/scalaenv
-eval "$(scalaenv init -)"
-export PATH=${HOME}/Downloads/CFinder-v2.0.6:$PATH
-
+# export SCALAENV_ROOT=/usr/local/var/scalaenv
+# eval "$(scalaenv init -)"
 
 if [ -x "`which go`" ]; then
   export GOROOT=`go env GOROOT`
@@ -72,13 +85,27 @@ if [ -x "`which go`" ]; then
   export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 fi
 
-<<<<<<< HEAD
-# pyenv warning
+# To ignore homebrew warning of python installed by pyenv
+alias brew="env PATH=${PATH/\/Users\/rhythnn\/\.pyenv\/shims:/} brew"
 
 
+#powerline
+# export PATH=$HOME/Library/Python/3.5/bin
+# powerline-daemon -q
+# #source ~/Library/Python/3.5/lib/python/site-packages/powerline/bindings/zsh/powerline.zsh
+source /usr/local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.zsh
+#
+# function _update_ps1()
+# {
+#   export PROMPT="$(~/powerline-zsh.py $?)"
+# }
+#
+# precmd()
+# {
+#   _update_ps1
+# }
+#
 
-=======
->>>>>>> origin/master
 fpath=(/usr/local/share/zsh-completions $fpath)
 autoload -U compinit
 compinit -u
@@ -94,7 +121,4 @@ setopt hist_ignore_dups
 setopt EXTENDED_HISTORY
 
 typeset -U path PATH
-<<<<<<< HEAD
-alias brew="env PATH=${PATH/\/Users\/rhythnn\/\.pyenv\/shims:/} brew"
-=======
->>>>>>> origin/master
+
