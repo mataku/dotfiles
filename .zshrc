@@ -12,20 +12,17 @@ if [ -e "${HOME}/.zplug" ]; then
   # githubのレポジトリを指定し, of以下でいるファイル指定
   zplug "jeremyFreeAgent/oh-my-zsh-powerline-theme", of:powerline.zsh-theme
 
-	if ! zplug check --verbose; then
-		printf "Install? [y/N]: "
-		if read -q; then
-			echo; zplug install
-		fi
-	fi
+  if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+      echo; zplug install
+    fi
+  fi
 
 fi
 
 function path_remove ()  { 
   export PATH=`echo -n $PATH | awk -v RS=: -v ORS=: '$0 != "'$1'"' | sed 's/:$//'`; }
-
-#function chpwd() { echo -ne "\033]0;$(pwd | rev | awk -F \/ '{print "/"$1"/"$2}'| rev)\007"}
-
 
 alias vi="vim"
 alias grep="ggrep"
@@ -33,6 +30,7 @@ alias grep="ggrep"
 
 fpath=(/usr/local/share/zsh-completions $fpath)
 typeset -U path fpath cdpath manpath
+
 setopt no_beep
 setopt ignore_eof
 setopt print_eight_bit
@@ -51,7 +49,7 @@ export EDITOR=/usr/local/bin/vim
 # docker
 #export DOCKER_TLS_VERIFY=1
 #export DOCKER_HOST=tcp://192.168.99.100:2376
-#export DOCKER_CERT_PATH=/Users/rhythnn/.docker/machine/machines/test-machine
+#export DOCKER_CERT_PATH=$HOME/.docker/machine/machines/test-machine
 #export DOCKER_MACHINE_NAME=test-machine
 
 alias dl='docker ps -l -q'
@@ -89,10 +87,6 @@ fi
 # To ignore homebrew warning of python installed by pyenv
 alias brew="env PATH=${PATH/\/Users\/rhythnn\/\.pyenv\/shims:/} brew"
 
-#function chpwd() { 
-  #echo -ne "\033]0;$(pwd | rev | awk -F \/ '{print "/"$1"/"$2}'| rev)\007"
-#  echo -n '"\033]0;${USER}: ${PWD}\007"'
-#}
 
 # powerline(重い)
 # TODO: powerline-daemon -q など後で設定する
@@ -100,20 +94,14 @@ source /usr/local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.z
 
 zplug load 
 
-fpath=(/usr/local/share/zsh-completions $fpath)
-
 autoload -U compinit
 compinit -u
 
 export HISTFILE=${HOME}/.zsh_history
-# 
 export HISTSIZE=1000
-
 export SAVEHIST=100000
 
 setopt hist_ignore_dups
-
 setopt EXTENDED_HISTORY
 
 typeset -U path PATH
-
