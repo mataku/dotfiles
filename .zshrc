@@ -2,13 +2,16 @@ export LANG=ja_JP.UTF-8
 autoload -Uz colors
 colors
 plugins=(git)
-#
-#ZSH_THEME="default"
+
 if [ -e "${HOME}/.zplug" ]; then
   . ~/.zplug/zplug
-  # githubのレポジトリを指定し, of以下でいるファイル指定
+  
+  # oh-my-zshのそのまま持ってこれる
   zplug "plugins/git", from:oh-my-zsh
+  
+  # githubのレポジトリを指定し, of以下でいるファイル指定
   zplug "jeremyFreeAgent/oh-my-zsh-powerline-theme", of:powerline.zsh-theme
+
 	if ! zplug check --verbose; then
 		printf "Install? [y/N]: "
 		if read -q; then
@@ -16,15 +19,12 @@ if [ -e "${HOME}/.zplug" ]; then
 		fi
 	fi
 
-  zplug load 
 fi
-# POWERLEVEL9K_MODE='compatible'
-#
+
 function path_remove ()  { 
   export PATH=`echo -n $PATH | awk -v RS=: -v ORS=: '$0 != "'$1'"' | sed 's/:$//'`; }
 
-echo -ne "\033]0;$(pwd | rev | awk -F \/ '{print "/"$1"/"$2}'| rev)\007"
-function chpwd() { echo -ne "\033]0;$(pwd | rev | awk -F \/ '{print "/"$1"/"$2}'| rev)\007"}
+#function chpwd() { echo -ne "\033]0;$(pwd | rev | awk -F \/ '{print "/"$1"/"$2}'| rev)\007"}
 
 
 alias vi="vim"
@@ -36,7 +36,8 @@ typeset -U path fpath cdpath manpath
 setopt no_beep
 setopt ignore_eof
 setopt print_eight_bit
-
+setopt correct
+setopt auto_cd
 
 export HOMEBREW_CASK_OPTS="--appdir=/Applications --caskroom=/usr/local/Caskroom"
 export PATH=$HOME/.nodebrew/current/bin:$PATH
@@ -56,7 +57,7 @@ export EDITOR=/usr/local/bin/vim
 alias dl='docker ps -l -q'
 alias pip3_upgrade="pip3 list --outdated | awk '{print \$1}' | xargs pip3 install -U"
 
-PROMPT="%n:%c%# "
+#PROMPT="%n:%c%# "
 alias ls="ls -G"
 alias sudo='sudo '
 alias sed="gsed"
@@ -88,25 +89,19 @@ fi
 # To ignore homebrew warning of python installed by pyenv
 alias brew="env PATH=${PATH/\/Users\/rhythnn\/\.pyenv\/shims:/} brew"
 
+#function chpwd() { 
+  #echo -ne "\033]0;$(pwd | rev | awk -F \/ '{print "/"$1"/"$2}'| rev)\007"
+#  echo -n '"\033]0;${USER}: ${PWD}\007"'
+#}
 
-#powerline
-# export PATH=$HOME/Library/Python/3.5/bin
-# powerline-daemon -q
-# #source ~/Library/Python/3.5/lib/python/site-packages/powerline/bindings/zsh/powerline.zsh
+# powerline(重い)
+# TODO: powerline-daemon -q など後で設定する
 source /usr/local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.zsh
-#
-# function _update_ps1()
-# {
-#   export PROMPT="$(~/powerline-zsh.py $?)"
-# }
-#
-# precmd()
-# {
-#   _update_ps1
-# }
-#
+
+zplug load 
 
 fpath=(/usr/local/share/zsh-completions $fpath)
+
 autoload -U compinit
 compinit -u
 
