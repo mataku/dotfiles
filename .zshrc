@@ -9,8 +9,8 @@ if [ -e "${HOME}/.zplug" ]; then
   # oh-my-zshのそのまま持ってこれる
   zplug "plugins/git", from:oh-my-zsh
   
-  # githubのレポジトリを指定し, of以下でいるファイル指定
-  zplug "jeremyFreeAgent/oh-my-zsh-powerline-theme", of:powerline.zsh-theme
+  # githubのレポジトリを指定し, "of"以下で必要なファイル指定
+  zplug "rhythnn/oh-my-zsh-powerline-theme", of:powerline.zsh-theme
 
   if ! zplug check --verbose; then
     printf "Install? [y/N]: "
@@ -24,6 +24,9 @@ fi
 function path_remove ()  { 
   export PATH=`echo -n $PATH | awk -v RS=: -v ORS=: '$0 != "'$1'"' | sed 's/:$//'`; }
 
+# alias vi="nvim"
+# alias vim="nvim"
+#
 alias vi="vim"
 alias grep="ggrep"
 
