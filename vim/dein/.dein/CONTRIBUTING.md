@@ -1,18 +1,12 @@
-## Contributing
+# We <3 pull requests!
 
-This project uses the [git
-flow](http://nvie.com/posts/a-successful-git-branching-model/) model for
-development. There's [a handy git module for git
-flow](//github.com/nvie/gitflow). If you'd like to be added as a contributor,
-the price of admission is 1 pull request. Please follow the general code style
-guides (read the code) and in your pull request explain the reason for the
-proposed change and how it is valuable.
+ 1. Fork the Repo on github.
+ 2. Add yourself to AUTHORS.txt
+ 3. Add a test if possible.
+ 4. Push to your fork and submit a pull request.
 
-## Pull Requests
+Please use PEP8 as a Python code style. For VIM, just try to style your
+code similar to the jedi-vim code that is already there.
 
-Please make your pull requests against the `develop` branch; we stage changes
-for testing there to avoid unexpected breakages for our users. :)
-
-## Bug report
-
-Report a bug on [GitHub Issues](https://github.com/pangloss/vim-javascript/issues).
+# Bug reports
+Please include the output of `:version` and `:JediDebugInfo`.

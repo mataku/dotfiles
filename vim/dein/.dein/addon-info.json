@@ -1,9 +1,6 @@
 {
-    "name" : "tcomment",
-    "version" : "dev",
-    "author" : "Tom Link <micathom at gmail com>",
-    "maintainer" : "Tom Link <micathom at gmail com>",
-    "repository" : {"type": "git", "url": "git://github.com/tomtom/tcomment_vim.git"},
-    "dependencies" : {},
-    "description" : "An easily extensible & universal comment plugin"
+  "name": "vim-go",
+  "description": "Full featured Go (golang) support for Vim.",
+  "author": "Fatih Arslan <fatih@arslan.io>",
+  "repository" : {"type": "git", "url": "https://github.com/fatih/vim-go.git"}
 }

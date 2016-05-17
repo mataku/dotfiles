@@ -155,7 +155,7 @@ au FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
 au FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 
 
-au Filetype coffee,javascript setlocal shiftwidth=2 softtabstop=2 tabstop=2 expandtab autoindent smartindent
+au Filetype coffee,javascript setlocal shiftwidth=2 softtabstop=2 tabstop=2 expandtab autoindent smartindent omnifunc=jscpmplete#CompleteJS
 
 syntax enable
 set background=dark

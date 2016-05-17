@@ -40,16 +40,6 @@ au BufReadPost *.s call s:gofiletype_post()
 au BufRead,BufNewFile *.tmpl set filetype=gohtmltmpl
 
 " vim:ts=4:sw=4:et
-au BufNewFile,BufRead *.js setf javascript
-au BufNewFile,BufRead *.jsm setf javascript
-au BufNewFile,BufRead Jakefile setf javascript
-
-fun! s:SelectJavascript()
-  if getline(1) =~# '^#!.*/bin/env\s\+node\>'
-    set ft=javascript
-  endif
-endfun
-au BufNewFile,BufRead * call s:SelectJavascript()
 " Language:    CoffeeScript
 " Maintainer:  Mick Koch <mick@kochm.co>
 " URL:         http://github.com/kchmck/vim-coffee-script
@@ -67,3 +57,13 @@ function! s:DetectCoffee()
 endfunction
 
 autocmd BufNewFile,BufRead * call s:DetectCoffee()
+au BufNewFile,BufRead *.js setf javascript
+au BufNewFile,BufRead *.jsm setf javascript
+au BufNewFile,BufRead Jakefile setf javascript
+
+fun! s:SelectJavascript()
+  if getline(1) =~# '^#!.*/bin/env\s\+node\>'
+    set ft=javascript
+  endif
+endfun
+au BufNewFile,BufRead * call s:SelectJavascript()
