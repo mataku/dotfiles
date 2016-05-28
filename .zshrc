@@ -3,6 +3,13 @@ autoload -Uz colors
 colors
 plugins=(git)
 
+#fpath=(/usr/local/share/zsh-completions $fpath)
+
+autoload -Uz compinit
+compinit -u
+
+
+
 if [ -e "${HOME}/.zplug" ]; then
   . ~/.zplug/zplug
   
@@ -10,7 +17,7 @@ if [ -e "${HOME}/.zplug" ]; then
   zplug "plugins/git", from:oh-my-zsh
   
   # githubのレポジトリを指定し, "of"以下で必要なファイル指定
-  zplug "rhythnn/oh-my-zsh-powerline-theme", of:powerline.zsh-theme
+  zplug "rhythnn/oh-my-zsh-powerline-theme", use:powerline.zsh-theme
 
   if ! zplug check --verbose; then
     printf "Install? [y/N]: "
@@ -30,9 +37,6 @@ function path_remove ()  {
 alias vi="vim"
 alias grep="ggrep"
 
-
-fpath=(/usr/local/share/zsh-completions $fpath)
-typeset -U path fpath cdpath manpath
 
 setopt no_beep
 setopt ignore_eof
@@ -70,7 +74,7 @@ function peco-lscd(){
   fi
 }
 
-export PATH="$HOME/Workspace/sl:$PATH"
+#export PATH="$HOME/Workspace/sl:$PATH"
 
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
@@ -88,7 +92,7 @@ if [ -x "`which go`" ]; then
 fi
 
 # To ignore homebrew warning of python installed by pyenv
-alias brew="env PATH=${PATH/\/Users\/rhythnn\/\.pyenv\/shims:/} brew"
+#alias brew="env PATH=${PATH/\/Users\/rhythnn\/\.pyenv\/shims:/} brew"
 
 
 # powerline(重い)
@@ -97,9 +101,6 @@ source /usr/local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.z
 
 zplug load 
 
-autoload -U compinit
-compinit -u
-
 export HISTFILE=${HOME}/.zsh_history
 export HISTSIZE=1000
 export SAVEHIST=100000
@@ -107,4 +108,9 @@ export SAVEHIST=100000
 setopt hist_ignore_dups
 setopt EXTENDED_HISTORY
 
-typeset -U path PATH
+typeset -U path fpath cdpath manpath PATH
+
+
+
+# added by travis gem
+[ -f /Users/rhythnn/.travis/travis.sh ] && source /Users/rhythnn/.travis/travis.sh

@@ -3,6 +3,11 @@ repo = 'Nigorojr/rsense'
 on_ft = 'ruby'
 
 [[plugins]]
+repo = 'supermomonga/neocomplete-rsense.vim'
+on_ft = 'ruby'
+on_i = 1
+
+[[plugins]]
 repo = 'nvie/vim-flake8'
 on_ft = 'python'
 

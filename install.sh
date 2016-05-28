@@ -8,4 +8,4 @@ ln -sf ~/dotfiles/vim/indent ~/.vim
 ln -sf ~/dotfiles/vim/bundle ~/.vim
 ln -sf ~/dotfiles/vim/dein ~/.vim
 ln -sf ~/dotfiles/vim/rc ~/.vim
-ln -sf ~/dotfiles/nvim ~/.config/
+ln -sf ~/dotfiles/nvim ~/.config/nvim
