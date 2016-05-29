@@ -65,10 +65,6 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#auto_completion_start_length = 2
 
-let g:python3_host_prog = expand('$HOME') . '/.pyenv/shims/python3'
-let g:python_host_prog = expand('$HOME') . '/.pyenv/shims/python'
-
-
 filetype plugin indent on
 
 
@@ -80,7 +76,7 @@ if expand("%:t") =~ ".*\.py"
   let g:jedi#popup_on_dot = 1
   "let g:jedi#show_call_signatures = 0
   let g:syntastic_python_checkers = ['pyflakes']
-  let g:jedi#force_py_version = 3
+  "let g:jedi#force_py_version = 3
 
 endif
 
