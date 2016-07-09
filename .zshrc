@@ -3,7 +3,7 @@ autoload -Uz colors
 colors
 plugins=(git)
 
-#fpath=(/usr/local/share/zsh-completions $fpath)
+fpath=(/usr/local/share/zsh-completions $fpath)
 
 autoload -Uz compinit
 compinit -u
@@ -49,7 +49,7 @@ export PATH=$HOME/.nodebrew/current/bin:$PATH
 export PATH=$HOME/sl:$PATH
 export PATH=/usr/local/bin:$PATH
 export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-export PATH=/Library/TeX/texbin:$PATH
+#export PATH=/Library/TeX/texbin:$PATH
 export EDITOR=/usr/local/bin/vim
 
 

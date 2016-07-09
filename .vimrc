@@ -112,9 +112,9 @@ if expand("%:t") =~ ".*\.py"
 	" au FileType python let b:did_ftplugin = 1
   " let g:syntastic_python_checkers = ["flake8"]
   " let g:flake8_bulitins="_,apply"
-  let g:flake8_cmd="/usr/local/bin/flake8"
+  " let g:flake8_cmd="/usr/local/bin/flake8"
   " 
-  au BufWritePost *.py call Flake8()
+  " au BufWritePost *.py call Flake8()
 
 
 endif
