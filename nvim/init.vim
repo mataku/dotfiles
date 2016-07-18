@@ -78,7 +78,7 @@ if expand("%:t") =~ ".*\.py"
   "let g:jedi#smart_auto_mappings = 0
   let g:jedi#popup_on_dot = 1
   "let g:jedi#show_call_signatures = 0
-  let g:syntastic_python_checkers = ['pyflakes']
+  "let g:syntastic_python_checkers = ['pyflakes']
   "let g:jedi#force_py_version = 3
 
 endif

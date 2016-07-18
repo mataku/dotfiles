@@ -36,6 +36,7 @@ function path_remove ()  {
 #
 alias vi="vim"
 alias grep="ggrep"
+alias be="bundle exec"
 
 
 setopt no_beep
