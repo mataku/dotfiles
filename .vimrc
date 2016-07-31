@@ -1,3 +1,7 @@
+python3 from powerline.vim import setup as powerline_setup
+python3 powerline_setup()
+python3 del powerline_setup
+
 set encoding=utf-8
 scriptencoding utf-8
 
@@ -5,6 +9,11 @@ scriptencoding utf-8
 if &compatible
   set nocompatible
 endif
+
+set laststatus=2
+" set showtabline=2
+set noshowmode
+
 
 " Setup dein
 
@@ -54,6 +63,10 @@ endif
 
 
 " Setting options
+
+let NERDTreeShowHidden = 1
+autocmd vimenter * if !argc() | NERDTree | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 set notitle
 set mouse=a
@@ -116,7 +129,6 @@ if expand("%:t") =~ ".*\.py"
   " 
   " au BufWritePost *.py call Flake8()
 
-
 endif
 
 if expand("%:t") =~ ",*\.java"
@@ -145,10 +157,6 @@ au BufRead,BufNewFile,BufReadPre *.coffee  set filetype=coffee
 au BufWritePost *.coffee silent make!
 au QuickFixCmdPost * nested cwindow | redraw!
 
-" jedi.vim
-au FileType python setlocal omnifunc=jedi#completions
-au FileType python setlocal completeopt-=preview
-
 
 au FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
 
@@ -157,7 +165,9 @@ au FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2 smartin
 
 au Filetype coffee,javascript setlocal shiftwidth=2 softtabstop=2 tabstop=2 expandtab autoindent smartindent omnifunc=jscpmplete#CompleteJS
 
+autocmd ColorScheme * highlight Normal ctermbg=none
+autocmd ColorScheme * highlight LineNr ctermbg=none
+
 syntax enable
 set background=dark
 colorscheme PaperColor
-

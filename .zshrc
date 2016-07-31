@@ -17,7 +17,8 @@ if [ -e "${HOME}/.zplug" ]; then
   zplug "plugins/git", from:oh-my-zsh
   
   # githubのレポジトリを指定し, "of"以下で必要なファイル指定
-  zplug "rhythnn/oh-my-zsh-powerline-theme", use:powerline.zsh-theme
+  #zplug "rhythnn/oh-my-zsh-powerline-theme", use:powerline.zsh-theme
+  #zplug "carloscuesta/materialshell", use:zsh/materialshelloceanic.zsh-theme
 
   if ! zplug check --verbose; then
     printf "Install? [y/N]: "
@@ -63,7 +64,6 @@ export EDITOR=/usr/local/bin/vim
 alias dl='docker ps -l -q'
 alias pip3_upgrade="pip3 list --outdated | awk '{print \$1}' | xargs pip3 install -U"
 
-#PROMPT="%n:%c%# "
 alias ls="ls -G"
 alias sudo='sudo '
 alias sed="gsed"
@@ -110,7 +110,15 @@ setopt hist_ignore_dups
 setopt EXTENDED_HISTORY
 
 typeset -U path fpath cdpath manpath PATH
+#PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")'
+PROMPT="[%1~]$ "
+PROMPT+=`$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")`
 
+function _update_vcs_info_msg() {
+  PROMPT="%{[38;5;208m%}[%~]$ %{[0m%}"
+  PROMPT+=`$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")`
+}
+add-zsh-hook precmd _update_vcs_info_msg
 
 
 # added by travis gem
