@@ -4,8 +4,8 @@
 [[plugins]]
 repo = 'scrooloose/nerdtree'
 
-[[plugins]]
-repo = 'scrooloose/syntastic'
+#[[plugins]]
+#repo = 'scrooloose/syntastic'
 
 [[plugins]]
 repo = 'Shougo/neocomplete.vim'

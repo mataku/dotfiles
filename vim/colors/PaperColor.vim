@@ -258,6 +258,7 @@ if s:is_dark " DARK VARIANT
   " Basics:
   let s:foreground   = ['#d0d0d0', '251']
   let s:background   = ['#262626', '234']
+  "let s:background   = ['#283540', '234']
   let s:selection    = ['#3a3a3a', '236']
   let s:nontext      = ['#444444', '237']
   let s:window       = ['#3a3a3a', '236']
@@ -319,6 +320,7 @@ if s:is_dark " DARK VARIANT
     call s:Load_Settings_Override(g:PaperColor_Dark_Override)
   endif
 
+
 else " LIGHT VARIANT
 
   let s:red     = ['#df0000', '160'] "Include/Exception
@@ -337,7 +339,8 @@ else " LIGHT VARIANT
 
   " Basics:
   let s:foreground   = ['#444444', '238']
-  let s:background   = ['#F5F5F5', '255']
+  " let s:background   = ['#F5F5F5', '255']
+  let s:background   = ['#283540', '234']
   let s:selection    = ['#d0d0d0', '252']
   let s:nontext      = ['#dfafff', '189']
   let s:window       = ['#e4e4e4', '254']

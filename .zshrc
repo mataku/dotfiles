@@ -115,7 +115,9 @@ PROMPT="[%1~]$ "
 PROMPT+=`$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")`
 
 function _update_vcs_info_msg() {
-  PROMPT="%{[38;5;208m%}[%~]$ %{[0m%}"
+  #PROMPT="%{[38;5;208m%}[%~]$ %{[0m%}"
+  PROMPT="%{[38;5;208m%}[$] %{[0m%}"
+  
   PROMPT+=`$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")`
 }
 add-zsh-hook precmd _update_vcs_info_msg

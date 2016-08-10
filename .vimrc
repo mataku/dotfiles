@@ -98,6 +98,7 @@ filetype plugin indent on
 
 " neocomplete setting
 
+let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
 
 if expand("%:t") =~ ",*\.rb"
@@ -106,7 +107,6 @@ if expand("%:t") =~ ",*\.rb"
 endif
 
 if expand("%:t") =~ ".*\.go"
-  let g:neocomplete#enable_at_startup = 1
   let g:go_highlight_functions = 1
   let g:go_highlight_methods = 1
   let g:go_highlight_structs = 1
@@ -117,22 +117,15 @@ if expand("%:t") =~ ".*\.go"
 endif
 
 if expand("%:t") =~ ".*\.py"
-	let g:neocomplete#enable_at_startup = 1
 	" let g:jedi#popup_select_first = 0
-	let g:jedi#completions_enabled = 0
+	let g:jedi#completions_enabled = 1
 	let g:jedi#auto_vim_configuration = 0
 	let g:jedi#popup_on_dot = 1
-	" au FileType python let b:did_ftplugin = 1
-  " let g:syntastic_python_checkers = ["flake8"]
-  " let g:flake8_bulitins="_,apply"
-  " let g:flake8_cmd="/usr/local/bin/flake8"
-  " 
-  " au BufWritePost *.py call Flake8()
+  " au FileType python let b:did_ftplugin = 1
 
 endif
 
 if expand("%:t") =~ ",*\.java"
-  let g:neocomplete#enable_at_startup = 1
   "let g:neocomplete#enable_smart_case = 1
   let g:java_highlight_all = 1
   "let g:java_space_errors = 1
@@ -155,7 +148,7 @@ let g:neocomplete#force_omni_input_patterns.go = '[^. *\t]\.\w*\|\h\w*::'
 
 au BufRead,BufNewFile,BufReadPre *.coffee  set filetype=coffee
 au BufWritePost *.coffee silent make!
-au QuickFixCmdPost * nested cwindow | redraw!
+" au QuickFixCmdPost * nested cwindow | redraw!
 
 
 au FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
