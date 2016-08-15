@@ -38,7 +38,7 @@ function path_remove ()  {
 alias vi="vim"
 alias grep="ggrep"
 alias be="bundle exec"
-
+alias de="docker exec"
 
 setopt no_beep
 setopt ignore_eof
