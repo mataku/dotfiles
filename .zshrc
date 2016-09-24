@@ -53,7 +53,7 @@ export PATH=/usr/local/bin:$PATH
 export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 #export PATH=/Library/TeX/texbin:$PATH
 export EDITOR=/usr/local/bin/vim
-
+export PATH=$HOME/.cargo/bin:$PATH
 
 # docker
 #export DOCKER_TLS_VERIFY=1

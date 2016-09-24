@@ -4,9 +4,6 @@
 [[plugins]]
 repo = 'scrooloose/nerdtree'
 
-#[[plugins]]
-#repo = 'scrooloose/syntastic'
-
 [[plugins]]
 repo = 'Shougo/neocomplete.vim'
 
@@ -48,3 +45,10 @@ repo = 'tpope/vim-endwise'
 
 [[plugins]]
 repo = 'tomtom/tcomment_vim'
+
+[[plugins]]
+repo = 'itchyny/lightline.vim'
+
+[[plugins]]
+repo = 'rust-lang/rust.vim'
+on_ft = 'rust'
