@@ -39,6 +39,7 @@ alias vi="vim"
 alias grep="ggrep"
 alias be="bundle exec"
 alias de="docker exec"
+alias g='git'
 
 setopt no_beep
 setopt ignore_eof

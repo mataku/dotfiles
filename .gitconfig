@@ -1,0 +1,15 @@
+[user]
+	name = Homma Takuma
+	email = sfprhythnn@gmail.com
+[color]
+  ui = true
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+[alias]
+  st = status
+  co = checkout
+  unstage = reset HEAD
+  b = branch
+  al = config --get-regexp alias.*
