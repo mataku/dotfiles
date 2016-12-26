@@ -11,7 +11,7 @@ compinit -u
 
 
 if [ -e "${HOME}/.zplug" ]; then
-  . ~/.zplug/zplug
+  source ~/.zplug/init.zsh
   
   # oh-my-zshのそのまま持ってこれる
   zplug "plugins/git", from:oh-my-zsh
