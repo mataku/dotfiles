@@ -30,18 +30,6 @@ endif
 set runtimepath^=~/.vim/dein/repos/github.com/Shougo/dein.vim
 set runtimepath+=$GOROOT/misc/vim
 
-
-
-
-" call dein#add('Shougo/dein.vim')
-"call dein#add('Shougo/vimproc.vim', {
-"  \ 'build' : {
-"  \   'mac' : 'make -f make_mac.mak',
-"  \   'unix': 'gmake',
-"  \   },
-"  \ })
-
-
 " Plugin list (toml)
 let s:toml      = '~/.vim/rc/dein.toml'
 let s:lazy_toml = '~/.vim/rc/dein_lazy.toml'
@@ -61,7 +49,6 @@ if dein#check_install()
   call dein#install()
 endif
 
-
 " Setting options
 
 let NERDTreeShowHidden = 1
@@ -80,7 +67,6 @@ set nobackup
 set noswapfile
 set ignorecase
 set wrapscan
-"set showcmd
 set wildmenu
 set ruler
 
@@ -154,7 +140,6 @@ au BufWritePost *.coffee silent make!
 au FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
 
 au FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
-
 
 au Filetype coffee,javascript setlocal shiftwidth=2 softtabstop=2 tabstop=2 expandtab autoindent smartindent omnifunc=jscpmplete#CompleteJS
 

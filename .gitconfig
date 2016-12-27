@@ -13,3 +13,5 @@
   unstage = reset HEAD
   b = branch
   al = config --get-regexp alias.*
+  cm = commit
+  wip = commit --allow-empty -m 'WIP'

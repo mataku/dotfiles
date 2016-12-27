@@ -11,7 +11,7 @@ compinit -u
 
 
 if [ -e "${HOME}/.zplug" ]; then
-  . ~/.zplug/zplug
+  source ~/.zplug/init.zsh
   
   # oh-my-zshのそのまま持ってこれる
   zplug "plugins/git", from:oh-my-zsh
@@ -40,6 +40,7 @@ alias grep="ggrep"
 alias be="bundle exec"
 alias de="docker exec"
 alias g='git'
+alias gpush='git push --set-upstream origin $(current_branch)'
 
 setopt no_beep
 setopt ignore_eof
@@ -55,6 +56,7 @@ export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 #export PATH=/Library/TeX/texbin:$PATH
 export EDITOR=/usr/local/bin/vim
 export PATH=$HOME/.cargo/bin:$PATH
+export PATH=$HOME/Library/Android/sdk/platform-tools:$PATH
 
 # docker
 #export DOCKER_TLS_VERIFY=1
@@ -81,7 +83,6 @@ function peco-lscd(){
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
-
 eval "$(rbenv init - zsh)"
 
 # export SCALAENV_ROOT=/usr/local/var/scalaenv
@@ -99,7 +100,7 @@ fi
 
 # powerline(重い)
 # TODO: powerline-daemon -q など後で設定する
-source /usr/local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.zsh
+source /usr/local/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
 
 zplug load 
 
@@ -114,6 +115,7 @@ typeset -U path fpath cdpath manpath PATH
 #PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")'
 PROMPT="[%1~]$ "
 PROMPT+=`$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")`
+RPROMPT=""
 
 function _update_vcs_info_msg() {
   #PROMPT="%{[38;5;208m%}[%~]$ %{[0m%}"
