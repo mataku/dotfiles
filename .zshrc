@@ -100,7 +100,7 @@ fi
 
 # powerline(重い)
 # TODO: powerline-daemon -q など後で設定する
-source /usr/local/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
+source /usr/local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.zsh
 
 zplug load 
 
