@@ -8,12 +8,10 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 autoload -Uz compinit
 compinit -u
 
-
-
 if [ -e "${HOME}/.zplug" ]; then
   source ~/.zplug/init.zsh
   
-  # oh-my-zshのそのまま持ってこれる
+  # oh-my-zsh の plugin をそのまま持ってこれる
   zplug "plugins/git", from:oh-my-zsh
   
   # githubのレポジトリを指定し, "of"以下で必要なファイル指定
@@ -26,21 +24,21 @@ if [ -e "${HOME}/.zplug" ]; then
       echo; zplug install
     fi
   fi
-
 fi
 
-function path_remove ()  { 
+function uniq_path ()  { 
   export PATH=`echo -n $PATH | awk -v RS=: -v ORS=: '$0 != "'$1'"' | sed 's/:$//'`; }
 
-# alias vi="nvim"
-# alias vim="nvim"
-#
-alias vi="vim"
 alias grep="ggrep"
 alias be="bundle exec"
 alias de="docker exec"
-alias g='git'
 alias gpush='git push --set-upstream origin $(current_branch)'
+alias v='vim'
+alias dl='docker ps -l -q'
+alias pip3_upgrade="pip3 list --outdated | awk '{print \$1}' | xargs pip3 install -U"
+alias ls="ls -G"
+alias sudo='sudo '
+alias sed="gsed"
 
 setopt no_beep
 setopt ignore_eof
@@ -53,23 +51,9 @@ export PATH=$HOME/.nodebrew/current/bin:$PATH
 export PATH=$HOME/sl:$PATH
 export PATH=/usr/local/bin:$PATH
 export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-#export PATH=/Library/TeX/texbin:$PATH
 export EDITOR=/usr/local/bin/vim
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/Library/Android/sdk/platform-tools:$PATH
-
-# docker
-#export DOCKER_TLS_VERIFY=1
-#export DOCKER_HOST=tcp://192.168.99.100:2376
-#export DOCKER_CERT_PATH=$HOME/.docker/machine/machines/test-machine
-#export DOCKER_MACHINE_NAME=test-machine
-
-alias dl='docker ps -l -q'
-alias pip3_upgrade="pip3 list --outdated | awk '{print \$1}' | xargs pip3 install -U"
-
-alias ls="ls -G"
-alias sudo='sudo '
-alias sed="gsed"
 
 function peco-lscd(){
   local dir="$( ls -1d */ | peco )"
@@ -97,11 +81,7 @@ fi
 # To ignore homebrew warning of python installed by pyenv
 #alias brew="env PATH=${PATH/\/Users\/rhythnn\/\.pyenv\/shims:/} brew"
 
-
-# powerline(重い)
-# TODO: powerline-daemon -q など後で設定する
-source /usr/local/lib/python3.5/site-packages/powerline/bindings/zsh/powerline.zsh
-
+source /usr/local/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
 zplug load 
 
 export HISTFILE=${HOME}/.zsh_history
@@ -112,19 +92,19 @@ setopt hist_ignore_dups
 setopt EXTENDED_HISTORY
 
 typeset -U path fpath cdpath manpath PATH
-#PS1="$PS1"'$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")'
 PROMPT="[%1~]$ "
 PROMPT+=`$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")`
 RPROMPT=""
 
 function _update_vcs_info_msg() {
-  #PROMPT="%{[38;5;208m%}[%~]$ %{[0m%}"
   PROMPT="%{[38;5;208m%}[$] %{[0m%}"
   
   PROMPT+=`$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")`
 }
 add-zsh-hook precmd _update_vcs_info_msg
 
+# zsh 起動時に tmux 起動
+[[ -z "$TMUX" && ! -z "$PS1" ]] && tmux
 
 # added by travis gem
 [ -f /Users/rhythnn/.travis/travis.sh ] && source /Users/rhythnn/.travis/travis.sh
