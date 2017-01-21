@@ -10,4 +10,4 @@ ln -sf ~/dotfiles/vim/rc ~/.vim
 ln -sf ~/dotfiles/nvim ~/.config/nvim
 ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
-cp where_i_am.sh ~/
+cp ~/dotfiles/where_i_am.sh ~/
