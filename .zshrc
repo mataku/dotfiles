@@ -3,7 +3,8 @@ autoload -Uz colors
 colors
 plugins=(git)
 
-fpath=(/usr/local/share/zsh-completions $fpath)
+# fpath=(/usr/local/share/zsh-completions $fpath)
+fpath=(/usr/local/share/zsh/site-functions $fpath)
 
 autoload -Uz compinit
 compinit -u
@@ -90,7 +91,7 @@ export SAVEHIST=100000
 
 setopt hist_ignore_dups
 setopt EXTENDED_HISTORY
-
+bindkey -e
 typeset -U path fpath cdpath manpath PATH
 PROMPT="[%1~]$ "
 PROMPT+=`$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")`
