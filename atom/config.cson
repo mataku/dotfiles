@@ -1,0 +1,32 @@
+"*":
+  "atom-beautify":
+    general:
+      _analyticsUserId: "e9afd112-b81d-4bb1-8d03-635440778d34"
+  "autocomplete-python":
+    useKite: false
+  core:
+    audioBeep: false
+    automaticallyUpdate: false
+    disabledPackages: [
+      "linter-htmlhint"
+    ]
+    telemetryConsent: "no"
+    themes: [
+      "atom-material-ui"
+      "rainbow-theme"
+    ]
+  editor:
+    backUpBeforeSaving: true
+    fontFamily: "Ricty Discord"
+    fontSize: 19
+  "exception-reporting":
+    userId: "18bea281-203c-6e7d-b094-75fd114aca42"
+  "terminal-plus":
+    ansiColors:
+      normal:
+        blue: "#6fcefe"
+    style: {}
+  "tree-view":
+    hideVcsIgnoredFiles: true
+  welcome:
+    showOnStartup: false
