@@ -3,6 +3,5 @@ repo = 'Nigorojr/rsense'
 on_ft = 'ruby'
 
 [[plugins]]
-repo = 'mattn/jscomplete-vim'
-on_ft = 'javascript'
+repo = 'junegunn/vim-emoji'
 on_i = 1
