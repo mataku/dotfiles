@@ -5,7 +5,6 @@ python3 del powerline_setup
 set encoding=utf-8
 scriptencoding utf-8
 
-
 if &compatible
   set nocompatible
 endif
@@ -13,7 +12,6 @@ endif
 set laststatus=2
 " set showtabline=2
 set noshowmode
-
 
 " Setup dein
 
@@ -43,7 +41,6 @@ if dein#load_state(s:dein_dir)
   call dein#end()
   call dein#save_state()
 endif
-
 
 if dein#check_install()
   call dein#install()
@@ -81,8 +78,7 @@ set expandtab
 
 filetype plugin indent on
 
-
-" neocomplete setting
+" neocomplete
 
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
@@ -121,8 +117,6 @@ endif
 
 set completeopt=menu
 
-
-
 if !exists('g:neocomplete#force_omni_input_patterns')
 	let g:neocomplete#force_omni_input_patterns = {}
 endif
@@ -139,15 +133,12 @@ au BufRead,BufNewFile,BufReadPre *.coffee  set filetype=coffee
 au BufWritePost *.coffee silent make!
 " au QuickFixCmdPost * nested cwindow | redraw!
 
-
 au FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
 
 au FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 
-au FileType coffee,javascript setlocal shiftwidth=2 softtabstop=2 tabstop=2 expandtab autoindent smartindent omnifunc=jscpmplete#CompleteJS
 au FileType gitcommit set omnifunc=emoji#complete
 au FileType markdown set omnifunc=emoji#complete
-
 
 autocmd ColorScheme * highlight Normal ctermbg=none
 autocmd ColorScheme * highlight LineNr ctermbg=none
