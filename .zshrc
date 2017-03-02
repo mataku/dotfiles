@@ -46,6 +46,13 @@ setopt ignore_eof
 setopt print_eight_bit
 setopt correct
 setopt auto_cd
+setopt hist_ignore_dups
+setopt hist_no_store
+setopt hist_expand
+setopt inc_append_history
+setopt EXTENDED_HISTORY
+# cd -[tab] で移動履歴
+setopt auto_pushd
 
 export HOMEBREW_CASK_OPTS="--appdir=/Applications --caskroom=/usr/local/Caskroom"
 export PATH=$HOME/.nodebrew/current/bin:$PATH
@@ -89,8 +96,6 @@ export HISTFILE=${HOME}/.zsh_history
 export HISTSIZE=1000
 export SAVEHIST=100000
 
-setopt hist_ignore_dups
-setopt EXTENDED_HISTORY
 bindkey -e
 typeset -U path fpath cdpath manpath PATH
 PROMPT="[%1~]$ "
