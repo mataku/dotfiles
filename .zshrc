@@ -61,7 +61,7 @@ export PATH=/usr/local/bin:$PATH
 export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 export EDITOR=/usr/local/bin/vim
 export PATH=$HOME/.cargo/bin:$PATH
-export PATH=$HOME/Library/Android/sdk/platform-tools:$PATH
+export PATH=$HOME/Library/Android/sdk/tools:$PATH
 
 function peco-lscd(){
   local dir="$( ls -1d */ | peco )"
@@ -101,6 +101,15 @@ typeset -U path fpath cdpath manpath PATH
 PROMPT="[%1~]$ "
 PROMPT+=`$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")`
 RPROMPT=""
+
+function peco-history-selection() {
+	BUFFER=`history -n 1 | tail -r  | awk '!a[$0]++' | peco`
+	CURSOR=$#BUFFER
+	zle reset-prompt
+}
+
+zle -N peco-history-selection
+bindkey '^R' peco-history-selection
 
 function _update_vcs_info_msg() {
   PROMPT="%{[38;5;208m%}[$] %{[0m%}"
