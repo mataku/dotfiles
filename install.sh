@@ -12,3 +12,4 @@ ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
 ln -sf ~/dotfiles/.emacs.d ~/
 ln -sf ~/dotfiles/where_i_am.sh ~/where_i_am.sh
+ln -sf ~/dotfiles/powerline ~/.config/
