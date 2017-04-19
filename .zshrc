@@ -40,6 +40,7 @@ alias pip3_upgrade="pip3 list --outdated | awk '{print \$1}' | xargs pip3 instal
 alias ls="ls -G"
 alias sudo='sudo '
 alias sed="gsed"
+alias bi="bundle install -j4"
 
 setopt no_beep
 setopt ignore_eof

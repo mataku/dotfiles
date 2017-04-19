@@ -7,7 +7,9 @@ ln -sf ~/dotfiles/vim/after ~/.vim
 ln -sf ~/dotfiles/vim/indent ~/.vim
 ln -sf ~/dotfiles/vim/bundle ~/.vim
 ln -sf ~/dotfiles/vim/rc ~/.vim
-ln -sf ~/dotfiles/nvim ~/.config/nvim
+ln -sf ~/dotfiles/nvim ~/.config/
 ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
-cp ~/dotfiles/where_i_am.sh ~/
+ln -sf ~/dotfiles/.emacs.d ~/
+ln -sf ~/dotfiles/where_i_am.sh ~/where_i_am.sh
+ln -sf ~/dotfiles/powerline ~/.config/
