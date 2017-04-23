@@ -2,3 +2,9 @@
 /vim/repos/
 .DS_Store
 /fish/fishd.*
+/fish/functions/
+
+# allow my func
+!/fish/functions/my_*
+!/fish/functions/set_*
+
