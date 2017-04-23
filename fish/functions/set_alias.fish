@@ -13,5 +13,4 @@ function set_alias
   alias g='git'
   alias gpush='git push origin (git rev-parse --abbrev-ref HEAD ^/dev/null)'
   alias gpull='git pull origin (git rev-parse --abbrev-ref HEAD ^/dev/null)'
-  alias here='echo (git rev-parse --abbrev-ref HEAD ^/dev/null)'
 end
