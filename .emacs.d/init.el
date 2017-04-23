@@ -7,6 +7,11 @@
 
 (prefer-coding-system 'utf-8)
 
+; server for emacs-client
+(require 'server)
+(unless (server-running-p)
+    (server-start))
+
 (require 'cask)
 (cask-initialize)
 
