@@ -25,17 +25,14 @@
 (require 'company-emoji)
 (add-to-list 'company-backends 'company-emoji)
 
-(defun --set-emoji-font (frame)
-  "Adjust the font settings of FRAME so Emacs can display emoji properly."
-  (if (eq system-type 'darwin)
-      ;; For NS/Cocoa
-      (if (functionp 'set-fontset-font) (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend))))
+(require 'git-commit)
 
-;; For when Emacs is started in GUI mode:
-(--set-emoji-font nil)
-;; Hook for when a frame is created with emacsclient
-;; see https://www.gnu.org/software/emacs/manual/html_node/elisp/Creating-Frames.html
-(add-hook 'after-make-frame-functions '--set-emoji-font)
+(setq auto-mode-alist
+  (append '(("\\.gitconfig\\'" . gitconfig-mode)
+            ("\\.gitignore\\'" . gitignore-mode)
+            ("\\.gitattributes\\'" . gitattributes-mode)
+            ("\\.fish\\'" . fish-mode))
+          auto-mode-alist))
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/emacs-material-theme")
 (load-theme 'material t)
