@@ -4,7 +4,7 @@ function set_path
   set -x PATH $HOME/sl $PATH
   set -x PATH /usr/local/bin $PATH
   set -x JAVA_HOME (/usr/libexec/java_home -v 1.8)
-  set -x EDITOR /usr/local/bin/vim
+  set -Ux EDITOR "emacsclient -nw"
   set -x PATH $HOME/.cargo/bin $PATH
   set -x PATH $HOME/Library/Android/sdk/tools $PATH
 end
