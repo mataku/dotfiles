@@ -1,3 +1,4 @@
 /nvim/dein/
 /vim/repos/
 .DS_Store
+/fish/fishd.*
