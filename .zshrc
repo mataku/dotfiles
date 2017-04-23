@@ -11,10 +11,10 @@ compinit -u
 
 if [ -e "${HOME}/.zplug" ]; then
   source ~/.zplug/init.zsh
-  
+
   # oh-my-zsh の plugin をそのまま持ってこれる
   zplug "plugins/git", from:oh-my-zsh
-  
+
   # githubのレポジトリを指定し, "of"以下で必要なファイル指定
   #zplug "rhythnn/oh-my-zsh-powerline-theme", use:powerline.zsh-theme
   #zplug "carloscuesta/materialshell", use:zsh/materialshelloceanic.zsh-theme
@@ -91,7 +91,7 @@ fi
 #alias brew="env PATH=${PATH/\/Users\/rhythnn\/\.pyenv\/shims:/} brew"
 
 source /usr/local/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
-zplug load 
+zplug load
 
 export HISTFILE=${HOME}/.zsh_history
 export HISTSIZE=1000
@@ -114,7 +114,7 @@ bindkey '^R' peco-history-selection
 
 function _update_vcs_info_msg() {
   PROMPT="%{[38;5;208m%}[$] %{[0m%}"
-  
+
   PROMPT+=`$([ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#I_#P") "$PWD")`
 }
 add-zsh-hook precmd _update_vcs_info_msg
