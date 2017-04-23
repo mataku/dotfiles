@@ -8,4 +8,3 @@ function set_path
   set -x PATH $HOME/.cargo/bin $PATH
   set -x PATH $HOME/Library/Android/sdk/tools $PATH
 end
-
