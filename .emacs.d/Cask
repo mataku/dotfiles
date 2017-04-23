@@ -25,3 +25,8 @@
 (depends-on "use-package")
 (depends-on "web-mode")
 (depends-on "yasnippet")
+(depends-on "fish-mode")
+(depends-on "company-emoji")
+(depends-on "gitignore-mode")
+(depends-on "gitattributes-mode")
+(depends-on "gitconfig-mode")

@@ -7,11 +7,32 @@
 
 (prefer-coding-system 'utf-8)
 
+; server for emacs-client
+(require 'server)
+(unless (server-running-p)
+    (server-start))
+
 (require 'cask)
 (cask-initialize)
 
 (require 'powerline)
 (powerline-default-theme)
+
+(require 'company)
+(global-company-mode)
+(setq company-selection-wrap-around t)
+
+(require 'company-emoji)
+(add-to-list 'company-backends 'company-emoji)
+
+(require 'git-commit)
+
+(setq auto-mode-alist
+  (append '(("\\.gitconfig\\'" . gitconfig-mode)
+            ("\\.gitignore\\'" . gitignore-mode)
+            ("\\.gitattributes\\'" . gitattributes-mode)
+            ("\\.fish\\'" . fish-mode))
+          auto-mode-alist))
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/emacs-material-theme")
 (load-theme 'material t)
@@ -26,6 +47,8 @@
 (setq make-backup-files nil)
 ;;; 終了時にオートセーブファイルを消す
 (setq delete-auto-save-files t)
+;; 自動保存ファイルを生成しない (#README.md#)
+(setq auto-save-default nil)
 
 ;; for mouse and trackpad
 (if (functionp 'xterm-mouse-mode) (xterm-mouse-mode t))
@@ -44,12 +67,13 @@
 
 ;;; カーソルの位置が何行目かを表示する
 (line-number-mode t)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (powerline))))
+ '(package-selected-packages (quote (## powerline))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -52,3 +52,7 @@ repo = 'itchyny/lightline.vim'
 [[plugins]]
 repo = 'rust-lang/rust.vim'
 on_ft = 'rust'
+
+[[plugins]]
+repo = 'dag/vim-fish'
+on_ft = 'fish'
