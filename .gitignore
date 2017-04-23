@@ -3,8 +3,8 @@
 .DS_Store
 /fish/fishd.*
 /fish/functions/
+/fish/completions
 
 # allow my func
 !/fish/functions/my_*
 !/fish/functions/set_*
-
