@@ -2,7 +2,7 @@ function set_alias
   alias grep='ggrep'
   alias be='bundle exec'
   alias de='docker exec'
-
+  alias e='emacsclient -nw'
   alias v='vim'
   alias dl='docker ps -l -q'
   alias pip3_upgrade='pip3 list --outdated | awk "{print \$1}" | xargs pip3 install -U'
