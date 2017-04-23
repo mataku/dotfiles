@@ -13,6 +13,10 @@
 (require 'powerline)
 (powerline-default-theme)
 
+(require 'company)
+(global-company-mode)
+(setq company-selection-wrap-around t)
+
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/emacs-material-theme")
 (load-theme 'material t)
 
@@ -26,6 +30,8 @@
 (setq make-backup-files nil)
 ;;; 終了時にオートセーブファイルを消す
 (setq delete-auto-save-files t)
+;; 自動保存ファイルを生成しない (#README.md#)
+(setq auto-save-default nil)
 
 ;; for mouse and trackpad
 (if (functionp 'xterm-mouse-mode) (xterm-mouse-mode t))
@@ -49,7 +55,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (powerline))))
+ '(package-selected-packages (quote (## powerline))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
