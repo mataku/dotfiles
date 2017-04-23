@@ -10,5 +10,6 @@ function set_alias
   alias sed="gsed"
   alias bi="bundle install -j4"
   alias g="git"
+  alias gpush="git push origin (git rev-parse --abbrev-ref HEAD ^/dev/null)"
+  alias gpull="git pull origin (git rev-parse --abbrev-ref HEAD ^/dev/null)"
 end
-
