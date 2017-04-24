@@ -4,6 +4,7 @@ function set_alias
   alias de='docker exec'
   alias e='emacsclient -nw'
   alias v='vim'
+  alias a='atom'
   alias dl='docker ps -l -q'
   alias pip3_upgrade='pip3 list --outdated | awk "{print \$1}" | xargs pip3 install -U'
   alias ls='ls -G'
