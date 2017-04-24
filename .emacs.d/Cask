@@ -30,3 +30,4 @@
 (depends-on "gitignore-mode")
 (depends-on "gitattributes-mode")
 (depends-on "gitconfig-mode")
+(depends-on "powerline")
