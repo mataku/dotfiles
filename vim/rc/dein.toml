@@ -28,14 +28,6 @@ repo = 'derekwyatt/vim-scala'
 on_ft = 'scala'
 
 [[plugins]]
-repo = 'vim-scripts/javacomplete'
-on_ft = 'java'
-
-  [[plugins.build]]
-  mac  = 'javac autoload/Reflection.java'
-  unix = 'javac autoload/Reflection.java'
-
-[[plugins]]
 repo = 'vim-scripts/ruby-matchit'
 on_ft = 'ruby'
 
