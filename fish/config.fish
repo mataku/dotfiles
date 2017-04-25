@@ -4,11 +4,16 @@ powerline-daemon -q
 
 set current_branch (command git rev-parse --abbrev-ref HEAD ^/dev/null)
 
-# defined in ${HOME}/.config/fish/functions
-set_alias
-set_path
+. ~/.config/fish/aliases.fish
+. ~/.config/fish/env.fish
+
+rbenv init - fish | .
 
 # peco history (Ctrl + r)
 function fish_user_key_bindings
   bind \cr peco_select_history
+end
+
+if not [ $TMUX ]
+  tmux a; or tmux
 end
