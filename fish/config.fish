@@ -13,3 +13,7 @@ rbenv init - fish | .
 function fish_user_key_bindings
   bind \cr peco_select_history
 end
+
+if not [ $TMUX ]
+  tmux a; or tmux
+end
