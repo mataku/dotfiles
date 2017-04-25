@@ -120,7 +120,7 @@ function _update_vcs_info_msg() {
 add-zsh-hook precmd _update_vcs_info_msg
 
 # zsh 起動時に tmux 起動
-[[ -z "$TMUX" && ! -z "$PS1" ]] && tmux
+# [[ -z "$TMUX" && ! -z "$PS1" ]] && tmux
 
 # added by travis gem
 [ -f /Users/rhythnn/.travis/travis.sh ] && source /Users/rhythnn/.travis/travis.sh
