@@ -27,12 +27,37 @@
 
 (require 'git-commit)
 
+(require 'ruby-end)
+
+; 左に行番号表示
+(require 'nlinum)
+(global-nlinum-mode t)
+(setq nlinum-format "%3d ")
+
+(setq x-select-enable-clipboard t)
+
+; use ⌘  as meta key
+; SETUP: iTerm2
+; - Keys
+;   - Remap Modifier Keys: Left command key: ⌥  Left Option
+; - Profiles -> Keys
+;   - Left option ⌥  key acts as: +Esc
+(when (eq system-type 'darwin)
+  (setq ns-command-modifier (quote meta)))
+
+; M-x re
+(defalias 're 'query-replace-regexp)
+
 (setq auto-mode-alist
   (append '(("\\.gitconfig\\'" . gitconfig-mode)
             ("\\.gitignore\\'" . gitignore-mode)
             ("\\.gitattributes\\'" . gitattributes-mode)
-            ("\\.fish\\'" . fish-mode))
+            ("\\.fish\\'" . fish-mode)
+            ("\\.rake\\'" . ruby-mode)
+            ("Gemfile\\'" . ruby-mode)
+            ("Capfile\\'" . ruby-mode))
           auto-mode-alist))
+
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/emacs-material-theme")
 (load-theme 'material t)
