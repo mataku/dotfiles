@@ -19,5 +19,5 @@
   wip = commit --allow-empty -m 'WIP'
   delete-merged-branch = "!f () { git checkout $1; git branch --merged|egrep -v '\\*|develop|master'|xargs git branch -d; };f"
 [merge "mergepbx"]
-	name = Xcode project files merger
-	driver = mergepbx %O %A %B
+  name = Xcode project files merger
+  driver = mergepbx %O %A %B
