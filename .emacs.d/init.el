@@ -58,7 +58,6 @@
             ("Capfile\\'" . ruby-mode))
           auto-mode-alist))
 
-
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/emacs-material-theme")
 (load-theme 'material t)
 
