@@ -48,6 +48,10 @@
 ; M-x re
 (defalias 're 'query-replace-regexp)
 
+(global-set-key "\M-c" 'kill-ring-save)
+(global-set-key "\M-y" 'yank)
+(global-set-key "\M-s" 'set-mark-command)
+
 (setq auto-mode-alist
   (append '(("\\.gitconfig\\'" . gitconfig-mode)
             ("\\.gitignore\\'" . gitignore-mode)
