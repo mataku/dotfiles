@@ -6,8 +6,14 @@ set current_branch (command git rev-parse --abbrev-ref HEAD ^/dev/null)
 
 . ~/.config/fish/aliases.fish
 . ~/.config/fish/env.fish
-. ~/.config/fish/github_access_token.fish
-. ~/.config/fish/work.fish
+
+if test -e ~/.config/fish/github_access_token.fish
+  . ~/.config/fish/github_access_token.fish
+end
+
+if test -e ~/.config/fish/work.fish
+  . ~/.config/fish/work.fish
+end
 
 rbenv init - fish | .
 
