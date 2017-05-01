@@ -6,6 +6,8 @@ set current_branch (command git rev-parse --abbrev-ref HEAD ^/dev/null)
 
 . ~/.config/fish/aliases.fish
 . ~/.config/fish/env.fish
+. ~/.config/fish/github_access_token.fish
+. ~/.config/fish/work.fish
 
 rbenv init - fish | .
 
@@ -15,5 +17,5 @@ function fish_user_key_bindings
 end
 
 if not [ $TMUX ]
-  tmux a; or tmux
+  tmux
 end

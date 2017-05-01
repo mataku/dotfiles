@@ -4,6 +4,8 @@
 /fish/fishd.*
 /fish/functions/
 /fish/completions
+/fish/work.fish
+/fish/github_access_token.fish
 
 # allow my func
 !/fish/functions/my_*
