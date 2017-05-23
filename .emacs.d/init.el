@@ -62,6 +62,15 @@
             ("Capfile\\'" . ruby-mode))
           auto-mode-alist))
 
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+(autoload 'gfm-mode "markdown-mode"
+   "Major mode for editing GitHub Flavored Markdown files" t)
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/emacs-material-theme")
 (load-theme 'material t)
 
