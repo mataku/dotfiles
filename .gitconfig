@@ -1,7 +1,7 @@
 [core]
   editor = "emacsclient -nw"
 [user]
-  name = Homma Takuma
+  name = Takuma Homma
   email = nagomimatcha@gmail.com
 [color]
   ui = true
