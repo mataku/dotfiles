@@ -34,3 +34,4 @@
 (depends-on "ruby-end")
 (depends-on "nlinum")
 (depends-on "emacs-material-theme" :git "https://github.com/rhythnn/emacs-material-theme.git")
+(depends-on "markdown-mode")

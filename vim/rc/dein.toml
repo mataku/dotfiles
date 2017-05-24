@@ -12,20 +12,8 @@ repo = 'davidhalter/jedi-vim'
 on_ft = 'python'
 
 [[plugins]]
-repo = 'pangloss/vim-javascript'
-on_ft = 'javascript'
-
-[[plugins]]
-repo = 'kchmck/vim-coffee-script'
-on_ft = 'coffeescript'
-
-[[plugins]]
 repo = 'fatih/vim-go'
 on_ft = 'go'
-
-[[plugins]]
-repo = 'derekwyatt/vim-scala'
-on_ft = 'scala'
 
 [[plugins]]
 repo = 'vim-scripts/ruby-matchit'
