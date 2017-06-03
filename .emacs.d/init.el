@@ -51,6 +51,8 @@
 (global-set-key "\M-c" 'kill-ring-save)
 (global-set-key "\M-y" 'yank)
 (global-set-key "\M-s" 'set-mark-command)
+(global-set-key "\M-p" 'copy-whole-line)
+(global-set-key "\M-d" 'kill-whole-line)
 
 (setq auto-mode-alist
   (append '(("\\.gitconfig\\'" . gitconfig-mode)
