@@ -14,3 +14,5 @@ ln -sf ~/dotfiles/.emacs.d ~/
 ln -sf ~/dotfiles/powerline ~/.config/
 ln -sf ~/dotfiles/fish ~/.config/
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
+ln -sf ~/dotfiles/atom/config.cson ~/.atom/config.cson
+ln -sf ~/dotfiles/atom/styles.less ~/.atom/styles.less
