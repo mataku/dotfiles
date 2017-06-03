@@ -1,0 +1,11 @@
+#!/bin/bash
+for c in `brew cask outdated | awk '{print $1}'`; 
+do
+brew cask install --force $c;
+done
+for c in /usr/local/Caskroom/*;
+do vl=(`ls -t $c`) && for v in "${vl[@]:1}";
+do rm -rf "$c/$v";
+done;
+done
+brew cask cleanup
