@@ -1,11 +1,11 @@
 {
-	"segments": {
-		"right": [
+  "segments": {
+    "right": [
       {
         "name": "branch",
         "function": "powerline.segments.common.vcs.branch",
         "priority": 50
       }
-		]
-	}
+    ]
+  }
 }
