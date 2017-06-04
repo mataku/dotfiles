@@ -69,6 +69,10 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
+(autoload 'kotlin-mode "kotlin-mode"
+   "Mode for editing kotlin files" t)
+(add-to-list 'auto-mode-alist '("\\.kt\\'" . kotlin-mode))
+
 (autoload 'gfm-mode "markdown-mode"
    "Major mode for editing GitHub Flavored Markdown files" t)
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
