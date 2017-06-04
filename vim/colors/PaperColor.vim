@@ -429,7 +429,6 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("StatusLine", s:statusline_active_fg, s:statusline_active_bg, "bold")
   call s:HL("StatusLineNC", s:statusline_inactive_fg, s:statusline_inactive_bg, "None")
   call s:HL("VertSplit", s:divider, s:background, "none")
-  " call s:HL("VertSplit", s:red, s:background, "none")
   call s:HL("Visual", s:visual_fg, s:visual_bg, "")
   call s:HL("Directory", s:blue, "", "")
   call s:HL("ModeMsg", s:olive, "", "")
@@ -550,75 +549,11 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("cPreCondit", s:aqua, "", "")
   call s:HL("cRepeat", s:purple, "", "bold")
   call s:HL("cLabel",s:aqua, "", "")
-  " call s:HL("cAnsiFunction",s:aqua, "", "bold")
-  " call s:HL("cAnsiName",s:pink, "", "")
   call s:HL("cDelimiter",s:blue, "", "")
-  " call s:HL("cBraces",s:foreground, "", "")
-  " call s:HL("cIdentifier",s:blue, s:pink, "")
-  " call s:HL("cSemiColon","", s:blue, "")
   call s:HL("cOperator",s:aqua, "", "")
-  " call s:HL("cStatement",s:pink, "", "")
   call s:HL("cFunction", s:foreground, "", "")
-  " call s:HL("cTodo", s:comment, "", "bold")
-  " call s:HL("cStructure", s:blue, "", "bold")
   call s:HL("cCustomParen", s:foreground, "", "")
-  " call s:HL("cCustomFunc", s:foreground, "", "")
-  " call s:HL("cUserFunction",s:blue, "", "bold")
   call s:HL("cOctalZero", s:purple, "", "bold")
-
-  " CPP highlighting
-  call s:HL("cppBoolean", s:navy, "", "")
-  call s:HL("cppSTLnamespace", s:purple, "", "")
-  call s:HL("cppSTLconstant", s:foreground, "", "")
-  call s:HL("cppSTLtype", s:foreground, "", "")
-  call s:HL("cppSTLexception", s:pink, "", "")
-  call s:HL("cppSTLfunctional", s:foreground, "", "bold")
-  call s:HL("cppSTLiterator", s:foreground, "", "bold")
-  " call s:HL("cppSTLfunction", s:aqua, "", "bold")
-  call s:HL("cppExceptions", s:red, "", "")
-  call s:HL("cppStatement", s:blue, "", "")
-  call s:HL("cppStorageClass", s:navy, "", "bold")
-  call s:HL("cppAccess",s:blue, "", "")
-  " call s:HL("cppSTL",s:blue, "", "")
-
-
-  " Lex highlighting
-  call s:HL("lexCFunctions", s:foreground, "", "")
-  call s:HL("lexAbbrv", s:purple, "", "")
-  call s:HL("lexAbbrvRegExp", s:aqua, "", "")
-  call s:HL("lexAbbrvComment", s:comment, "", "")
-  call s:HL("lexBrace", s:navy, "", "")
-  call s:HL("lexPat", s:aqua, "", "")
-  call s:HL("lexPatComment", s:comment, "", "")
-  call s:HL("lexPatTag", s:orange, "", "")
-  " call s:HL("lexPatBlock", s:foreground, "", "bold")
-  call s:HL("lexSlashQuote", s:foreground, "", "")
-  call s:HL("lexSep", s:foreground, "", "")
-  call s:HL("lexStartState", s:orange, "", "")
-  call s:HL("lexPatTagZone", s:olive, "", "bold")
-  call s:HL("lexMorePat", s:olive, "", "bold")
-  call s:HL("lexOptions", s:olive, "", "bold")
-  call s:HL("lexPatString", s:olive, "", "")
-
-  " Yacc highlighting
-  call s:HL("yaccNonterminal", s:navy, "", "")
-  call s:HL("yaccDelim", s:orange, "", "")
-  call s:HL("yaccInitKey", s:aqua, "", "")
-  call s:HL("yaccInit", s:navy, "", "")
-  call s:HL("yaccKey", s:purple, "", "")
-  call s:HL("yaccVar", s:aqua, "", "")
-
-  " NASM highlighting
-  call s:HL("nasmStdInstruction", s:navy, "", "")
-  call s:HL("nasmGen08Register", s:aqua, "", "")
-  call s:HL("nasmGen16Register", s:aqua, "", "")
-  call s:HL("nasmGen32Register", s:aqua, "", "")
-  call s:HL("nasmGen64Register", s:aqua, "", "")
-  call s:HL("nasmHexNumber", s:purple, "", "")
-  call s:HL("nasmStorage", s:aqua, "", "bold")
-  call s:HL("nasmLabel", s:pink, "", "")
-  call s:HL("nasmDirective", s:blue, "", "bold")
-  call s:HL("nasmLocalLabel", s:orange, "", "")
 
   " GAS highlighting
   call s:HL("gasSymbol", s:pink, "", "")
@@ -629,12 +564,6 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("gasRegisterX86", s:blue, "", "")
   call s:HL("gasOpcode_P6_Base", s:navy, "", "")
   call s:HL("gasDirectiveStore", s:foreground, "", "bold")
-
-  " MIPS highlighting
-  call s:HL("mipsInstruction", s:pink, "", "")
-  call s:HL("mipsRegister", s:navy, "", "")
-  call s:HL("mipsLabel", s:aqua, "", "bold")
-  call s:HL("mipsDirective", s:purple, "", "bold")
 
   " Shell/Bash highlighting
   call s:HL("bashStatement", s:foreground, "", "bold")
@@ -785,23 +714,8 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("goConditional", s:purple, "", "bold")
   call s:HL("goConstants", s:orange, "", "")
   call s:HL("goFunction", s:orange, "", "")
-  " call s:HL("goTodo", s:comment, "", "bold")
   call s:HL("goDeclType", s:blue, "", "")
   call s:HL("goBuiltins", s:purple, "", "")
-
-  " Systemtap Highlighting
-  " call s:HL("stapBlock", s:comment, "", "none")
-  call s:HL("stapComment", s:comment, "", "none")
-  call s:HL("stapProbe", s:aqua, "", "bold")
-  call s:HL("stapStat", s:navy, "", "bold")
-  call s:HL("stapFunc", s:foreground, "", "")
-  call s:HL("stapString", s:olive, "", "")
-  call s:HL("stapTarget", s:navy, "", "")
-  call s:HL("stapStatement", s:pink, "", "")
-  call s:HL("stapType", s:pink, "", "bold")
-  call s:HL("stapSharpBang", s:comment, "", "")
-  call s:HL("stapDeclaration", s:pink, "", "")
-  call s:HL("stapCMacro", s:blue, "", "")
 
   " DTrace Highlighting
   call s:HL("dtraceProbe", s:blue, "", "")
@@ -815,30 +729,6 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("dtraceConstant", s:orange, "", "")
   call s:HL("dtraceType", s:pink, "", "bold")
 
-  " PlantUML Highlighting
-  call s:HL("plantumlPreProc", s:orange, "", "bold")
-  call s:HL("plantumlDirectedOrVerticalArrowRL", s:pink, "", "")
-  call s:HL("plantumlDirectedOrVerticalArrowLR", s:pink, "", "")
-  call s:HL("plantumlString", s:olive, "", "")
-  call s:HL("plantumlActivityThing", s:purple, "", "")
-  call s:HL("plantumlText", s:navy, "", "")
-  call s:HL("plantumlClassPublic", s:olive, "", "bold")
-  call s:HL("plantumlClassPrivate", s:red, "", "")
-  call s:HL("plantumlColonLine", s:orange, "", "")
-  call s:HL("plantumlClass", s:navy, "", "")
-  call s:HL("plantumlHorizontalArrow", s:pink, "", "")
-  call s:HL("plantumlTypeKeyword", s:blue, "", "bold")
-  call s:HL("plantumlKeyword", s:pink, "", "bold")
-
-  call s:HL("plantumlType", s:blue, "", "bold")
-  call s:HL("plantumlBlock", s:pink, "", "bold")
-  call s:HL("plantumlPreposition", s:orange, "", "")
-  call s:HL("plantumlLayout", s:blue, "", "bold")
-  call s:HL("plantumlNote", s:orange, "", "")
-  call s:HL("plantumlLifecycle", s:aqua, "", "")
-  call s:HL("plantumlParticipant", s:foreground, "", "bold")
-
-
   " Haskell Highlighting
   call s:HL("haskellType", s:aqua, "", "bold")
   call s:HL("haskellIdentifier", s:orange, "", "bold")
@@ -847,35 +737,6 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("haskellDelimiter", s:aqua, "", "")
   call s:HL("haskellImportKeywords", s:pink, "", "")
   call s:HL("haskellStatement", s:purple, "", "bold")
-
-
-  " SQL/MySQL Highlighting
-  call s:HL("sqlStatement", s:pink, "", "bold")
-  call s:HL("sqlType", s:blue, "", "bold")
-  call s:HL("sqlKeyword", s:pink, "", "")
-  call s:HL("sqlOperator", s:aqua, "", "")
-  call s:HL("sqlSpecial", s:green, "", "bold")
-
-  call s:HL("mysqlVariable", s:olive, "", "bold")
-  call s:HL("mysqlType", s:blue, "", "bold")
-  call s:HL("mysqlKeyword", s:pink, "", "")
-  call s:HL("mysqlOperator", s:aqua, "", "")
-  call s:HL("mysqlSpecial", s:green, "", "bold")
-
-
-  " Octave/MATLAB Highlighting
-  call s:HL("octaveVariable", s:foreground, "", "")
-  call s:HL("octaveDelimiter", s:pink, "", "")
-  call s:HL("octaveQueryVar", s:foreground, "", "")
-  call s:HL("octaveSemicolon", s:purple, "", "")
-  call s:HL("octaveFunction", s:navy, "", "")
-  call s:HL("octaveSetVar", s:blue, "", "")
-  call s:HL("octaveUserVar", s:foreground, "", "")
-  call s:HL("octaveArithmeticOperator", s:aqua, "", "")
-  call s:HL("octaveBeginKeyword", s:purple, "", "bold")
-  call s:HL("octaveElseKeyword", s:purple, "", "bold")
-  call s:HL("octaveEndKeyword", s:purple, "", "bold")
-  call s:HL("octaveStatement", s:pink, "", "")
 
   " Ruby Highlighting
   call s:HL("rubyModule", s:navy, "", "bold")
@@ -903,26 +764,10 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("rubyExceptional", s:purple, "", "bold")
   call s:HL("rubyBoolean", s:green, "", "bold")
 
-  " Fortran Highlighting
-  call s:HL("fortranUnitHeader", s:foreground, "", "bold")
-  call s:HL("fortranType", s:pink, "", "bold")
-  call s:HL("fortranStructure", s:blue, "", "bold")
-  call s:HL("fortranStorageClass", s:navy, "", "bold")
-  call s:HL("fortranStorageClassR", s:navy, "", "bold")
-  call s:HL("fortranKeyword", s:pink, "", "")
-  call s:HL("fortranReadWrite", s:blue, "", "")
-  call s:HL("fortranIO", s:navy, "", "")
-
   " R Highlighting
   call s:HL("rType", s:blue, "", "")
   call s:HL("rArrow", s:pink, "", "")
   call s:HL("rDollar", s:blue, "", "")
-
-  " XXD Highlighting
-  call s:HL("xxdAddress", s:navy, "", "")
-  call s:HL("xxdSep", s:pink, "", "")
-  call s:HL("xxdAscii", s:pink, "", "")
-  call s:HL("xxdDot", s:aqua, "", "")
 
   " PHP Highlighting
   call s:HL("phpIdentifier", s:foreground, "", "")
@@ -939,61 +784,6 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("phpMemberSelector", s:blue, "", "")
   call s:HL("phpStorageClass", s:purple, "", "bold")
   call s:HL("phpDefine", s:navy, "", "")
-
-  " Perl Highlighting
-  call s:HL("perlFiledescRead", s:green, "", "")
-  call s:HL("perlMatchStartEnd", s:pink, "", "")
-  call s:HL("perlStatementFlow", s:pink, "", "")
-  call s:HL("perlStatementStorage", s:pink, "", "")
-  call s:HL("perlFunction", s:pink, "", "bold")
-  call s:HL("perlMethod", s:foreground, "", "")
-  call s:HL("perlStatementFiledesc", s:orange, "", "")
-  call s:HL("perlVarPlain", s:navy, "", "")
-  call s:HL("perlSharpBang", s:comment, "", "")
-  call s:HL("perlStatementInclude", s:aqua, "", "bold")
-  call s:HL("perlStatementScalar", s:purple, "", "")
-  call s:HL("perlSubName", s:aqua, "", "bold")
-  call s:HL("perlSpecialString", s:olive, "", "bold")
-
-  " Lua Highlighting
-  call s:HL("luaFunc", s:foreground, "", "")
-  call s:HL("luaIn", s:blue, "", "bold")
-  call s:HL("luaFunction", s:pink, "", "")
-  call s:HL("luaStatement", s:blue, "", "")
-  call s:HL("luaRepeat", s:blue, "", "bold")
-  call s:HL("luaCondStart", s:purple, "", "bold")
-  call s:HL("luaTable", s:aqua, "", "bold")
-  call s:HL("luaConstant", s:green, "", "bold")
-  call s:HL("luaElse", s:purple, "", "bold")
-  call s:HL("luaCondElseif", s:purple, "", "bold")
-  call s:HL("luaCond", s:purple, "", "bold")
-  call s:HL("luaCondEnd", s:purple, "", "")
-
-  " Clojure highlighting:
-  call s:HL("clojureConstant", s:blue, "", "")
-  call s:HL("clojureBoolean", s:orange, "", "")
-  call s:HL("clojureCharacter", s:olive, "", "")
-  call s:HL("clojureKeyword", s:pink, "", "")
-  call s:HL("clojureNumber", s:orange, "", "")
-  call s:HL("clojureString", s:olive, "", "")
-  call s:HL("clojureRegexp", s:purple, "", "")
-  call s:HL("clojureRegexpEscape", s:pink, "", "")
-  call s:HL("clojureParen", s:aqua, "", "")
-  call s:HL("clojureVariable", s:olive, "", "")
-  call s:HL("clojureCond", s:blue, "", "")
-  call s:HL("clojureDefine", s:blue, "", "bold")
-  call s:HL("clojureException", s:red, "", "")
-  call s:HL("clojureFunc", s:navy, "", "")
-  call s:HL("clojureMacro", s:blue, "", "")
-  call s:HL("clojureRepeat", s:blue, "", "")
-  call s:HL("clojureSpecial", s:blue, "", "bold")
-  call s:HL("clojureQuote", s:blue, "", "")
-  call s:HL("clojureUnquote", s:blue, "", "")
-  call s:HL("clojureMeta", s:blue, "", "")
-  call s:HL("clojureDeref", s:blue, "", "")
-  call s:HL("clojureAnonArg", s:blue, "", "")
-  call s:HL("clojureRepeat", s:blue, "", "")
-  call s:HL("clojureDispatch", s:aqua, "", "")
 
   " Dockerfile Highlighting
   " @target https://github.com/docker/docker/tree/master/contrib/syntax/vim
@@ -1018,16 +808,6 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("yamlKeyValueDelimiter", s:pink, "", "")
   call s:HL("yamlBlockCollectionItemStart", s:pink, "", "")
 
-  " Qt QML Highlighting
-  call s:HL("qmlObjectLiteralType", s:pink, "", "")
-  call s:HL("qmlReserved", s:purple, "", "")
-  call s:HL("qmlBindingProperty", s:navy, "", "")
-  call s:HL("qmlType", s:navy, "", "")
-
-  " Dosini Highlighting
-  call s:HL("dosiniHeader", s:pink, "", "")
-  call s:HL("dosiniLabel", s:blue, "", "")
-
   " Mail highlighting
   call s:HL("mailHeaderKey", s:blue, "", "")
   call s:HL("mailHeaderEmail", s:purple, "", "")
@@ -1050,18 +830,6 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("xmlNamespace", s:blue, "", "")
 
   " }}}
-
-  " Plugin: Netrw
-  call s:HL("netrwVersion", s:red, "", "")
-  call s:HL("netrwList", s:pink, "", "")
-  call s:HL("netrwHidePat", s:olive, "", "")
-  call s:HL("netrwQuickHelp", s:blue, "", "")
-  call s:HL("netrwHelpCmd", s:blue, "", "")
-  call s:HL("netrwDir", s:aqua, "", "bold")
-  call s:HL("netrwClassify", s:pink, "", "")
-  call s:HL("netrwExe", s:green, "", "")
-  call s:HL("netrwSuffixes", s:comment, "", "")
-  call s:HL("netrwTreeBar", s:linenumber, "", "")
 
   " Plugin: NERDTree
   call s:HL("NERDTreeUp", s:comment, "", "")
@@ -1102,75 +870,6 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("StartifySlash", s:navy, "", "")
   call s:HL("StartifyBracket", s:aqua, "", "")
   call s:HL("StartifySpecial", s:aqua, "", "")
-
-  "=====================================================================
-  " SYNTAX HIGHLIGHTING CODE BELOW THIS LINE ISN'T TESTED FOR THIS THEME
-  "=====================================================================
-
-
-  " " CoffeeScript Highlighting
-  " call s:HL("coffeeRepeat", s:purple, "", "")
-  " call s:HL("coffeeConditional", s:purple, "", "")
-  " call s:HL("coffeeKeyword", s:purple, "", "")
-  " call s:HL("coffeeObject", s:yellow, "", "")
-
-
-  " " ShowMarks Highlighting
-  " call s:HL("ShowMarksHLl", s:orange, s:background, "none")
-  " call s:HL("ShowMarksHLo", s:purple, s:background, "none")
-  " call s:HL("ShowMarksHLu", s:yellow, s:background, "none")
-  " call s:HL("ShowMarksHLm", s:aqua, s:background, "none")
-
-
-  " " Cucumber Highlighting
-  " call s:HL("cucumberGiven", s:blue, "", "")
-  " call s:HL("cucumberGivenAnd", s:blue, "", "")
-
-
-
-  " " Scala "highlighting
-  " call s:HL("scalaKeyword", s:purple, "", "")
-  " call s:HL("scalaKeywordModifier", s:purple, "", "")
-  " call s:HL("scalaOperator", s:blue, "", "")
-  " call s:HL("scalaPackage", s:pink, "", "")
-  " call s:HL("scalaFqn", s:foreground, "", "")
-  " call s:HL("scalaFqnSet", s:foreground, "", "")
-  " call s:HL("scalaImport", s:purple, "", "")
-  " call s:HL("scalaBoolean", s:orange, "", "")
-  " call s:HL("scalaDef", s:purple, "", "")
-  " call s:HL("scalaVal", s:purple, "", "")
-  " call s:HL("scalaVar", s:aqua, "", "")
-  " call s:HL("scalaClass", s:purple, "", "")
-  " call s:HL("scalaObject", s:purple, "", "")
-  " call s:HL("scalaTrait", s:purple, "", "")
-  " call s:HL("scalaDefName", s:blue, "", "")
-  " call s:HL("scalaValName", s:foreground, "", "")
-  " call s:HL("scalaVarName", s:foreground, "", "")
-  " call s:HL("scalaClassName", s:foreground, "", "")
-  " call s:HL("scalaType", s:yellow, "", "")
-  " call s:HL("scalaTypeSpecializer", s:yellow, "", "")
-  " call s:HL("scalaAnnotation", s:orange, "", "")
-  " call s:HL("scalaNumber", s:orange, "", "")
-  " call s:HL("scalaDefSpecializer", s:yellow, "", "")
-  " call s:HL("scalaClassSpecializer", s:yellow, "", "")
-  " call s:HL("scalaBackTick", s:olive, "", "")
-  " call s:HL("scalaRoot", s:foreground, "", "")
-  " call s:HL("scalaMethodCall", s:blue, "", "")
-  " call s:HL("scalaCaseType", s:yellow, "", "")
-  " call s:HL("scalaLineComment", s:comment, "", "")
-  " call s:HL("scalaComment", s:comment, "", "")
-  " call s:HL("scalaDocComment", s:comment, "", "")
-  " call s:HL("scalaDocTags", s:comment, "", "")
-  " call s:HL("scalaEmptyString", s:olive, "", "")
-  " call s:HL("scalaMultiLineString", s:olive, "", "")
-  " call s:HL("scalaUnicode", s:orange, "", "")
-  " call s:HL("scalaString", s:olive, "", "")
-  " call s:HL("scalaStringEscape", s:olive, "", "")
-  " call s:HL("scalaSymbol", s:orange, "", "")
-  " call s:HL("scalaChar", s:orange, "", "")
-  " call s:HL("scalaXml", s:olive, "", "")
-  " call s:HL("scalaConstructorSpecializer", s:yellow, "", "")
-  " call s:HL("scalaBackTick", s:blue, "", "")
 
   " Git
   call s:HL("diffAdded", s:olive, "", "")
