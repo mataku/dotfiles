@@ -10,7 +10,7 @@ ln -sf ~/dotfiles/vim/rc ~/.vim
 ln -sf ~/dotfiles/nvim ~/.config/
 ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
-ln -sf ~/dotfiles/.emacs.d ~/
+ln -sf ~/dotfiles/emacs.d ~/.emacs.d
 ln -sf ~/dotfiles/powerline ~/.config/
 ln -sf ~/dotfiles/fish ~/.config/
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
