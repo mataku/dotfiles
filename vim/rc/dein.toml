@@ -36,3 +36,6 @@ on_ft = 'rust'
 [[plugins]]
 repo = 'dag/vim-fish'
 on_ft = 'fish'
+
+[[plugins]]
+repo = 'rhythnn/papercolor-theme'
