@@ -53,6 +53,7 @@
 (global-set-key "\M-s" 'set-mark-command)
 (global-set-key "\M-p" 'copy-whole-line)
 (global-set-key "\M-d" 'kill-whole-line)
+(global-set-key "\M-g" 'goto-line)
 
 (setq auto-mode-alist
   (append '(("\\.gitconfig\\'" . gitconfig-mode)
