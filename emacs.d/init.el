@@ -80,7 +80,7 @@
 
 (autoload 'slim-mode "slim-mode"
    "Major mode for editing slim files" t)
-(add-to-list 'auto-mode-alist '("\\.slim\\'" . gfm-mode))
+(add-to-list 'auto-mode-alist '("\\.slim\\'" . slim-mode))
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/emacs-material-theme")
 (load-theme 'material t)
