@@ -4,7 +4,7 @@ powerline-daemon -q
 
 set current_branch (command git rev-parse --abbrev-ref HEAD ^/dev/null)
 
-. ~/.config/fish/aliases.fish
+. ~/.config/fish/alias.fish
 . ~/.config/fish/env.fish
 
 if test -e ~/.config/fish/github_access_token.fish
