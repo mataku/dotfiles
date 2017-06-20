@@ -15,8 +15,6 @@ if test -e ~/.config/fish/work.fish
   . ~/.config/fish/work.fish
 end
 
-rbenv init - fish | .
-
 # peco history (Ctrl + r)
 function fish_user_key_bindings
   bind \cr peco_select_history
