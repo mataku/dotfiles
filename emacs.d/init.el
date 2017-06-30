@@ -82,6 +82,9 @@
    "Major mode for editing slim files" t)
 (add-to-list 'auto-mode-alist '("\\.slim\\'" . slim-mode))
 
+(autoload 'ruby-mode "ruby-mode"
+   "Mode for editing ruby files" t)
+
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/emacs-material-theme")
 (load-theme 'material t)
 
@@ -112,6 +115,11 @@
 
 ;; ruby-mode にて coding: utf-8 を自動挿入させない
 (setq ruby-insert-encoding-magic-comment nil)
+
+;; robe
+(add-hook 'ruby-mode-hook 'robe-mode)
+(eval-after-load 'company
+  '(push 'company-robe company-backends))
 
 ;;; カーソルの位置が何行目かを表示する
 (line-number-mode t)

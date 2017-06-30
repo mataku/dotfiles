@@ -37,3 +37,5 @@
 (depends-on "markdown-mode")
 (depends-on "kotlin-mode")
 (depends-on "slim-mode")
+(depends-on "robe")
+(depends-on "ruby-mode")
