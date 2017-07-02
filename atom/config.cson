@@ -4,23 +4,32 @@
       _analyticsUserId: "e9afd112-b81d-4bb1-8d03-635440778d34"
   "autocomplete-python":
     useKite: false
+  "autocomplete-ruby":
+    rsensePath: "/Users/rhythnn/.rbenv/versions/2.3.3/bin/rsense"
+    suggestionPriority: true
   core:
     audioBeep: false
     automaticallyUpdate: false
     disabledPackages: [
       "linter-htmlhint"
+      "autocomplete-ruby"
     ]
     telemetryConsent: "no"
     themes: [
       "atom-material-ui"
-      "rainbow-theme"
+      "atom-material-syntax"
     ]
   editor:
     backUpBeforeSaving: true
-    fontFamily: "Ricty Discord"
-    fontSize: 19
+    fontFamily: "Ricty Discord for Powerline"
+    fontSize: 18
   "exception-reporting":
     userId: "18bea281-203c-6e7d-b094-75fd114aca42"
+  "linter-ui-default":
+    panelHeight: 81
+  robe:
+    launchTimeout: 30000
+    robePath: "~/github.com/robe"
   "terminal-plus":
     ansiColors:
       normal:
