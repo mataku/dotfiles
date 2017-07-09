@@ -34,7 +34,14 @@
     ansiColors:
       normal:
         blue: "#6fcefe"
+    core:
+      shell: "/usr/local/bin/fish"
     style: {}
+  termination:
+    core:
+      shell: "/usr/local/bin/fish"
+    toggles:
+      selectToCopy: false
   "tree-view":
     hideVcsIgnoredFiles: true
   welcome:
