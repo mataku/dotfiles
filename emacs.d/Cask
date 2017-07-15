@@ -39,3 +39,4 @@
 (depends-on "slim-mode")
 (depends-on "robe")
 (depends-on "ruby-mode")
+(depends-on "neotree")

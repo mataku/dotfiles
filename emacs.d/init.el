@@ -36,6 +36,10 @@
 
 (setq x-select-enable-clipboard t)
 
+(require 'neotree)
+(setq neo-show-hidden-files t)
+(global-set-key "\C-e" 'neotree-toggle)
+
 ; use ⌘  as meta key
 ; SETUP: iTerm2
 ; - Keys
