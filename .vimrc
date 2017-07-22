@@ -88,23 +88,12 @@ if expand("%:t") =~ ",*\.rb"
   let g:neocomplete#enable_smart_case = 1
 endif
 
-if expand("%:t") =~ ".*\.go"
-  let g:go_highlight_functions = 1
-  let g:go_highlight_methods = 1
-  let g:go_highlight_structs = 1
-  let g:go_highlight_operators = 1
-  set completeopt=menu
-  au BufRead,BufNewFile,BufReadPre *.go  set filetype=go
-
-endif
-
 if expand("%:t") =~ ".*\.py"
 	" let g:jedi#popup_select_first = 0
 	let g:jedi#completions_enabled = 1
 	let g:jedi#auto_vim_configuration = 0
 	let g:jedi#popup_on_dot = 1
   " au FileType python let b:did_ftplugin = 1
-
 endif
 
 if expand("%:t") =~ ",*\.java"
@@ -124,14 +113,12 @@ endif
 let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 let g:neocomplete#force_omni_input_patterns.python = '[^. *\t]\.\w*\|\h\w*::'
 let g:neocomplete#force_omni_input_patterns.go = '[^. *\t]\.\w*\|\h\w*::'
-"let g:neocomplete#force_omni_input_patterns.java = '[^. *\t]\.\w*\|\h\w*::'
 let g:neocomplete#force_omni_input_patterns.gitcommit = ':'
 let g:neocomplete#force_omni_input_patterns.markdown = ':'
 
 
 au BufRead,BufNewFile,BufReadPre *.coffee  set filetype=coffee
 au BufWritePost *.coffee silent make!
-" au QuickFixCmdPost * nested cwindow | redraw!
 
 au FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
 
