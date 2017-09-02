@@ -10,3 +10,4 @@
 # allow my func
 !/fish/functions/fish_prompt.fish
 !/fish/functions/fish_title.fish
+!/fish/functions/fish_right_prompt.fish
