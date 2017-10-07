@@ -23,4 +23,4 @@
   name = Xcode project files merger
   driver = mergepbx %O %A %B
 [fetch]
-	prune = true
+  prune = true
