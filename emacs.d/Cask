@@ -40,3 +40,4 @@
 (depends-on "robe")
 (depends-on "ruby-mode")
 (depends-on "neotree")
+(depends-on "yaml-mode")
