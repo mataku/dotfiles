@@ -39,6 +39,9 @@
 (require 'neotree)
 (setq neo-show-hidden-files t)
 (global-set-key "\C-e" 'neotree-toggle)
+(global-set-key "\C-p" 'yank)
+(global-set-key "\C-y" 'copy-whole-line)
+
 
 ; use ⌘  as meta key
 ; SETUP: iTerm2
