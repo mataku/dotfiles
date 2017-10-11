@@ -1,4 +1,3 @@
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -41,6 +40,7 @@
 (global-set-key "\C-e" 'neotree-toggle)
 (global-set-key "\C-p" 'yank)
 (global-set-key "\C-y" 'copy-whole-line)
+(global-set-key "\C-w" 'copy-selection)
 
 
 ; use ⌘  as meta key
@@ -56,9 +56,7 @@
 (defalias 're 'query-replace-regexp)
 
 (global-set-key "\M-c" 'kill-ring-save)
-(global-set-key "\M-y" 'yank)
 (global-set-key "\M-s" 'set-mark-command)
-(global-set-key "\M-p" 'copy-whole-line)
 (global-set-key "\M-d" 'kill-whole-line)
 (global-set-key "\M-g" 'goto-line)
 
@@ -91,6 +89,8 @@
 
 (autoload 'ruby-mode "ruby-mode"
    "Mode for editing ruby files" t)
+
+(add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/emacs-material-theme")
 (load-theme 'material t)
