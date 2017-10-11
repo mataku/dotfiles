@@ -24,3 +24,5 @@
   driver = mergepbx %O %A %B
 [fetch]
   prune = true
+[ghq]
+  root = ~/github.com
