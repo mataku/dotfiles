@@ -33,7 +33,7 @@
 (depends-on "powerline")
 (depends-on "ruby-end")
 (depends-on "nlinum")
-(depends-on "emacs-material-theme" :git "https://github.com/rhythnn/emacs-material-theme.git")
+(depends-on "emacs-material-theme" :git "https://github.com/mataku/emacs-material-theme.git")
 (depends-on "markdown-mode")
 (depends-on "kotlin-mode")
 (depends-on "slim-mode")
