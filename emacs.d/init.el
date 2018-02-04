@@ -36,7 +36,10 @@
 (global-set-key "\C-p" 'yank)
 (global-set-key "\C-y" 'copy-whole-line)
 (global-set-key "\C-w" 'copy-selection)
-
+(global-set-key "\C-n" 'scroll-up-command)
+(global-set-key "\C-b" 'scroll-down-command)
+(global-set-key "\C-i" 'isearch-forward)
+(global-set-key "\C-b" 'isearch-backward)
 
 ; use ⌘  as meta key
 ; SETUP: iTerm2
