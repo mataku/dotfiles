@@ -19,7 +19,15 @@
   wip = commit -S --allow-empty -m 'WIP'
   delete-merged-branch = "!f () { git checkout $1; git branch --merged|egrep -v '\\*|develop|master'|xargs git branch -d; };f"
   showpr = !"f() { git log --merges --oneline --reverse --ancestry-path $1...master | grep 'Merge pull request #' | head -n 1; }; f"
-  pr = pull-request
+  showprdev = !"f() { git log --merges --oneline --reverse --ancestry-path $1...develop | grep 'Merge pull request #' | head -n 1; }; f"
+  pr = \
+  "!f () {\
+          branch=$1;\
+      if [ -z ${branch} ]; then\
+        branch='develop';\
+      fi;\
+      hub browse -- compare/${branch}'...'$(git symbolic-ref --short HEAD);\
+    };f"
 [merge "mergepbx"]
   name = Xcode project files merger
   driver = mergepbx %O %A %B
