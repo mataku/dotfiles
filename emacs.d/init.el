@@ -54,7 +54,7 @@
 (defalias 're 'query-replace-regexp)
 
 (global-set-key "\M-c" 'kill-ring-save)
-(global-set-key "\M-s" 'set-mark-command)
+(global-set-key "\M-v" 'set-mark-command)
 (global-set-key "\M-d" 'kill-whole-line)
 (global-set-key "\M-g" 'goto-line)
 
@@ -67,6 +67,8 @@
             ("\\.fish\\'" . fish-mode)
             ("\\.rake\\'" . ruby-mode)
             ("Gemfile\\'" . ruby-mode)
+            ("Fastfile\\'" . ruby-mode)
+            ("Dangerfile\\'" . ruby-mode)
             ("Capfile\\'" . ruby-mode))
           auto-mode-alist))
 
