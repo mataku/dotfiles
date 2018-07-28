@@ -21,7 +21,6 @@
   deletebr = branch -D
   showpr = !"f() { git log --merges --oneline --reverse --ancestry-path $1...master | grep 'Merge pull request #' | head -n 1; }; f"
   showprdev = !"f() { git log --merges --oneline --reverse --ancestry-path $1...develop | grep 'Merge pull request #' | head -n 1; }; f"
-  pr = \
   mkpr = \
   "!f () {\
           branch=$1;\
