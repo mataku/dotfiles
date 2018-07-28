@@ -35,7 +35,6 @@
 [fetch]
   prune = true
 [ghq]
-  root = ~/
   root = ~/src
 [pull]
   rebase = true
