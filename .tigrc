@@ -1,0 +1,8 @@
+# id: Commit hash
+set main-view = id date author commit-title:graph=yes,refs=yes
+
+set split-view-height = 70%
+
+bind status C !git cm
+bind generic P ?git push origin 
+bind branch P ?git push origin
