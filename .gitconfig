@@ -29,6 +29,7 @@
       fi;\
       hub browse -- compare/${branch}'...'$(git symbolic-ref --short HEAD);\
     };f"
+  reset-first-commit = update-ref -d HEAD
 [merge "mergepbx"]
   name = Xcode project files merger
   driver = mergepbx %O %A %B
