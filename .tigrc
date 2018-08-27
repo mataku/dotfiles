@@ -6,3 +6,7 @@ set split-view-height = 70%
 bind status C !git cm
 bind generic P ?git push origin 
 bind branch P ?git push origin
+
+bind main o !hub browse -- commit/%(commit)
+bind diff o !hub browse -- commit/%(commit)
+bind log o !hub browse -- commit/%(commit)
