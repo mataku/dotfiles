@@ -13,5 +13,6 @@
 !/fish/functions/fish_right_prompt.fish
 !/fish/functions/gco.fish
 !/fish/functions/gnew.fish
+!/fish/functions/gpr.fish
 
 emacs.d/elpa/
