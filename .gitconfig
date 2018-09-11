@@ -18,7 +18,7 @@
   cm = commit -v -S
   wip = commit -S --allow-empty -m 'WIP'
   delete-merged-branch = "!f () { git checkout $1; git branch --merged|egrep -v '\\*|develop|master'|xargs git branch -d; };f"
-  deletebr = branch -D
+  delbr = branch -D
   showpr = !"f() { git log --merges --oneline --reverse --ancestry-path $1...master | grep 'Merge pull request #' | head -n 1; }; f"
   showprdev = !"f() { git log --merges --oneline --reverse --ancestry-path $1...develop | grep 'Merge pull request #' | head -n 1; }; f"
   mkpr = \
@@ -39,3 +39,5 @@
   root = ~/src
 [pull]
   rebase = true
+[commit]
+	template = /Users/mataku/src/github.com/dotfiles/.commit_template
