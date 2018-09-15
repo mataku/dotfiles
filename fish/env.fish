@@ -9,4 +9,4 @@ set -x PATH $HOME/Library/Android/sdk/tools/bin $PATH
 set fish_greeting ""
 set -x HOMEBREW_NO_AUTO_UPDATE 1
 set -x ANDROID_HOME $HOME/Library/Android/sdk
-set -x PATH $HOME/Library/Android/sdk/build-tools/27.0.3 $PATH
+set -x PATH $HOME/Library/Android/sdk/build-tools/28.0.2 $PATH
