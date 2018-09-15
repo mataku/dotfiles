@@ -21,7 +21,7 @@
     
     powerline ruby-end nlinum markdown-mode kotlin-mode slim-mode
 
-    robe ruby-mode neotree yaml-mode go-mode company-go flycheck
+    robe ruby-mode neotree yaml-mode go-mode company-go flycheck with-editor
     ))
 
 (dolist (package my/favorite-packages)

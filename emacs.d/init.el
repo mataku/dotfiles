@@ -58,12 +58,14 @@
 (global-set-key "\M-d" 'kill-whole-line)
 (global-set-key "\M-g" 'goto-line)
 
+(setq load-path (cons "~/.emacs.d/lisp/" load-path))
 (load "git-commit" t)
 
 (setq auto-mode-alist
   (append '(("\\.gitconfig\\'" . gitconfig-mode)
             ("\\.gitignore\\'" . gitignore-mode)
             ("\\.gitattributes\\'" . gitattributes-mode)
+            ("\\COMMIT_EDITMSG\\'" . git-commit-mode)
             ("\\.fish\\'" . fish-mode)
             ("\\.rake\\'" . ruby-mode)
             ("Gemfile\\'" . ruby-mode)
