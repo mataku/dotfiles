@@ -14,5 +14,6 @@
 !/fish/functions/gco.fish
 !/fish/functions/gnew.fish
 !/fish/functions/gpr.fish
+!/fish/functions/gcd.fish
 
 emacs.d/elpa/
