@@ -1,5 +1,6 @@
 [core]
   editor = emacsclient -nw -t
+  pager = bat
 [user]
   name = Takuma Homma
   email = nagomimatcha@gmail.com
