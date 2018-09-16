@@ -1,5 +1,6 @@
 alias a atom
 alias g git
+alias t tig
 alias v vim
 alias grep ggrep
 alias sed gsed
@@ -19,8 +20,6 @@ alias gst 'git st'
 alias gdif 'git diff'
 alias gcm 'git cm'
 alias gwip 'git wip'
-alias gl 'git log'
-alias gh 'cd (ghq list -p | peco)'
 alias gl 'git log'
 alias clean './gradlew clean'
 abbr ga 'g add'
