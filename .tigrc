@@ -1,11 +1,14 @@
 # id: Commit hash
 set main-view = id date author commit-title:graph=yes,refs=yes
-
 set split-view-height = 70%
+set vertical-split = false
 
 bind status C !git cm
-bind generic P ?git push origin 
-bind branch P ?git push origin
+bind generic P ?git push -u %(remote) %(repo:head)
+bind branch P ?git push -u %(remote) %(repo:head)
+
+bind generic U ?git pull %(remote)
+bind generic H ?hub mkpr develop
 
 bind main o !hub browse -- commit/%(commit)
 bind diff o !hub browse -- commit/%(commit)
