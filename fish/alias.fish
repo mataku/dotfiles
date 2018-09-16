@@ -3,7 +3,7 @@ alias g git
 alias v vim
 alias grep ggrep
 alias sed gsed
-alias ls exa
+alias ls 'exa -a'
 
 alias be 'bundle exec'
 alias de 'docker exec'
