@@ -26,5 +26,3 @@ end
 # if not [ $TMUX ]
   # tmux
 # end
-
-set -x LANG ja_JP.UTF-8
