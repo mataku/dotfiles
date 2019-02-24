@@ -11,8 +11,8 @@
 (unless (server-running-p)
     (server-start))
 
-(require 'powerline)
-(powerline-default-theme)
+; (require 'powerline)
+; (powerline-default-theme)
 
 (require 'company)
 (global-company-mode)
