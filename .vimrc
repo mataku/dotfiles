@@ -79,7 +79,7 @@ filetype plugin indent on
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
 
-if expand("%:t") =~ ",*\.rb"
+if expand("%:t") =~ ".*\.rb"
   let g:neocomplete#enable_at_startup = 1
   let g:neocomplete#enable_smart_case = 1
 endif
@@ -92,12 +92,18 @@ if expand("%:t") =~ ".*\.py"
   " au FileType python let b:did_ftplugin = 1
 endif
 
-if expand("%:t") =~ ",*\.java"
+if expand("%:t") =~ ".*\.java"
   "let g:neocomplete#enable_smart_case = 1
   let g:java_highlight_all = 1
   "let g:java_space_errors = 1
   let g:java_highlight_functions = 1
   setlocal omnifunc=javacomplete#Complete
+endif
+
+if expand("%:t") =~ ".*\.go"
+  let g:go_highlight_functions = 1
+  let g:go_highlight_methods = 1
+  let g:go_highlight_structs = 1
 endif
 
 set completeopt=menu
