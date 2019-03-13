@@ -120,6 +120,8 @@ au FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
 
 au FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 
+au FileType go setlocal noexpandtab tabstop=4 shiftwidth=4 autoindent
+
 au FileType gitcommit set omnifunc=emoji#complete
 au FileType markdown set omnifunc=emoji#complete
 
