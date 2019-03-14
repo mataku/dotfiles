@@ -98,6 +98,36 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (load-theme 'material t)
 
+;; Golang
+(add-to-list 'exec-path (expand-file-name "/usr/local/go/bin/"))
+(add-to-list 'exec-path (expand-file-name "/Users/mataku/go/bin/"))
+
+; (add-hook 'go-mode-hook 'flycheck-mode)
+(add-hook 'go-mode-hook (lambda()
+       (add-hook 'before-save-hook' 'gofmt-before-save)
+       (local-set-key (kbd "M-.") 'godef-jump)
+       (set (make-local-variable 'company-backends) '(company-go))
+       (setq indent-tabs-mode nil)    ; タブを利用
+       (setq c-basic-offset 4)    ; tabサイズを4にする
+       (setq tab-width 4)))
+
+(require 'company-go)
+(add-hook 'go-mode-hook (lambda()
+      (company-mode)
+      (setq company-transformers '(company-sort-by-backend-importance))
+      (setq company-idle-delay 0)
+      (setq company-minimum-prefix-length 3)
+      (setq company-selection-wrap-around t)
+      (setq completion-ignore-case t)
+      (setq company-dabbrev-downcase nil)
+      (global-set-key (kbd "C-M-i") 'company-complete)
+      (define-key company-active-map (kbd "C-n") 'company-select-next)
+      (define-key company-active-map (kbd "C-p") 'company-select-previous)
+      (define-key company-active-map (kbd "C-s") 'company-filter-candidates) 
+      (define-key company-active-map [tab] 'company-complete-selection) ;; Select by TAB
+      (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
+      ))
+
 ;; カーソル行を目立たせる
 (global-hl-line-mode)
 
