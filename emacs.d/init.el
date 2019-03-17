@@ -11,8 +11,10 @@
 (unless (server-running-p)
     (server-start))
 
-; (require 'powerline)
-; (powerline-default-theme)
+(require 'init-loader)
+(setq init-loader-show-log-after-init nil)
+(init-loader-load "~/.emacs.d/inits")
+
 
 (require 'company)
 (global-company-mode)
@@ -56,6 +58,7 @@
 (global-set-key "\M-v" 'set-mark-command)
 (global-set-key "\M-d" 'kill-whole-line)
 (global-set-key "\M-g" 'goto-line)
+(global-set-key (kbd "C-\\") 'comment-dwim)
 
 (setq load-path (cons "~/.emacs.d/lisp/" load-path))
 (load "git-commit" t)
@@ -101,18 +104,19 @@
 ;; Golang
 (add-to-list 'exec-path (expand-file-name "/usr/local/go/bin/"))
 (add-to-list 'exec-path (expand-file-name "/Users/mataku/go/bin/"))
+(setenv "GOPATH" "/Users/mataku/go")
+
+(require 'company-go)
+(require 'go-mode)
 
 ; (add-hook 'go-mode-hook 'flycheck-mode)
 (add-hook 'go-mode-hook (lambda()
-       (add-hook 'before-save-hook' 'gofmt-before-save)
-       (local-set-key (kbd "M-.") 'godef-jump)
-       (set (make-local-variable 'company-backends) '(company-go))
-       (setq indent-tabs-mode nil)    ; タブを利用
-       (setq c-basic-offset 4)    ; tabサイズを4にする
-       (setq tab-width 4)))
-
-(require 'company-go)
-(add-hook 'go-mode-hook (lambda()
+      (add-hook 'before-save-hook' 'gofmt-before-save)
+      (local-set-key (kbd "M-.") 'godef-jump)
+      (set (make-local-variable 'company-backends) '(company-go))
+      (setq indent-tabs-mode nil)    ; タブを利用
+      (setq c-basic-offset 4)    ; tabサイズを4にする
+      (setq tab-width 4)
       (company-mode)
       (setq company-transformers '(company-sort-by-backend-importance))
       (setq company-idle-delay 0)
