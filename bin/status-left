@@ -1,2 +1,2 @@
 #!/bin/zsh
-echo "#[fg=colour232, bg=colour208]  #[fg=colour208, bg=colour223, bold]#[fg=colour243, bg=colour223] #I* #[fg=colour223, bg=colour66, bold]#[fg=colour7, bg=colour66, bold] #W #[fg=colour66, bg=colour232]"
+echo "#[fg=colour232, bg=colour208]  #[fg=colour208, bg=colour223, bold]#[fg=colour243, bg=colour223] #T #[fg=colour223, bg=colour66, bold]#[fg=colour7, bg=colour66, bold] #W #[fg=colour66, bg=#455A64]"
