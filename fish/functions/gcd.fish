@@ -1,3 +1,3 @@
 function gcd
-  cd (ghq list -p | peco)
+  cd (ghq list -p | fzf)
 end
