@@ -4,7 +4,7 @@ alias t tig
 alias v vim
 alias grep ggrep
 alias sed gsed
-alias ls 'exa -a'
+alias ls 'lsd -a'
 
 alias be 'bundle exec'
 alias de 'docker exec'
