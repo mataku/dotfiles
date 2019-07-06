@@ -18,6 +18,7 @@
   al = config --get-regexp alias.*
   cm = commit -v -S
   wip = commit -S --allow-empty -m 'WIP'
+  delete-branch = "!f () { git branch | fzf | xargs git branch -d; };f"
   delete-merged-branch = "!f () { git checkout $1; git branch --merged|egrep -v '\\*|develop|master'|xargs git branch -d; };f"
   delbr = branch -D
   showpr = !"f() { git log --merges --oneline --reverse --ancestry-path $1...master | grep 'Merge pull request #' | head -n 1; }; f"
