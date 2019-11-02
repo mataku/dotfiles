@@ -16,5 +16,9 @@ ln -sf ~/src/github.com/dotfiles/atom/config.cson ~/.atom/config.cson
 ln -sf ~/src/github.com/dotfiles/atom/styles.less ~/.atom/styles.less
 ln -sf ~/src/github.com/dotfiles/.tigrc ~/.tigrc
 ln -sf ~/src/github.com/dotfiles/.irbrc ~/.irbrc
+
+mkdir -p ~/.config/alacritty
 ln -sf ~/src/github.com/dotfiles/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml
+
+mkdir -p ~/Library/Developer/Xcode/UserData/FontAndColorThemes/
 ln -sf ~/src/github.com/dotfiles/xcode-theme/Material\ Dark.xccolortheme ~/Library/Developer/Xcode/UserData/FontAndColorThemes/Material\ Dark.xccolortheme
