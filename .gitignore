@@ -15,5 +15,6 @@
 !/fish/functions/gnew.fish
 !/fish/functions/gpr.fish
 !/fish/functions/gcd.fish
+!/fish/functions/buildapk.fish
 
 emacs.d/elpa/
