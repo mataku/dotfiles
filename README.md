@@ -1,6 +1,5 @@
 ## Installation
 
 ```shell
-git clone git://github.com/rhythnn/dotfiles.git  
-dotfiles/install.sh
+$ /bin/bash -c "$(curl -L https://raw.githubusercontent.com/mataku/mac-setup/master/init.sh)"
 ```
