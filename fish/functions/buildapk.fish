@@ -1,5 +1,5 @@
 function buildapk
-  fd '.aab'  app/build/outputs/ installed/ | fzf | read aab
+  fd '.aab'  app/build/outputs/ | fzf | read aab
   if [ $aab ]
     bundletool build-apks --bundle=$aab \
                --output=app.apks \
