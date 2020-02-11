@@ -16,5 +16,6 @@
 !/fish/functions/gpr.fish
 !/fish/functions/gcd.fish
 !/fish/functions/buildapk.fish
+!/fish/functions/adb-uninstall.fish
 
 emacs.d/elpa/
