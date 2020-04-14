@@ -17,5 +17,6 @@
 !/fish/functions/gcd.fish
 !/fish/functions/buildapk.fish
 !/fish/functions/adb-uninstall.fish
+!/fish/functions/emu.fish
 
 emacs.d/elpa/
