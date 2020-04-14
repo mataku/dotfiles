@@ -120,6 +120,8 @@ let g:neocomplete#force_omni_input_patterns.markdown = ':'
 
 
 au BufRead,BufNewFile,BufReadPre *.coffee  set filetype=coffee
+au BufRead,BufNewFile Fastfile set filetype=ruby
+au BufRead,BufNewFile IAMFile set filetype=ruby
 au BufWritePost *.coffee silent make!
 
 au FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
