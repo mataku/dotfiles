@@ -133,6 +133,8 @@ au FileType go setlocal noexpandtab tabstop=4 shiftwidth=4 autoindent
 au FileType gitcommit set omnifunc=emoji#complete
 au FileType markdown set omnifunc=emoji#complete
 
+au BufRead,BufNewFile .spacemacs set filetype=lisp
+
 autocmd ColorScheme * highlight Normal ctermbg=none
 autocmd ColorScheme * highlight LineNr ctermbg=none
 
