@@ -18,6 +18,10 @@ if test -e ~/.config/fish/android_env.fish
   . ~/.config/fish/android_env.fish
 end
 
+if not [ (ps aux | grep \[e\]macs) ]
+  emacs --daemon
+end
+
 # peco history (Ctrl + r)
 function fish_user_key_bindings
   bind \cr peco_select_history
