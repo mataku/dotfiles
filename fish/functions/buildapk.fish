@@ -3,6 +3,10 @@ function buildapk
   if [ $aab ]
     bundletool build-apks --bundle=$aab \
                --output=app.apks \
+               --ks=~/.android/debug.keystore \
+               --ks-pass=pass:android \
+               --ks-key-alias=androiddebugkey \
+               --key-pass=pass:android \
                --overwrite \
                --connected-device
 
