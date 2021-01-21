@@ -11,8 +11,6 @@ ln -sf ~/src/github.com/dotfiles/.tmux.conf ~/.tmux.conf
 ln -sf ~/src/github.com/dotfiles/.gitconfig ~/.gitconfig
 ln -sf ~/src/github.com/dotfiles/powerline ~/.config/powerline
 ln -sf ~/src/github.com/dotfiles/fish ~/.config/fish
-ln -sf ~/src/github.com/dotfiles/atom/config.cson ~/.atom/config.cson
-ln -sf ~/src/github.com/dotfiles/atom/styles.less ~/.atom/styles.less
 ln -sf ~/src/github.com/dotfiles/.tigrc ~/.tigrc
 ln -sf ~/src/github.com/dotfiles/.irbrc ~/.irbrc
 
