@@ -6,8 +6,8 @@ alias grep ggrep
 alias sed gsed
 alias ls 'lsd -a'
 
-alias be 'bundle exec'
-alias de 'docker exec'
+alias bx 'bundle exec'
+alias dx 'docker exec'
 alias e 'emacsclient -nw'
 alias dl 'docker ps -l -q'
 alias pip3_upgrade 'pip3 list --outdated | awk "{print \$1}" | xargs pip3 install -U'
