@@ -1,16 +1,17 @@
-alias a atom
 alias g git
 alias t tig
 alias v vim
-alias grep ggrep
-alias sed gsed
-alias ls 'lsd -a'
 
+if string match -q 'Darwin' (uname)
+  alias grep ggrep
+  alias sed gsed
+end
+
+alias ls 'lsd -a'
 alias bx 'bundle exec'
 alias dx 'docker exec'
 alias e 'emacsclient -nw'
 alias dl 'docker ps -l -q'
-alias pip3_upgrade 'pip3 list --outdated | awk "{print \$1}" | xargs pip3 install -U'
 alias sudo 'sudo '
 alias bi 'bundle install -j4'
 alias gpush 'git push -u origin (git rev-parse --abbrev-ref HEAD ^/dev/null)'
