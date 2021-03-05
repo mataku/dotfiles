@@ -15,11 +15,7 @@
 (unless (server-running-p)
     (server-start))
 
-; (require 'powerline)
-; (powerline-default-theme)
-
 (require 'company)
-; (global-company-mode)
 
 (require 'company-emoji)
 (add-to-list 'company-backends 'company-emoji)
@@ -51,6 +47,8 @@
 ; - Profiles -> Keys
 ;   - Left option ⌥  key acts as: +Esc
 (when (eq system-type 'darwin)
+  ;; カーソル行を目立たせる
+  (global-hl-line-mode)
   (setq ns-function-modifier (quote meta)))
 
 ; M-x re
@@ -132,9 +130,6 @@
 ;       (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
 ;       ))
 
-;; カーソル行を目立たせる
-(global-hl-line-mode)
-
 (if (functionp 'tool-bar-mode) (tool-bar-mode -1))
 (if (functionp 'menu-bar-mode) (menu-bar-mode -1))
 
@@ -161,8 +156,10 @@
 (setq ruby-insert-encoding-magic-comment nil)
 
 
-(require 'eglot)
-(add-hook 'ruby-mode-hook 'eglot-ensure)
+;; TODO: Enable on Linux
+(when (eq system-type 'darwin)
+  (require 'eglot)
+  (add-hook 'ruby-mode-hook 'eglot-ensure))
 
 ;; robe
 ; (add-hook 'ruby-mode-hook 'robe-mode)
