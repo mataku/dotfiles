@@ -5,7 +5,7 @@
 repo = 'scrooloose/nerdtree'
 
 [[plugins]]
-repo = 'Shougo/neocomplete.vim'
+repo = 'Shougo/deoplete.nvim'
 
 [[plugins]]
 repo = 'davidhalter/jedi-vim'
@@ -38,4 +38,10 @@ repo = 'dag/vim-fish'
 on_ft = 'fish'
 
 [[plugins]]
-repo = 'rhythnn/papercolor-theme'
+repo = 'roxma/nvim-yarp'
+
+[[plugins]]
+repo = 'roxma/vim-hug-neovim-rpc'
+
+[[plugins]]
+repo = 'mataku/papercolor-theme'
