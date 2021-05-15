@@ -13,6 +13,7 @@ ln -sf ~/src/github.com/dotfiles/powerline ~/.config/powerline
 ln -sf ~/src/github.com/dotfiles/fish ~/.config/fish
 ln -sf ~/src/github.com/dotfiles/.tigrc ~/.tigrc
 ln -sf ~/src/github.com/dotfiles/.irbrc ~/.irbrc
+ln -sf ~/src/github.com/dotfiles/emacs.d/init.el ~/.emacs.d/init.el
 
 mkdir -p ~/.config/alacritty
 ln -sf ~/src/github.com/dotfiles/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml
