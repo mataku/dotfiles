@@ -1,5 +1,9 @@
 set -x HOMEBREW_CASK_OPTS "--appdir=/Applications"
 set -x PATH /usr/local/bin $PATH
+
+if test (uname -m) = 'arm64'
+  set -x PATH /opt/homebrew/bin $PATH
+end
 # set -x JAVA_HOME (/usr/libexec/java_home -v 1.8)
 set -x PATH $HOME/Library/Android/sdk/tools $PATH
 set -x GOPATH $HOME/go
