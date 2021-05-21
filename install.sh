@@ -16,6 +16,7 @@ ln -sf ~/src/github.com/dotfiles/.irbrc ~/.irbrc
 ln -sf ~/src/github.com/dotfiles/emacs.d/init.el ~/.emacs.d/init.el
 ln -sf ~/src/github.com/dotfiles/nvim/init.vim ~/.config/nvim/init.vim
 ln -sf ~/src/github.com/dotfiles/nvim/rc ~/.config/rc
+ln -sf ~/src/github.com/dotfiles/nvim/coc/package.json ~/.config/coc/extensions/package.json
 
 mkdir -p ~/.config/alacritty
 ln -sf ~/src/github.com/dotfiles/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml
