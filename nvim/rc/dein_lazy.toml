@@ -1,8 +1,3 @@
 [[plugins]]
-repo = 'junegunn/vim-emoji'
-on_i = 1
-
-[[plugins]]
 repo = 'neoclide/coc.nvim'
 on_i = 1
-hook_source = 'call coil398#init#coc#hook_source()'
