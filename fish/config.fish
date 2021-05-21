@@ -5,6 +5,8 @@ set current_branch (command git rev-parse --abbrev-ref HEAD ^/dev/null)
 
 rbenv init - | .
 pyenv init - | .
+nodenv init - | .
+direnv hook fish | .
 
 if test -e ~/.config/fish/github_access_token.fish
   . ~/.config/fish/github_access_token.fish
