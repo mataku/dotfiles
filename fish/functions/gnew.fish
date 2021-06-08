@@ -3,6 +3,7 @@ function gnew
     git checkout -b feature/$argv[1]
   else
     echo 'Specify branch name!'
+    return 1
   end
 end
 
