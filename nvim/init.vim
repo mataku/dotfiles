@@ -91,18 +91,6 @@ if expand("%:t") =~ ".*\.py"
   " au FileType python let b:did_ftplugin = 1
 endif
 
-if expand("%:t") =~ ".*\.rb"
-  if executable('solargraph')
-    " gem install solargraph
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'solargraph',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-        \ 'initialization_options': {"diagnostics": "true"},
-        \ 'whitelist': ['ruby'],
-        \ })
-  endif
-endif
-
 if expand("%:t") =~ ".*\.go"
   let g:go_highlight_functions = 1
   let g:go_highlight_methods = 1
@@ -143,3 +131,9 @@ autocmd ColorScheme * highlight LineNr ctermbg=none
 syntax enable
 set background=dark
 colorscheme PaperColor
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
