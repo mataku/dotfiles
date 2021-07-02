@@ -1,6 +1,6 @@
 alias g git
 alias t tig
-alias v vim
+alias v nvim
 
 if string match -q 'Darwin' (uname)
   alias grep ggrep
