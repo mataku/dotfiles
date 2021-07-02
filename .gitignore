@@ -20,5 +20,6 @@
 !/fish/functions/emu.fish
 !/fish/functions/gmg.fish
 !/fish/functions/killer.fish
+!/fish/functions/adb-open.fish
 
 emacs.d/elpa/
