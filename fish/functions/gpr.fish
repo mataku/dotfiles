@@ -1,7 +1,7 @@
 function gpr
   git branch -a | fzf | tr -d ' ' | read branch
   if [ $branch ]
-    if string match "remotes/*" $branch
+    if string match -q "remotes/*" $branch
       set -l b (string replace 'remotes/origin/' '' $branch)
       hub mkpr $b
     else
