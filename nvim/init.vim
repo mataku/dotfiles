@@ -72,23 +72,9 @@ set expandtab
 
 filetype plugin indent on
 
-" neocomplete
-
-" call dein#add('Shougo/deoplete.nvim')
 if !has('nvim')
   call dein#add('roxma/nvim-yarp')
   call dein#add('roxma/vim-hug-neovim-rpc')
-endif
-
-" let g:deoplete#enable_at_startup = 1
-" let g:deoplete#enable_smart_case = 1
-
-if expand("%:t") =~ ".*\.py"
-	" let g:jedi#popup_select_first = 0
-	let g:jedi#completions_enabled = 1
-	let g:jedi#auto_vim_configuration = 0
-	let g:jedi#popup_on_dot = 1
-  " au FileType python let b:did_ftplugin = 1
 endif
 
 if expand("%:t") =~ ".*\.go"
@@ -98,16 +84,6 @@ if expand("%:t") =~ ".*\.go"
 endif
 
 set completeopt=menu
-
-if !exists('g:neocomplete#force_omni_input_patterns')
-	let g:neocomplete#force_omni_input_patterns = {}
-endif
-
-let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-let g:neocomplete#force_omni_input_patterns.python = '[^. *\t]\.\w*\|\h\w*::'
-let g:neocomplete#force_omni_input_patterns.go = '[^. *\t]\.\w*\|\h\w*::'
-let g:neocomplete#force_omni_input_patterns.gitcommit = ':'
-let g:neocomplete#force_omni_input_patterns.markdown = ':'
 
 au BufRead,BufNewFile,BufReadPre *.coffee  set filetype=coffee
 au BufRead,BufNewFile Fastfile set filetype=ruby
