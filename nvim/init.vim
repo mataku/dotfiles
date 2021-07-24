@@ -51,7 +51,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 set notitle
 set mouse=a
-set shell=zsh
+set shell=fish
 set ambiwidth=double
 set clipboard=unnamed
 set backspace=start,eol,indent
@@ -88,10 +88,8 @@ endif
 
 set completeopt=menu
 
-au BufRead,BufNewFile,BufReadPre *.coffee  set filetype=coffee
 au BufRead,BufNewFile Fastfile set filetype=ruby
 au BufRead,BufNewFile IAMFile set filetype=ruby
-au BufWritePost *.coffee silent make!
 
 au FileType java setl tabstop=2 expandtab shiftwidth=2 softtabstop=2 autoindent
 
