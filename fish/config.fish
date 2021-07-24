@@ -1,10 +1,12 @@
-set current_branch (command git rev-parse --abbrev-ref HEAD ^/dev/null)
+if test -e ./.git
+  set current_branch (command git rev-parse --abbrev-ref HEAD)
+end
 
 . ~/.config/fish/alias.fish
 . ~/.config/fish/env.fish
 
 rbenv init - | .
-pyenv init - | .
+# pyenv init - | .
 nodenv init - | .
 direnv hook fish | .
 
