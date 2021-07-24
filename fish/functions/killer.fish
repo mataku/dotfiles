@@ -1,4 +1,3 @@
 function killer
-  ps a -o pid,command | peco --query "$LBUFFER" | awk '{print $1}' | xargs kill
+  ps aux -o pid,command | peco --query "$LBUFFER" | awk '{print $2}' | xargs kill
 end
-
