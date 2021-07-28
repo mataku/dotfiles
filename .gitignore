@@ -23,5 +23,7 @@
 !/fish/functions/killer.fish
 !/fish/functions/adb-open.fish
 !/fish/functions/adb-install.fish
+!/fish/functions/adb-screenrecord.fish
+!/fish/functions/adb-screenshot.fish
 
 emacs.d/elpa/
