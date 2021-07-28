@@ -1,4 +1,4 @@
-function gco
+function gco -d 'Switch branch'
   git branch -a | fzf | tr -d ' ' | read branch
   if [ $branch ]
     if string match -q "remotes/*" $branch

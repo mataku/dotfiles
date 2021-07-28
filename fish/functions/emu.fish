@@ -1,4 +1,4 @@
-function emu
+function emu -d 'Start Android device emulator. --coldboot: Cold boot'
   if [ $argv[1] ] 
     if test $argv[1] = '--coldboot'
       set option '-no-snapshot-load'

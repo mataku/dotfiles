@@ -1,4 +1,4 @@
-function adb-install
+function adb-install -d 'Find apk from current directory and install it'
   fd -e apk --full-path -I app/ | fzf | read apk
   if not [ $apk ]
     echo 'Can\'t find apk!'
