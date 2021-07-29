@@ -7,7 +7,7 @@ function adb-screenshot -d 'Capture screenshot. Usage: adb-screenshot filename'
       set ADB_SCREENSHOT_FILENAME screenshot
     end
 
-    adb shell screencap -p /sdcard/$ADB_SCREENSHOT_FILENAME.png && adb pull /sdcard/$ADB_SCREENSHOT_FILENAME.png && adb shell rm /sdcard/$ADB_SCREENSHOT_FILENAME.png
+    adb -s $device shell screencap -p /sdcard/$ADB_SCREENSHOT_FILENAME.png && adb -s $device pull /sdcard/$ADB_SCREENSHOT_FILENAME.png && adb -s $device shell rm /sdcard/$ADB_SCREENSHOT_FILENAME.png
   else
     echo 'Specify device!'
     return 1
