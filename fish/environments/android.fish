@@ -1,4 +1,4 @@
-set -x JAVA_HOME (/usr/libexec/java_home -v 1.8)
+set -x JAVA_HOME (/usr/libexec/java_home -v 11)
 set -x PATH $HOME/Library/Android/sdk/tools $PATH
 set -x PATH $HOME/Library/Android/sdk/platform-tools $PATH
 set -x PATH $HOME/Library/Android/sdk/tools/bin $PATH
