@@ -36,10 +36,6 @@ function fish_user_key_bindings
   bind \cr fzf_select_history
 end
 
-if not ps aux | grep -q \[e\]macs
-  emacs --daemon
-end
-
 # if not [ $TMUX ]
   # tmux
 # end
