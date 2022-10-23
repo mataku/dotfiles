@@ -97,7 +97,7 @@ au FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2 smartin
 
 au FileType go setlocal noexpandtab tabstop=4 shiftwidth=4 autoindent
 
-au FileType gitcommit set omnifunc=emoji#complete
+au FileType gitcommit set omnifunc=emoji#complete filetype=markdown
 au FileType markdown set omnifunc=emoji#complete
 
 au BufRead,BufNewFile .spacemacs set filetype=lisp
