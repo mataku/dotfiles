@@ -7,6 +7,7 @@
 /fish/completions
 /fish/work.fish
 /fish/github_access_token.fish
+fish/fish_variables
 
 # allow my func
 !/fish/functions/fish_prompt.fish
