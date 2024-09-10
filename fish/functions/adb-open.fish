@@ -1,4 +1,4 @@
-function adb-open-app
+function adb-open
   if [ $argv[1] ]
     adb shell am start -a android.intent.action.VIEW -d $argv[1]
   else

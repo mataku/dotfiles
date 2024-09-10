@@ -5,5 +5,8 @@ set -x PATH $HOME/Library/Android/sdk/tools/bin $PATH
 set -x PATH $HOME/Library/Android/sdk/emulator $PATH
 set -x PATH $HOME/Library/Android/sdk/cmdline-tools/latest/bin $PATH
 set -x ANDROID_HOME $HOME/Library/Android/sdk
+set -x ANDROID_SDK_ROOT $HOME/Library/Android/sdk
+set -x PATH /Applications/Android\ Studio.app/Contents/MacOS $PATH
+# set -x ANDROID_SDK_ROOT $HOME/android/sdk
 set -x PATH $HOME/Library/Android/sdk/build-tools/29.0.3 $PATH
 alias clean './gradlew clean'

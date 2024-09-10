@@ -40,7 +40,6 @@ repo = 'roxma/vim-hug-neovim-rpc'
 
 [[plugins]]
 repo = 'junegunn/fzf'
-merged = '0'
 
 [[plugins]]
 repo = 'junegunn/fzf.vim'
@@ -53,4 +52,10 @@ command! -bang -nargs=* Pt
 '''
 
 [[plugins]]
-repo = 'mataku/papercolor-theme'
+repo = 'LunarVim/primer.nvim'
+
+[[plugins]]
+repo = 'marko-cerovac/material.nvim'
+
+[[plugins]]
+repo = 'NLKNguyen/papercolor-theme'

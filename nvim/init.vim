@@ -12,6 +12,33 @@ set noshowmode
 set tags=./tags,tags
 nnoremap <C-]> g<C-]> 
 
+" Setup dpp.vim
+" const s:dpp_config_path = '~/.config/nvim/dpp.ts'
+" const s:dpp_base = '~/.config/nvim/dpp/'
+" const s:dpp_src = '~/.config/nvim/dpp/repos/github.com/Shougo/dpp.vim'
+" const s:denops_src = '~/.config/nvim/dpp/repos/github.com/vim-denops/denops.vim'
+" const s:denops_installer = '~/.config/nvim/dpp/repos/github.com/Shougo/dpp-ext-installer'
+
+" execute 'set runtimepath^=' .. s:dpp_src
+
+" if s:dpp_base->dpp#min#load_state()
+"   " NOTE: dpp#make_state() requires denops.vim
+"   " NOTE: denops.vim and dpp plugins are must be added
+"   execute 'set runtimepath^=' .. s:denops_src
+"   execute 'set runtimepath^=' .. s:denops_installer
+"
+"   autocmd User DenopsReady
+"   \ : echohl WarningMsg
+"   \ | echomsg 'dpp load_state() is failed'
+"   \ | echohl NONE
+"   \ | call dpp#make_state(s:dpp_base, s:dpp_config_path)
+" endif
+"
+" autocmd User Dpp:makeStatePost
+"       \ : echohl WarningMsg
+"       \ | echomsg 'dpp make_state() is done'
+"       \ | echohl NONE
+"
 " Setup dein
 
 " dir where plugins are installed
@@ -100,11 +127,23 @@ au FileType go setlocal noexpandtab tabstop=4 shiftwidth=4 autoindent
 au FileType gitcommit set omnifunc=emoji#complete filetype=markdown
 au FileType markdown set omnifunc=emoji#complete
 
-autocmd ColorScheme * highlight Normal ctermbg=none
-autocmd ColorScheme * highlight LineNr ctermbg=none
+" autocmd ColorScheme * highlight Normal ctermbg=none
+" autocmd ColorScheme * highlight LineNr ctermbg=none
+
+let g:PaperColor_Theme_Options = {
+  \   'theme': {
+  \     'default.dark': {
+  \       'override' : {
+  \         'color00' : ['#263137', '232'],
+  \         'linenumber_bg' : ['263137', '232']
+  \       }
+  \     }
+  \   }
+  \ }
 
 syntax enable
 set background=dark
+set termguicolors
 colorscheme PaperColor
 
 " GoTo code navigation.

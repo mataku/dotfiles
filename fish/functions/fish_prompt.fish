@@ -28,13 +28,13 @@ function fish_prompt
       set git_info "$git_info$yellow*"
     end
 
-    set git_info "$magenta($git_info$magenta)$normal"
+    set git_info "$magenta($git_info$magenta)$normal "
   end
 
   if test $last_status = 0
-    set prompt " $green⫸ $normal "
+    set prompt "$green⫸ $normal "
   else
-    set prompt " $red⫸ $normal "
+    set prompt "$red⫸ $normal "
   end
 
   echo -n -s $git_info $prompt
