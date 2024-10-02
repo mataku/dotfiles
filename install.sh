@@ -9,6 +9,3 @@ ln -sf ~/src/github.com/mataku/dotfiles/nvim/rc/dein.toml ~/.config/nvim/rc/dein
 ln -sf ~/src/github.com/mataku/dotfiles/nvim/rc/dein_lazy.toml ~/.config/nvim/rc/dein_lazy.toml
 ln -sf ~/src/github.com/mataku/dotfiles/nvim/coc/package.json ~/.config/coc/extensions/package.json
 ln -sf ~/src/github.com/mataku/dotfiles/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
-
-mkdir -p ~/Library/Developer/Xcode/UserData/FontAndColorThemes/
-ln -sf ~/src/github.com/mataku/dotfiles/xcode-theme/Material\ Dark.xccolortheme ~/Library/Developer/Xcode/UserData/FontAndColorThemes/Material\ Dark.xccolortheme
