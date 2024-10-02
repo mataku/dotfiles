@@ -113,7 +113,7 @@ if expand("%:t") =~ ".*\.go"
   let g:go_highlight_structs = 1
 endif
 
-set completeopt=menu
+set completeopt="menu,menuone,noselect"
 
 au BufRead,BufNewFile Fastfile set filetype=ruby
 au BufRead,BufNewFile IAMFile set filetype=ruby
@@ -140,6 +140,8 @@ let g:PaperColor_Theme_Options = {
   \     }
   \   }
   \ }
+
+inoremap <silent><expr> <TAB> coc#pum#visible() ? coc#pum#next(1) : "\<TAB>"
 
 syntax enable
 set background=dark

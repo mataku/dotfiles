@@ -42,6 +42,6 @@
 [pull]
   rebase = true
 [commit]
-	template = ~/src/github.com/dotfiles/.commit_template
+	template = ~/src/github.com/mataku/dotfiles/.commit_template
 [init]
   defaultBranch = develop
