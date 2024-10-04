@@ -16,7 +16,7 @@ jobs:
     runs-on: macOS-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Provisioning
       run: |
         export HOMEBREW_BUNDLE_MAS_SKIP="$(grep mas <Brewfile | grep -v brew | awk -F '[, "]' '{printf $3" "}')"
