@@ -6,6 +6,10 @@ on:
     branches:
       - '**'
 
+concurrency:
+  group: ${{ github.head_ref || 'develop' }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: macOS-latest
@@ -15,4 +19,5 @@ jobs:
     - name: Provisioning
       run: |
         set -ex
+        export HOMEBREW_BUNDLE_MAS_SKIP="$(grep mas <Brewfile | grep -v brew | awk -F '[, "]' '{printf $3" "}')"
         /bin/bash setup.sh

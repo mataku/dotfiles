@@ -29,3 +29,5 @@ fish/fish_variables
 !/fish/functions/adb-open-app.fish
 
 emacs.d/elpa/
+
+Brewfile.lock.json

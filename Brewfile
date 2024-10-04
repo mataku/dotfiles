@@ -1,5 +1,3 @@
-tap "adoptopenjdk/openjdk"
-tap "heroku/brew"
 tap "homebrew/bundle"
 brew "bat"
 brew "fontconfig"
@@ -66,12 +64,12 @@ brew "vim"
 brew "xmlformat"
 brew "youtube-dl"
 brew "yq"
-brew "heroku/brew/heroku"
 cask "flutter"
 cask "font-cica"
 cask "google-cloud-sdk"
 cask "ngrok"
 cask "xquartz"
+cask "zulu@17"
 mas "Amphetamine", id: 937984704
 mas "GarageBand", id: 682658836
 mas "iMovie", id: 408981434
