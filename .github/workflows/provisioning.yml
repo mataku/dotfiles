@@ -1,0 +1,18 @@
+name: Provisioning
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    runs-on: macOS-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Provisioning
+      run: |
+        set -ex
+        /bin/bash setup.sh
