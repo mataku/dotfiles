@@ -4,6 +4,8 @@
 [user]
   name = Takuma Homma
   email = nagomimatcha@gmail.com
+[include]
+  path = ~/src/github.com/mataku/dotfiles/git/workconfig
 [color]
   ui = true
 [color "status"]

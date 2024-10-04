@@ -31,3 +31,4 @@ fish/fish_variables
 emacs.d/elpa/
 
 Brewfile.lock.json
+git/workconfig
