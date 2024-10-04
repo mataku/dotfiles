@@ -2,9 +2,10 @@ name: Provisioning
 
 on:
   workflow_dispatch:
+  pull_request:
   push:
     branches:
-      - '**'
+      - develop
 
 concurrency:
   group: ${{ github.head_ref || 'develop' }}
