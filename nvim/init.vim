@@ -142,6 +142,7 @@ let g:PaperColor_Theme_Options = {
   \ }
 
 inoremap <silent><expr> <TAB> coc#pum#visible() ? coc#pum#next(1) : "\<TAB>"
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 syntax enable
 set background=dark
