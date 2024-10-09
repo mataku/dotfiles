@@ -7,7 +7,6 @@ echo 'Installing bundle'
 /opt/homebrew/bin/brew bundle
 
 echo 'Setup dotfiles'
-mkdir -p $HOME/.config/nvim/rc
-mkdir -p $HOME/.config/coc/extensions/
+mkdir -p $HOME/.config/nvim/lua/config
 mkdir -p $HOME/.config/wezterm
 ./install.sh
