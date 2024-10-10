@@ -31,9 +31,6 @@ require("lazy").setup({
       end,
     },
     {
-      "ndonfris/fish-lsp"
-    },
-    {
       "hrsh7th/cmp-nvim-lsp"
     },
     {
@@ -95,7 +92,6 @@ require("lazy").setup({
       "neovim/nvim-lspconfig",
       dependencies = {
         "hrsh7th/cmp-nvim-lsp",
-        "ndonfris/fish-lsp"
       },
       config = function()
         local lspconfig = require('lspconfig')
@@ -103,7 +99,6 @@ require("lazy").setup({
         lspconfig.solargraph.setup{
           capabilities = capabilities
         }
-        lspconfig.fish_lsp.setup{}
       end
     },
     { "scrooloose/nerdtree" },
