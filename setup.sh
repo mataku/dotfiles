@@ -9,4 +9,4 @@ echo 'Installing bundle'
 echo 'Setup dotfiles'
 mkdir -p $HOME/.config/nvim/lua/config
 mkdir -p $HOME/.config/wezterm
-./install.sh
+./link_files.sh

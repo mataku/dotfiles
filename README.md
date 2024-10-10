@@ -1,7 +1,7 @@
 ## Installation
 
 ```shell
-$ /bin/bash install.sh
+/bin/bash setup.sh
 ```
 
 ## Screenshots
