@@ -42,7 +42,7 @@ config.font = wezterm.font_with_fallback {
 config.font_size = 14.0
 config.adjust_window_size_when_changing_font_size = false
 
-config.enable_scroll_bar = true
+config.enable_scroll_bar = false
 config.show_tab_index_in_tab_bar = false
 
 local act = wezterm.action
