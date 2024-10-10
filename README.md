@@ -21,3 +21,6 @@
   </tbody>
 </table>
 
+## Acknowledgements
+
+My WezTerm theme is based on [https://github.com/MartinSeeler/iterm2-material-design](https://github.com/MartinSeeler/iterm2-material-design).
