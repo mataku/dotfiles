@@ -54,6 +54,10 @@ local act = wezterm.action
 config.keys = {
   { key = 'LeftArrow', mods = 'CMD', action = act.ActivateTabRelative(-1) },
   { key = 'RightArrow', mods = 'CMD', action = act.ActivateTabRelative(1) },
+  { key = '=', mods = 'CTRL', action = act.DisableDefaultAssignment },
+  { key = '-', mods = 'CTRL', action = act.DisableDefaultAssignment },
+  { key = '=', mods = 'CMD', action = act.IncreaseFontSize },
+  { key = '-', mods = 'CMD', action = act.DecreaseFontSize },
 }
 
 function basename(s)
