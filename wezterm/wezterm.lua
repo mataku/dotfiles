@@ -52,8 +52,8 @@ config.show_new_tab_button_in_tab_bar = false
 local act = wezterm.action
 
 config.keys = {
-  { key = 'LeftArrow', mods = 'CMD', action = act.MoveTabRelative(-1) },
-  { key = 'RightArrow', mods = 'CMD', action = act.MoveTabRelative(1) },
+  { key = 'LeftArrow', mods = 'CMD', action = act.ActivateTabRelative(-1) },
+  { key = 'RightArrow', mods = 'CMD', action = act.ActivateTabRelative(1) },
 }
 
 function basename(s)
