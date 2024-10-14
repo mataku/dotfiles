@@ -3,7 +3,6 @@
   "extends": [
     "config:base"
   ],
-  "schedule": "after 3pm on Friday",
   "timezone": "Asia/Tokyo",
   "rangeStrategy": "replaced",
   "rebaseWhen": "conflicted",
