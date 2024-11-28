@@ -1,0 +1,49 @@
+[core]
+  editor = nvim -c 'startinsert'
+  pager = bat
+[user]
+  name = Takuma Homma
+  email = nagomimatcha@gmail.com
+[include]
+  path = ~/src/github.com/mataku/dotfiles/git/workconfig
+[color]
+  ui = true
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+[alias]
+  st = status
+  co = checkout
+  unstage = reset HEAD
+  b = branch
+  al = config --get-regexp alias.*
+  cm = commit -v -S
+  wip = commit -S --allow-empty -m 'WIP'
+  delete-branch = "!f () { git branch | fzf | xargs git branch -D; };f"
+  delete-merged-branch = "!f () { git checkout $1; git branch --merged|egrep -v '\\*|develop|master'|xargs git branch -D; };f"
+  delbr = branch -D
+  showpr = !"f() { git log --merges --oneline --reverse --ancestry-path $1...master | grep 'Merge pull request #' | head -n 1; }; f"
+  showprdev = !"f() { git log --merges --oneline --reverse --ancestry-path $1...develop | grep 'Merge pull request #' | head -n 1; }; f"
+  mkpr = \
+  "!f () {\
+          branch=$1;\
+      if [ -z ${branch} ]; then\
+        branch='develop';\
+      fi;\
+      hub browse -- compare/${branch}'...'$(git symbolic-ref --short HEAD);\
+    };f"
+  reset-first-commit = update-ref -d HEAD
+[merge "mergepbx"]
+  name = Xcode project files merger
+  driver = mergepbx %O %A %B
+[fetch]
+  prune = true
+[ghq]
+  root = ~/src
+[pull]
+  rebase = true
+[commit]
+	template = ~/src/github.com/mataku/dotfiles/.commit_template
+[init]
+  defaultBranch = develop
