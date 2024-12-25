@@ -59,11 +59,17 @@ config.keys = {
   { key = 'LeftArrow', mods = 'CMD', action = act.ActivateTabRelative(-1) },
   { key = 'RightArrow', mods = 'CMD', action = act.ActivateTabRelative(1) },
   { key = '=', mods = 'CTRL', action = act.DisableDefaultAssignment },
+  { key = '_', mods = 'CTRL|SHIFT', action = act.DisableDefaultAssignment },
+  { key = '_', mods = 'SHIFT', action = act.DisableDefaultAssignment },
+  { key = '=', mods = 'SHIFT', action = act.DisableDefaultAssignment },
   { key = '-', mods = 'CTRL', action = act.DisableDefaultAssignment },
-  { key = '=', mods = 'CMD', action = act.IncreaseFontSize },
-  { key = '-', mods = 'CMD', action = act.DecreaseFontSize },
+  { key = '-', mods = 'SHIFT', action = act.DisableDefaultAssignment },
+  -- { key = '=', mods = 'CMD', action = act.IncreaseFontSize },
+  -- { key = '-', mods = 'CMD', action = act.DecreaseFontSize },
   { key = '3', mods = 'OPT', action = act.DisableDefaultAssignment },
 }
+
+-- config.macos_forward_to_ime_modifier_mask = 'CTRL|SHIFT'
 
 function basename(s)
   return string.gsub(s, '(.*[/\\])(.*)', '%2')
