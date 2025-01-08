@@ -72,15 +72,3 @@ mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "The Unarchiver", id: 425424353
 mas "Xcode", id: 497799835
-vscode "biomejs.biome"
-vscode "castwide.solargraph"
-vscode "dart-code.dart-code"
-vscode "dart-code.flutter"
-vscode "equinusocio.vsc-material-theme"
-vscode "equinusocio.vsc-material-theme-icons"
-vscode "jduponchelle.rainbow-end"
-vscode "k--kato.intellij-idea-keybindings"
-vscode "pkief.material-icon-theme"
-vscode "tomoki1207.vscode-gfm-preview"
-vscode "usernamehw.errorlens"
-vscode "xadillax.viml"
