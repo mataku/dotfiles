@@ -68,6 +68,16 @@ return {
       lspconfig.solargraph.setup{
         capabilities = capabilities
       }
+      lspconfig.rust_analyzer.setup{
+        capabilities = capabilities,
+        settings = {
+          ['rust-analyzer'] = {
+            diagnostics = {
+              enable = false;
+            }
+          },
+        },
+      }
     end
   }
 }
