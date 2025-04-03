@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macOS-latest
+    runs-on: macOS-15
     
     steps:
     - uses: actions/checkout@v4
@@ -21,3 +21,4 @@ jobs:
       run: |
         export HOMEBREW_BUNDLE_MAS_SKIP="$(grep mas <Brewfile | grep -v brew | awk -F 'id\: ' '{printf $2" "}')"
         /bin/bash -ex setup.sh
+        ls ~/.config/nvim/lua/plugins/
