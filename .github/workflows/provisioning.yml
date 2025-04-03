@@ -21,4 +21,3 @@ jobs:
       run: |
         export HOMEBREW_BUNDLE_MAS_SKIP="$(grep mas <Brewfile | grep -v brew | awk -F 'id\: ' '{printf $2" "}')"
         /bin/bash -ex setup.sh
-        ls ~/.config/nvim/lua/plugins/
