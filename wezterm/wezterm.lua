@@ -71,6 +71,24 @@ config.keys = {
 
 -- config.macos_forward_to_ime_modifier_mask = 'CTRL|SHIFT'
 
+config.mouse_bindings = {
+  -- Change the default click behavior so that it only selects
+  -- text and doesn't open hyperlinks
+  {
+    event = { Up = { streak = 1, button = 'Left' } },
+    mods = 'NONE',
+    action = act.CompleteSelection 'ClipboardAndPrimarySelection',
+  },
+
+  -- and make CTRL-Click open hyperlinks
+  {
+    event = { Up = { streak = 1, button = 'Left' } },
+    mods = 'CMD',
+    action = act.OpenLinkAtMouseCursor,
+  }
+}
+
+
 function basename(s)
   return string.gsub(s, '(.*[/\\])(.*)', '%2')
 end
@@ -110,7 +128,11 @@ end)
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
   local active_pane = tab.active_pane
   local process_name = active_pane.foreground_process_name
-  return basename(active_pane.current_working_dir.path) .. ' ' .. '(' .. basename(process_name) .. ')'
+  if (process_name == '') then
+    return basename(active_pane.current_working_dir.path)
+  else
+    return basename(active_pane.current_working_dir.path) .. ' ' .. '(' .. basename(process_name) .. ')'
+  end
 end)
 
 return config
