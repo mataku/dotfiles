@@ -1,4 +1,3 @@
-Equinusocio.vsc-material-theme
 christian-kohler.path-intellisense
 rebornix.Ruby
 tomoki1207.vscode-gfm-preview
