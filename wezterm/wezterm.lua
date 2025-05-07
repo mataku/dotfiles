@@ -72,15 +72,13 @@ config.keys = {
 -- config.macos_forward_to_ime_modifier_mask = 'CTRL|SHIFT'
 
 config.mouse_bindings = {
-  -- Change the default click behavior so that it only selects
-  -- text and doesn't open hyperlinks
   {
     event = { Up = { streak = 1, button = 'Left' } },
     mods = 'NONE',
     action = act.CompleteSelection 'ClipboardAndPrimarySelection',
   },
 
-  -- and make CTRL-Click open hyperlinks
+  -- CMD-Click for hyperlinks
   {
     event = { Up = { streak = 1, button = 'Left' } },
     mods = 'CMD',
