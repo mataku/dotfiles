@@ -13,3 +13,4 @@ mkdir -p $HOME/.config/wezterm
 
 /opt/homebrew/bin/rustup default stable
 /opt/homebrew/bin/rustup component add rust-analyzer
+/opt/homebrew/bin/npm install -g @anthropic-ai/claude-code
