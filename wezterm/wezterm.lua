@@ -99,10 +99,16 @@ function split_path(path)
   return result
 end
 
-function prompt_pwd(current_dir)
-  local simple_home_path = string.gsub(current_dir, "^/Users/mataku", '~')
+function minified_home(current_dir)
+  local home = os.getenv("HOME")
+  if home and current_dir:sub(1, #home) == home then
+    return "~" .. current_dir:sub(#home + 1)
+  end
+  return current_dir
+end
 
-  local path_array = split_path(simple_home_path)
+function prompt_pwd(current_dir)
+  local path_array = split_path(minified_home(current_dir))
   local result = ""
   local path_array_size = #path_array
 
