@@ -19,6 +19,8 @@ set fish_color_command normal
 # https://www.materialui.co/colors
 set fish_color_error FF7043
 
+set -x RIPGREP_CONFIG_PATH $HOME/src/github.com/mataku/dotfiles/.ripgreprc
+
 set -x FZF_DEFAULT_OPTS '--cycle --ansi --select-1 --exit-0'
 set -x FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git'
 
