@@ -58,6 +58,8 @@ local act = wezterm.action
 config.keys = {
   { key = 'LeftArrow', mods = 'CMD', action = act.ActivateTabRelative(-1) },
   { key = 'RightArrow', mods = 'CMD', action = act.ActivateTabRelative(1) },
+  { key = '{', mods = 'CTRL|SHIFT', action = act.MoveTabRelative(-1) },
+  { key = '}', mods = 'CTRL|SHIFT', action = act.MoveTabRelative(1) },
   { key = '=', mods = 'CTRL', action = act.DisableDefaultAssignment },
   { key = '_', mods = 'CTRL|SHIFT', action = act.DisableDefaultAssignment },
   { key = '_', mods = 'SHIFT', action = act.DisableDefaultAssignment },
