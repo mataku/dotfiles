@@ -10,3 +10,7 @@ git:
     - pager: bat
   commitOptions:
     - '-S'
+  mainBranches:
+    - main
+    - develop
+    - master
