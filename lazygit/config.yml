@@ -16,3 +16,8 @@ git:
     - main
     - develop
     - master
+
+customCommands:
+  - key: 'H'
+    context: 'global, commits'
+    command: 'hub mkpr'
