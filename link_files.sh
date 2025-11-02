@@ -8,5 +8,4 @@ ln -sf ~/src/github.com/mataku/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
 ln -sf ~/src/github.com/mataku/dotfiles/nvim/lua/plugins  ~/.config/nvim/lua/plugins
 ln -sf ~/src/github.com/mataku/dotfiles/nvim/lua/config/lazy.lua ~/.config/nvim/lua/config/lazy.lua
 ln -sf ~/src/github.com/mataku/dotfiles/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
-mkdir -p ~/Library/Application\ Support/lazygit
 ln -sf ~/src/github.com/mataku/dotfiles/lazygit/config.yml ~/Library/Application\ Support/lazygit/config.yml
