@@ -1,6 +1,10 @@
 gui:
   language: 'en'
   nerdFontsVersion: '3'
+  authorColors:
+    '*': '#BDBDBD'
+  commitAuthorShortLength: 0
+  commitAuthorLongLength: 0
 
 git:
   autoFetch: false # f
@@ -8,8 +12,6 @@ git:
   fetchAll: false
   pagers:
     - pager: bat
-  commitOptions:
-    - '-S'
   mainBranches:
     - main
     - develop
