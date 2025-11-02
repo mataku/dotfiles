@@ -1,3 +1,12 @@
 gui:
   language: 'en'
   nerdFontsVersion: '3'
+
+git:
+  autoFetch: false # f
+  autoRefresh: false # R
+  fetchAll: false
+  pagers:
+    - pager: bat
+  commitOptions:
+    - '-S'
