@@ -69,6 +69,13 @@ config.keys = {
   -- { key = '=', mods = 'CMD', action = act.IncreaseFontSize },
   -- { key = '-', mods = 'CMD', action = act.DecreaseFontSize },
   { key = '3', mods = 'OPT', action = act.DisableDefaultAssignment },
+  {
+    key = 'p',
+    mods = 'CTRL',
+    action = act.PaneSelect {
+      alphabet = '1234567890',
+    },
+  },
 }
 
 -- config.macos_forward_to_ime_modifier_mask = 'CTRL|SHIFT'
