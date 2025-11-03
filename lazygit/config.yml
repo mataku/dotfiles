@@ -19,5 +19,6 @@ git:
 
 customCommands:
   - key: 'H'
-    context: 'global, commits'
-    command: 'hub mkpr'
+    context: 'status, commits, localBranches'
+    command: 'gpr'
+    output: terminal
