@@ -16,29 +16,10 @@ git:
     - main
     - develop
     - master
+  branchPrefix: 'feature/'
 
 customCommands:
   - key: 'H'
     context: 'status, commits, localBranches'
     command: 'gpr'
     output: terminal
-  - key: 'n'
-    context: 'localBranches'
-    prompts:
-      - type: 'menu'
-        title: 'What kind of branch is it?'
-        key: 'BranchType'
-        options:
-          - name: 'feature'
-            description: 'a feature branch'
-            value: 'feature'
-          - name: 'hotfix'
-            description: 'a hotfix branch'
-            value: 'hotfix'
-          - name: 'release'
-            description: 'a release branch'
-            value: 'release'
-      - type: 'input'
-        title: 'What is the new branch name?'
-        key: 'BranchName'
-        initialValue: ''
