@@ -18,6 +18,8 @@ git:
     - master
   branchPrefix: 'feature/'
   branchLogCmd: git log -p --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium {{branchName}} --
+  merging:
+    args: '-S'
 
 customCommands:
   - key: 'H'
