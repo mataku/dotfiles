@@ -17,6 +17,7 @@ git:
     - develop
     - master
   branchPrefix: 'feature/'
+  branchLogCmd: git log -p --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium {{branchName}} --
 
 customCommands:
   - key: 'H'
