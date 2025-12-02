@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - develop
+  schedule:
+    - cron: '00 13 1 * *'
 
 concurrency:
   group: ${{ github.head_ref || 'develop' }}
