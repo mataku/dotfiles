@@ -43,10 +43,10 @@
     defaults = {
       # Dock settings
       dock = {
-        autohide = true;
-        orientation = "bottom";
+        autohide = false;
+        orientation = "left";
         show-recents = false;
-        tilesize = 48;
+        tilesize = 38;
       };
 
       # Finder settings
@@ -62,20 +62,14 @@
       # Global macOS settings
       NSGlobalDomain = {
         # Keyboard settings
-        AppleKeyboardUIMode = 3; # Enable full keyboard access
-        ApplePressAndHoldEnabled = false; # Disable press-and-hold for keys
         InitialKeyRepeat = 15; # Fast initial key repeat
         KeyRepeat = 2; # Fast key repeat
 
-        # Disable automatic text substitutions
-        NSAutomaticCapitalizationEnabled = false;
+        # Automatic text substitutions (matches current system state)
+        NSAutomaticCapitalizationEnabled = true;
         NSAutomaticDashSubstitutionEnabled = false;
         NSAutomaticPeriodSubstitutionEnabled = false;
         NSAutomaticQuoteSubstitutionEnabled = false;
-        NSAutomaticSpellingCorrectionEnabled = false;
-
-        # Save to disk (not iCloud) by default
-        NSDocumentSaveNewDocumentsToCloud = false;
       };
 
       # Trackpad settings
@@ -87,15 +81,9 @@
 
       # Screenshots settings
       screencapture = {
-        location = "~/Desktop";
+        location = "~/Pictures/screenshots";
         type = "png";
       };
-    };
-
-    # Keyboard settings
-    keyboard = {
-      enableKeyMapping = true;
-      remapCapsLockToControl = true;
     };
 
     # macOS version compatibility
