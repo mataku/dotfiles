@@ -71,8 +71,9 @@ jobs:
 
     - name: Run installation script
       run: |
-        CURRENT_USER=$USER
-        USER=$CURRENT_USER bash ~/src/github.com/mataku/dotfiles/scripts/install.sh     
+        bash ~/src/github.com/mataku/dotfiles/scripts/install.sh
+      env:
+        NIX_CONFIG: "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
 
     - name: Verify Nix packages are installed
       run: |

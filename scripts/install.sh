@@ -86,7 +86,7 @@ fi
 info "Detected architecture: $SYSTEM"
 
 # Run nix-darwin switch
-sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" --show-trace -- \
+sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" --impure --show-trace -- \
     switch --flake ".#mataku-macbook"
 
 if [ $? -eq 0 ]; then

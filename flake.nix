@@ -19,8 +19,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }:
-    let
-      username = builtins.getEnv "USER";
+    let username = builtins.getEnv "USER";
     in
     {
       # macOS configuration for Apple Silicon
