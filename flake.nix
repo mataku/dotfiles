@@ -18,32 +18,37 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }: {
-    # macOS configuration for Apple Silicon
-    darwinConfigurations = {
-      "mataku-macbook" = nix-darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
+  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }:
+    let
+      username = builtins.getEnv "USER";
+      primaryUser = if username != "" then username else "mataku";
+    in
+    {
+      # macOS configuration for Apple Silicon
+      darwinConfigurations = {
+        "mataku-macbook" = nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
 
-        modules = [
-          # Main nix-darwin configuration
-          ./nix/darwin/configuration.nix
+          modules = [
+            # Main nix-darwin configuration
+            ./nix/darwin/configuration.nix
 
-          # Integrate home-manager as a nix-darwin module
-          home-manager.darwinModules.home-manager
-          {
-            # home-manager configuration
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.mataku = import ./nix/home/default.nix;
+            # Integrate home-manager as a nix-darwin module
+            home-manager.darwinModules.home-manager
+            {
+              # home-manager configuration
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${primaryUser} = import ./nix/home/default.nix;
 
-            # Pass inputs to home-manager modules
-            home-manager.extraSpecialArgs = { inherit inputs; };
-          }
-        ];
+              # Pass inputs to home-manager modules
+              home-manager.extraSpecialArgs = { inherit inputs; };
+            }
+          ];
 
-        # Make inputs available to all modules
-        specialArgs = { inherit inputs; };
+          # Make inputs and username available to all modules
+          specialArgs = { inherit inputs primaryUser; };
+        };
       };
     };
-  };
 }

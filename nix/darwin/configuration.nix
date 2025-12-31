@@ -1,8 +1,8 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, primaryUser, ... }:
 
 {
-  # Enable the Nix daemon for multi-user installations
-  services.nix-daemon.enable = true;
+  # Set the primary user for system defaults
+  system.primaryUser = primaryUser;
 
   # Nix package manager settings
   nix = {
@@ -36,13 +36,6 @@
   environment.systemPackages = with pkgs; [
     vim
     git
-  ];
-
-  # Install fonts
-  fonts.packages = with pkgs; [
-    # Font Cica will be added via custom derivation
-    # For now, using nerd-fonts as alternative
-    (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
   ];
 
   # macOS system preferences
@@ -110,12 +103,12 @@
   };
 
   # Enable sudo authentication with Touch ID
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   # User configuration
-  users.users.mataku = {
-    name = "mataku";
-    home = "/Users/mataku";
+  users.users.${primaryUser} = {
+    name = primaryUser;
+    home = "/Users/${primaryUser}";
   };
 
   # Shells available for users

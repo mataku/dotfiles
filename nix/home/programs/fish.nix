@@ -69,13 +69,13 @@
         if [ $selection ]
           commandline $selection
         else
-          commandline ''
+          commandline ''''
         end
       end
 
       # Key bindings for FZF history (Ctrl+R)
       function fish_user_key_bindings
-        bind \cr fzf_select_history
+        bind ''\cr fzf_select_history
       end
     '';
 
@@ -93,30 +93,8 @@
         src = pkgs.fetchFromGitHub {
           owner = "oh-my-fish";
           repo = "plugin-argu";
-          rev = "85967166425d49f32d44b6328a1c5a4d6d0d3e9e";
-          sha256 = "sha256-CCrajFLeVpCpBOJM3x9Fjp/6u3T1cLd9d4X3+O8KeUI=";
-        };
-      }
-
-      # 0rax/fish-bd
-      {
-        name = "fish-bd";
-        src = pkgs.fetchFromGitHub {
-          owner = "0rax";
-          repo = "fish-bd";
-          rev = "d1e9096b1e4f0d4a12f8d63a4f2a0f2c4f1e8f91";
-          sha256 = "sha256-baR08W8LsJwdVfN+Wu7LNc+ca7S7gJ5HtJm1BbWnFBM=";
-        };
-      }
-
-      # oh-my-fish/plugin-expand
-      {
-        name = "plugin-expand";
-        src = pkgs.fetchFromGitHub {
-          owner = "oh-my-fish";
-          repo = "plugin-expand";
-          rev = "8d7d926c7b4fa61a54a95e393cf4d5f33a39eb0e";
-          sha256 = "sha256-wj/fQ20w8PU1eRBGK2u+aVK7kIHv64vL8MIy5N3E9Gs=";
+          rev = "1332d5c0561f9587c956b16cf096034f67202c83";
+          sha256 = "sha256-4c9ScQVf55b2ANaR7Lp/oqLeuK+FxH/wKmSNLV+b/CE=";
         };
       }
 
@@ -126,8 +104,19 @@
         src = pkgs.fetchFromGitHub {
           owner = "oh-my-fish";
           repo = "plugin-extract";
-          rev = "8b645bb5e8c8c608f7b7a8d888f1b8e8f2cc81f0";
-          sha256 = "sha256-Lw/SYlFA1c1kR/pkJlcfKZGGW/9kBxGMrFp7FDPZwXM=";
+          rev = "5d05f9f15d3be8437880078171d1e32025b9ad9f";
+          sha256 = "sha256-GeWjoakXa0t2TsMC/wpLEmsSVGhHFhBVK3v9eyQdzv0=";
+        };
+      }
+
+      # oh-my-fish/plugin-expand
+      {
+        name = "plugin-expand";
+        src = pkgs.fetchFromGitHub {
+          owner = "oh-my-fish";
+          repo = "plugin-expand";
+          rev = "ffb18d57506c7332ae8b7b8bc8d7f56e3a2390d2";
+          sha256 = "sha256-Oou2IeNNAqR00ZT3bss/DbhrJjGeMsn9dBBYhgdafBw=";
         };
       }
 
@@ -137,19 +126,8 @@
         src = pkgs.fetchFromGitHub {
           owner = "jorgebucaran";
           repo = "getopts.fish";
-          rev = "3c2c1c28af89ec336a6b737ce19c4e5a61b5e6d2";
-          sha256 = "sha256-yJQb1M3o8FvxA9ILRCMHWJzPn8ZdqDHkV3gPCLLLULs=";
-        };
-      }
-
-      # decors/fish-ghq
-      {
-        name = "fish-ghq";
-        src = pkgs.fetchFromGitHub {
-          owner = "decors";
-          repo = "fish-ghq";
-          rev = "af18a5f7eb0797c3ea54d4f45440d119aeca03f2";
-          sha256 = "sha256-84rXEsPDAKANwQO3TuDvgLv9Dm9LwPSSbmJDCm5VEFQ=";
+          rev = "e6f87012692088a0a9fea426f08e83001668ce66";
+          sha256 = "sha256-mEgoKxoe7/88p0/5vcX27VM83wp4Cii5C3sTjwnoLJ8=";
         };
       }
 
@@ -159,8 +137,19 @@
         src = pkgs.fetchFromGitHub {
           owner = "jorgebucaran";
           repo = "fish-spin";
-          rev = "a58579802e99d5f5ec0cd2ad5cd9c4fd92adfc59";
-          sha256 = "sha256-3kkWqUwLXkPJmZBBQe/bYVGGkSBJsO7sJYqzNkFTJ/U=";
+          rev = "d2ecacd3fe7126e822ce8918389f3ad93b14c86c";
+          sha256 = "sha256-TzQ97h9tBRUg+A7DSKeTBWLQuThicbu19DHMwkmUXdg=";
+        };
+      }
+
+      # 0rax/fish-bd
+      {
+        name = "fish-bd";
+        src = pkgs.fetchFromGitHub {
+          owner = "0rax";
+          repo = "fish-bd";
+          rev = "ab686e028bfe95fa561a4f4e57840e36902d4d7d";
+          sha256 = "sha256-dDT0rRhkSQV/ZqhtaPnDwhaxUyjg+6VGGeH9L2SUsEY=";
         };
       }
 
@@ -170,8 +159,8 @@
         src = pkgs.fetchFromGitHub {
           owner = "jethrokuan";
           repo = "z";
-          rev = "85f863f20f24faf675827fb00f3a4e15c7838d76";
-          sha256 = "sha256-+FUBM7CodtZrYKqU542fQD+ZDGrd2438trKM0tIESs0=";
+          rev = "d2f502f5575b18a32e1bee2f2b3f869a5053c159";
+          sha256 = "sha256-hFM8uDHDfKBVn4CgRdfRaD0SzmVzOPjfMxU9X6yATzE=";
         };
       }
 
@@ -181,8 +170,8 @@
         src = pkgs.fetchFromGitHub {
           owner = "laughedelic";
           repo = "pisces";
-          rev = "e45e0869855bc7e6519b8a25c8e0696e859e4052";
-          sha256 = "sha256-Oou2IeNNAqR00ZT3bss/DbhrJjGeMsn9dBBYhgdafBw=";
+          rev = "e45e0869855d089ba1e628b6248434b2dfa709c4";
+          sha256 = "sha256-vlIXBWCQrz2ZlxPhi2/+gweKnT6pcMQQ2NYlysqn7ig=";
         };
       }
     ];

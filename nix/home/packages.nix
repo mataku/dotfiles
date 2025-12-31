@@ -21,7 +21,7 @@
     git              # Version control
     gh               # GitHub CLI
     ghq              # Git repository manager
-    gitAndTools.hub  # Git wrapper for GitHub
+    hub              # Git wrapper for GitHub
     tig              # Text-mode interface for git
     lazygit          # Terminal UI for git
 
@@ -48,7 +48,6 @@
     go               # Go programming language
     kotlin           # Kotlin JVM language
     nodejs_20        # Node.js 20.x (replacing nodenv)
-    ruby_3_2         # Ruby 3.2.x (replacing rbenv)
     rustup           # Rust toolchain manager
     lua              # Lua programming language
 
@@ -62,7 +61,6 @@
     gifsicle         # GIF optimizer
     pngquant         # PNG compression
     potrace          # Bitmap to vector tracing
-    fontforge        # Font editor
 
     # === Database ===
     postgresql_14    # PostgreSQL 14.x
@@ -80,20 +78,14 @@
     gnupg            # GNU Privacy Guard
     pinentry_mac     # GPG PIN entry for macOS
 
-    # === Search Tools ===
-    the_platinum_searcher  # Code search tool (pt)
-
     # === Code Tools ===
     universal-ctags  # Source code indexing
-    source-highlight # Source code syntax highlighter
+    sourceHighlight  # Source code syntax highlighter
 
     # === Libraries ===
     libsodium        # Cryptography library
     fontconfig       # Font configuration
     glib             # Low-level core library
-
-    # === X11 (for some GUI apps) ===
-    xquartz          # X11 for macOS
 
     # === Java ===
     temurin-jre-bin-17  # Eclipse Temurin JRE 17 (replacing temurin@17 cask)
@@ -109,7 +101,7 @@
   ];
 
   # Note: The following are NOT included as they are replaced by Nix's declarative approach:
-  # - rbenv, ruby-build (using ruby_3_2 directly)
+  # - rbenv, ruby-build (use rbenv separately for Ruby version management)
   # - nodenv, node-build (using nodejs_20 directly)
   # - leoafarias/fvm/fvm (Flutter Version Manager - manual installation)
   # - flutter (cask - manual installation)
