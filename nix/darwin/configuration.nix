@@ -1,9 +1,8 @@
-{ config, pkgs, inputs, primaryUser, ... }:
+{ config, pkgs, inputs, username, ... }:
 
 {
   # Set the primary user for system defaults
-  system.primaryUser = primaryUser;
-
+  system.primaryUser = username;
   # Nix package manager settings
   nix = {
     package = pkgs.nix;

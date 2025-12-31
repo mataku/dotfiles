@@ -21,7 +21,6 @@
   outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }:
     let
       username = builtins.getEnv "USER";
-      primaryUser = if username != "" then username else "mataku";
     in
     {
       # macOS configuration for Apple Silicon
@@ -39,7 +38,7 @@
               # home-manager configuration
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.${primaryUser} = import ./nix/home/default.nix;
+              home-manager.users.${username} = import ./nix/home/default.nix;
 
               # Pass inputs to home-manager modules
               home-manager.extraSpecialArgs = { inherit inputs; };
@@ -47,7 +46,7 @@
           ];
 
           # Make inputs and username available to all modules
-          specialArgs = { inherit inputs primaryUser; };
+          specialArgs = { inherit inputs username; };
         };
       };
     };
