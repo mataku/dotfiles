@@ -81,6 +81,7 @@
     # === Code Tools ===
     universal-ctags  # Source code indexing
     sourceHighlight  # Source code syntax highlighter
+    nixfmt-rfc-style # Nix code formatter
 
     # === Libraries ===
     libsodium        # Cryptography library

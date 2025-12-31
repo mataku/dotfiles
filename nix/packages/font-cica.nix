@@ -6,9 +6,7 @@ stdenvNoCC.mkDerivation rec {
 
   src = fetchzip {
     url = "https://github.com/miiton/Cica/releases/download/v${version}/Cica_v${version}.zip";
-    # Hash will be determined on first build
-    # Run: nix-prefetch-url --unpack https://github.com/miiton/Cica/releases/download/v5.0.3/Cica_v5.0.3.zip
-    sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Placeholder
+    sha256 = "sha256-BtDnfWCfD9NE8tcWSmk8ciiInsspNPTPmAdGzpg62SM=";
     stripRoot = false;
   };
 

@@ -94,7 +94,7 @@
           owner = "oh-my-fish";
           repo = "plugin-argu";
           rev = "1332d5c0561f9587c956b16cf096034f67202c83";
-          sha256 = "sha256-4c9ScQVf55b2ANaR7Lp/oqLeuK+FxH/wKmSNLV+b/CE=";
+          sha256 = "sha256-dDT0rRhkSQV/ZqhtaPnDwhaxUyjg+6VGGeH9L2SUsEY=";
         };
       }
 
@@ -105,7 +105,7 @@
           owner = "oh-my-fish";
           repo = "plugin-extract";
           rev = "5d05f9f15d3be8437880078171d1e32025b9ad9f";
-          sha256 = "sha256-GeWjoakXa0t2TsMC/wpLEmsSVGhHFhBVK3v9eyQdzv0=";
+          sha256 = "sha256-hFM8uDHDfKBVn4CgRdfRaD0SzmVzOPjfMxU9X6yATzE=";
         };
       }
 
@@ -116,7 +116,7 @@
           owner = "oh-my-fish";
           repo = "plugin-expand";
           rev = "ffb18d57506c7332ae8b7b8bc8d7f56e3a2390d2";
-          sha256 = "sha256-Oou2IeNNAqR00ZT3bss/DbhrJjGeMsn9dBBYhgdafBw=";
+          sha256 = "sha256-mEgoKxoe7/88p0/5vcX27VM83wp4Cii5C3sTjwnoLJ8=";
         };
       }
 
@@ -127,7 +127,7 @@
           owner = "jorgebucaran";
           repo = "getopts.fish";
           rev = "e6f87012692088a0a9fea426f08e83001668ce66";
-          sha256 = "sha256-mEgoKxoe7/88p0/5vcX27VM83wp4Cii5C3sTjwnoLJ8=";
+          sha256 = "sha256-vlIXBWCQrz2ZlxPhi2/+gweKnT6pcMQQ2NYlysqn7ig=";
         };
       }
 
@@ -149,7 +149,7 @@
           owner = "0rax";
           repo = "fish-bd";
           rev = "ab686e028bfe95fa561a4f4e57840e36902d4d7d";
-          sha256 = "sha256-dDT0rRhkSQV/ZqhtaPnDwhaxUyjg+6VGGeH9L2SUsEY=";
+          sha256 = "sha256-GeWjoakXa0t2TsMC/wpLEmsSVGhHFhBVK3v9eyQdzv0=";
         };
       }
 
@@ -160,7 +160,7 @@
           owner = "jethrokuan";
           repo = "z";
           rev = "d2f502f5575b18a32e1bee2f2b3f869a5053c159";
-          sha256 = "sha256-hFM8uDHDfKBVn4CgRdfRaD0SzmVzOPjfMxU9X6yATzE=";
+          sha256 = "sha256-4c9ScQVf55b2ANaR7Lp/oqLeuK+FxH/wKmSNLV+b/CE=";
         };
       }
 
@@ -176,8 +176,4 @@
       }
     ];
   };
-
-  # Note: rbenv and nodenv init are NOT included
-  # Ruby and Node.js are managed declaratively via Nix (ruby_3_2, nodejs_20)
-  # Use direnv + shell.nix for per-project version management
 }
