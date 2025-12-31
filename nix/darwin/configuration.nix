@@ -70,19 +70,11 @@
   # Enable sudo authentication with Touch ID
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  # User configuration
+  programs.fish.enable = true;
+
   users.users.${username} = {
     name = username;
     home = "/Users/${username}";
+    shell = pkgs.fish;
   };
-
-  # Shells available for users
-  environment.shells = with pkgs; [
-    bash
-    fish
-  ];
-
-  # Set default shell (fish will be set per-user in home-manager)
-  # But make it available system-wide
-  programs.fish.enable = true;
 }
