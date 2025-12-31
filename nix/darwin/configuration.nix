@@ -93,9 +93,9 @@
   security.pam.services.sudo_local.touchIdAuth = true;
 
   # User configuration
-  users.users.${primaryUser} = {
-    name = primaryUser;
-    home = "/Users/${primaryUser}";
+  users.users.${username} = {
+    name = username;
+    home = "/Users/${username}";
   };
 
   # Shells available for users
