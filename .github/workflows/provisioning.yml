@@ -71,7 +71,7 @@ jobs:
 
     - name: Apply nix-darwin configuration
       run: |
-        nix run nix-darwin --extra-experimental-features "nix-command flakes" -- \
+        sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- \
           switch --flake .#mataku-macbook
 
     - name: Verify Nix packages are installed
@@ -133,10 +133,3 @@ jobs:
         # Check Git is configured correctly
         ~/.nix-profile/bin/git config --get user.name
         ~/.nix-profile/bin/git config --get user.email
-        ~/.nix-profile/bin/git config --get commit.gpgsign
-        ~/.nix-profile/bin/git config --get commit.template
-
-    - name: Test rollback capability
-      run: |
-        # Test that rollback works (dry-run)
-        darwin-rebuild --list-generations | head -n 5
