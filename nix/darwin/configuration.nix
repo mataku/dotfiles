@@ -3,33 +3,9 @@
 {
   # Set the primary user for system defaults
   system.primaryUser = username;
-  # Nix package manager settings
-  nix = {
-    package = pkgs.nix;
 
-    settings = {
-      # Enable flakes and nix-command (modern Nix features)
-      experimental-features = [ "nix-command" "flakes" ];
-
-      # Trust admin users for Nix operations
-      trusted-users = [ "@admin" ];
-
-      # Binary cache settings for faster builds
-      substituters = [
-        "https://cache.nixos.org"
-      ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      ];
-    };
-
-    # Garbage collection to save disk space
-    gc = {
-      automatic = true;
-      interval = { Weekday = 0; Hour = 2; Minute = 0; }; # Weekly on Sunday at 2 AM
-      options = "--delete-older-than 30d";
-    };
-  };
+  # to use nix-darwin with Determinate
+  nix.enable = false;
 
   # System-wide packages (available to all users)
   environment.systemPackages = with pkgs; [
