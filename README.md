@@ -1,8 +1,7 @@
-## Installation
+## Documentation
 
-```shell
-/bin/bash setup.sh
-```
+- [Installation Guide](docs/installation.md) - Setup instructions
+- [Usage Guide](docs/usage.md) - Daily workflows and package management
 
 ## Screenshots
 
