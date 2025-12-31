@@ -73,21 +73,21 @@ info "🔨 Building nix-darwin configuration..."
 info "This may take a while on first run as packages are downloaded..."
 
 # Check architecture
-ARCH=$(uname -m)
-if [[ "$ARCH" == "arm64" ]]; then
-    SYSTEM="aarch64-darwin"
-elif [[ "$ARCH" == "x86_64" ]]; then
-    SYSTEM="x86_64-darwin"
-else
-    error "Unsupported architecture: $ARCH"
-    exit 1
-fi
+# ARCH=$(uname -m)
+# if [[ "$ARCH" == "arm64" ]]; then
+#     SYSTEM="aarch64-darwin"
+# elif [[ "$ARCH" == "x86_64" ]]; then
+#     SYSTEM="x86_64-darwin"
+# else
+#     error "Unsupported architecture: $ARCH"
+#     exit 1
+# fi
 
-info "Detected architecture: $SYSTEM"
+CURRENT_USER="$USER"
 
 # Run nix-darwin switch
-sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" --impure --show-trace -- \
-    switch --flake ".#mataku-macbook"
+# NIX_CONFIG is mainly for CI like: "access-tokens = github.com=${GITHUB_TOKEN:-}"
+sudo sh -c "export USER='$CURRENT_USER' NIX_CONFIG='${NIX_CONFIG:-}'; nix run nix-darwin --extra-experimental-features 'nix-command flakes' --impure --show-trace -- switch --flake '.#mataku-macbook'"
 
 if [ $? -eq 0 ]; then
     info "✅ nix-darwin configuration activated successfully!"
