@@ -7,6 +7,11 @@
   # to use nix-darwin with Determinate
   nix.enable = false;
 
+  # macOS version compatibility
+  system.stateVersion = 5;
+
+  environment.etc.zshenv.enable = false;
+
   # System-wide packages (available to all users)
   environment.systemPackages = with pkgs; [
     vim
@@ -60,9 +65,6 @@
         type = "png";
       };
     };
-
-    # macOS version compatibility
-    stateVersion = 4;
   };
 
   # Enable sudo authentication with Touch ID
