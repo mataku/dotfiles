@@ -36,7 +36,7 @@ info "🚀 Starting Nix-based dotfiles installation"
 if ! command -v nix &> /dev/null; then
     info "📦 Installing Nix..."
     curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
-        sh -s -- install
+        sh -s -- install --no-confirm
 
     info "✅ Nix installed successfully"
 else
