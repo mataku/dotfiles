@@ -30,18 +30,6 @@ if [[ "$(uname)" != "Darwin" ]]; then
     exit 1
 fi
 
-# Check if Homebrew is installed (warn if it is)
-if command -v brew &> /dev/null; then
-    warn "Homebrew is currently installed. This Nix setup will replace it."
-    warn "Make sure you have backed up your Brewfile if needed!"
-    read -p "Continue anyway? (y/N) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        info "Installation cancelled"
-        exit 0
-    fi
-fi
-
 info "🚀 Starting Nix-based dotfiles installation"
 
 # Step 1: Install Nix using Determinate Systems installer
@@ -98,7 +86,7 @@ fi
 info "Detected architecture: $SYSTEM"
 
 # Run nix-darwin switch
-nix run nix-darwin --extra-experimental-features "nix-command flakes" -- \
+sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- \
     switch --flake ".#mataku-macbook"
 
 if [ $? -eq 0 ]; then

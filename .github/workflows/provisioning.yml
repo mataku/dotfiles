@@ -59,20 +59,18 @@ jobs:
     steps:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
-    - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@v14
-      with:
-        logger: pretty
-        extra-conf: |
-          accept-flake-config = true
+    - name: Setup dotfiles
+      run: |
+        mkdir -p ~/src/github.com/mataku
+        mv dotfiles ~/src/github.com/mataku/dotfiles
 
     - name: Setup Nix cache
       uses: DeterminateSystems/magic-nix-cache-action@v8
 
-    - name: Apply nix-darwin configuration
+    - name: Run installation script
       run: |
-        sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- \
-          switch --flake .#mataku-macbook
+        CURRENT_USER=$USER
+        USER=$CURRENT_USER bash ~/src/github.com/mataku/dotfiles/scripts/install.sh     
 
     - name: Verify Nix packages are installed
       run: |
