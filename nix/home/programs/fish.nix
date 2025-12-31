@@ -171,7 +171,7 @@
           owner = "laughedelic";
           repo = "pisces";
           rev = "e45e0869855d089ba1e628b6248434b2dfa709c4";
-          sha256 = "sha256-vlIXBWCQrz2ZlxPhi2/+gweKnT6pcMQQ2NYlysqn7ig=";
+          sha256 = "sha256-Oou2IeNNAqR00ZT3bss/DbhrJjGeMsn9dBBYhgdafBw=";
         };
       }
     ];
