@@ -78,6 +78,7 @@ jobs:
     - name: Verify Nix packages are installed
       run: |
         # Check that Nix profile exists
+        brew install tree
         tree -d ~/.config/ || true
         tree -d ~/.local || true
         tree -d ~/.nix-profile || true
