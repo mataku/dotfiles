@@ -66,9 +66,6 @@ jobs:
         mkdir -p ~/src/github.com/mataku
         mv dotfiles ~/src/github.com/mataku/
 
-    - name: Setup Nix cache
-      uses: DeterminateSystems/magic-nix-cache-action@87b14cf437d03d37989d87f0fa5ce4f5dc1a330b # v8
-
     - name: Run installation script
       run: |
         bash ~/src/github.com/mataku/dotfiles/scripts/install.sh
@@ -82,7 +79,8 @@ jobs:
         tree -d ~/.config/ || true
         tree -d ~/.local || true
         tree -d ~/.nix-profile || true
-        darwin-rebuild --list-generations || true
+        which nix || true
+        which nvim || true
   
     - name: Verify dotfiles are symlinked
       run: |
