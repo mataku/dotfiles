@@ -44,13 +44,13 @@ jobs:
       run: |
         nix eval .#darwinConfigurations.mataku-macbook.config.home-manager.users.$USER.home.packages \
           --apply 'pkgs: builtins.map (p: p.pname or p.name or "unknown") pkgs' \
-          --json | jq -r '.[]' | grep -E "(bat|fzf|ripgrep|git|fish)"
+          --impure --json | jq -r '.[]' | grep -E "(bat|fzf|ripgrep|git|fish)"
 
     - name: Check configurations
       run: |
-        nix eval .#darwinConfigurations.mataku-macbook.config.home-manager.users.$USER.xdg.enable
-        nix eval .#darwinConfigurations.mataku-macbook.config.home-manager.users.$USER.programs.fish.enable
-        nix eval .#darwinConfigurations.mataku-macbook.config.home-manager.users.$USER.programs.git.enable
+        nix eval .#darwinConfigurations.mataku-macbook.config.home-manager.users.$USER.xdg.enable --impure
+        nix eval .#darwinConfigurations.mataku-macbook.config.home-manager.users.$USER.programs.fish.enable --impure
+        nix eval .#darwinConfigurations.mataku-macbook.config.home-manager.users.$USER.programs.git.enable --impure
 
   install:
     runs-on: macos-15
