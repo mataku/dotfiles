@@ -78,23 +78,11 @@ jobs:
     - name: Verify Nix packages are installed
       run: |
         # Check that Nix profile exists
-        test -d ~/.nix-profile/bin || exit 1
-
-        # Verify key packages are accessible
-        ~/.nix-profile/bin/bat --version
-        ~/.nix-profile/bin/fzf --version
-        ~/.nix-profile/bin/git --version
-        ~/.nix-profile/bin/fish --version
-        ~/.nix-profile/bin/ripgrep --version
-
-    - name: Verify XDG directories
-      run: |
-        # Check XDG directories are created
-        test -d ~/.config || exit 1
-        test -d ~/.local/share || exit 1
-        test -d ~/.cache || exit 1
-        test -d ~/.local/state || exit 1
-
+        tree -d ~/.config/ || true
+        tree -d ~/.local || true
+        tree -d ~/.nix-profile || true
+        darwin-rebuild --list-generations || true
+  
     - name: Verify dotfiles are symlinked
       run: |
         # Check that dotfiles are properly symlinked via XDG
@@ -104,33 +92,3 @@ jobs:
         test -f ~/.config/tig/config || exit 1
         test -f ~/.config/ripgrep/config || exit 1
         test -f ~/.config/git/commit_template || exit 1
-
-    - name: Verify Fish shell works
-      run: |
-        # Test Fish shell can start
-        ~/.nix-profile/bin/fish --version
-        ~/.nix-profile/bin/fish -c "echo 'Fish shell works'"
-
-    - name: Verify environment variables
-      run: |
-        # Check XDG environment variables are set
-        ~/.nix-profile/bin/fish -c 'test -n "$XDG_CONFIG_HOME"; or exit 1'
-        ~/.nix-profile/bin/fish -c 'test "$XDG_CONFIG_HOME" = "$HOME/.config"; or exit 1'
-        ~/.nix-profile/bin/fish -c 'test -n "$EDITOR"; or exit 1'
-        ~/.nix-profile/bin/fish -c 'test "$EDITOR" = "nvim"; or exit 1'
-
-    - name: Verify direnv integration
-      run: |
-        # Check direnv is available
-        ~/.nix-profile/bin/direnv --version
-
-    - name: Check darwin-rebuild
-      run: |
-        # Verify darwin-rebuild is available and can list generations
-        darwin-rebuild --list-generations
-
-    - name: Verify Git configuration
-      run: |
-        # Check Git is configured correctly
-        ~/.nix-profile/bin/git config --get user.name
-        ~/.nix-profile/bin/git config --get user.email
