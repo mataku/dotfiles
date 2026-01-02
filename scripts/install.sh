@@ -35,8 +35,7 @@ info "🚀 Starting Nix-based dotfiles installation"
 # Step 1: Install Nix using Determinate Systems installer
 if ! command -v nix &> /dev/null; then
     info "📦 Installing Nix..."
-    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
-        sh -s -- install --no-confirm
+    bash <(curl -L https://nixos.org/nix/install) --daemon
 
     info "✅ Nix installed successfully"
 else
@@ -67,6 +66,14 @@ fi
 
 cd "$DOTFILES_DIR"
 info "Working in: $DOTFILES_DIR"
+
+# Backup existing files for nix-darwin
+if [ -f /etc/bashrc ]; then
+  sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
+fi
+if [ -f /etc/zshrc ]; then
+  sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
+fi
 
 # Step 4: Build and activate nix-darwin configuration
 info "🔨 Building nix-darwin configuration..."
