@@ -27,7 +27,6 @@
   imports = [
     ./packages.nix
     ./programs/fish.nix
-    ./programs/git.nix
   ];
 
   home.sessionVariables = {
@@ -75,6 +74,9 @@
 
   # Legacy dotfiles (for tools that don't support XDG yet)
   home.file = {
+    # Git configuration
+    ".gitconfig".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.gitconfig";
+
     # IRB (Ruby REPL) - no XDG support yet
     ".irbrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.irbrc";
 
