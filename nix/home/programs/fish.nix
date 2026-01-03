@@ -1,11 +1,8 @@
 { config, pkgs, lib, ... }:
 
 {
-  # Fish shell installed via Nix, but configuration managed manually
-  # The existing ~/.config/fish/config.fish and plugins are used as-is
-  programs.fish = {
-    enable = true;
-    # No shellAliases, shellAbbrs, interactiveShellInit, or plugins
-    # Use existing config.fish and fisher/other plugin managers
-  };
+  # Fish shell is installed via home.packages (see packages.nix)
+  # Configuration files are symlinked from fish/ directory (see default.nix)
+  # Plugins are managed via fisher/other plugin managers in config.fish
+  # No programs.fish configuration needed - fully manual management
 }

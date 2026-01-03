@@ -47,7 +47,8 @@
     # === Language Runtimes ===
     go               # Go programming language
     kotlin           # Kotlin JVM language
-    nodejs_20        # Node.js 20.x (replacing nodenv)
+    nodejs_20        # Node.js 20.x (default version)
+    nodenv           # Node.js version manager
     rustup           # Rust toolchain manager
     lua              # Lua programming language
 

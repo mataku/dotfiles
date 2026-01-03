@@ -62,32 +62,6 @@
     HOMEBREW_NO_AUTO_UPDATE = "1";
   };
 
-  # Additional paths (replacing PATH modifications in fish/env.fish)
-  home.sessionPath = [
-    # User local bin
-    "${config.home.homeDirectory}/.local/bin"
-
-    # Go binaries
-    "${config.home.homeDirectory}/go/bin"
-
-    # Android SDK paths
-    "${config.home.homeDirectory}/Library/Android/sdk/tools"
-    "${config.home.homeDirectory}/Library/Android/sdk/platform-tools"
-    "${config.home.homeDirectory}/Library/Android/sdk/tools/bin"
-    "${config.home.homeDirectory}/Library/Android/sdk/emulator"
-    "${config.home.homeDirectory}/Library/Android/sdk/cmdline-tools/latest/bin"
-    "${config.home.homeDirectory}/Library/Android/sdk/build-tools/35.0.0"
-
-    # Android Studio
-    "/Applications/Android Studio.app/Contents/MacOS"
-
-    # Rustup (rustup manages its own PATH, but add stable toolchain)
-    "${config.home.homeDirectory}/.rustup/toolchains/stable-aarch64-apple-darwin/bin"
-
-    # Note: No Homebrew paths (/opt/homebrew/bin, /usr/local/bin)
-    # Note: No rbenv/nodenv shims (using Nix-managed Ruby and Node)
-  ];
-
   # XDG-compliant dotfile symlinking
   xdg.configFile = {
     # Neovim configuration (complex Lua setup)
@@ -145,4 +119,6 @@
     enable = true;
     nix-direnv.enable = true;
   };
+
+  programs.java.enable = true;
 }
