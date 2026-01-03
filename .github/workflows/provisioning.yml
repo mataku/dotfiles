@@ -79,6 +79,7 @@ jobs:
         tree -d ~/.config/ || true
         tree -d ~/.local || true
         tree -d ~/.nix-profile || true
+        tree /etc/profiles/per-user/ || true
         which nix || true
         which nvim || true
   

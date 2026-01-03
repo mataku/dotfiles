@@ -4,13 +4,8 @@
   # Set the primary user for system defaults
   system.primaryUser = username;
 
-  # to use nix-darwin with Determinate
-  nix.enable = false;
-
   # macOS version compatibility
   system.stateVersion = 5;
-
-  environment.etc.zshenv.enable = false;
 
   # System-wide packages (available to all users)
   environment.systemPackages = with pkgs; [

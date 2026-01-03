@@ -21,6 +21,14 @@ error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# Backup existing files for nix-darwin
+if [ -f /etc/bashrc ]; then
+  sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
+fi
+if [ -f /etc/zshrc ]; then
+  sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
+fi
+
 CURRENT_USER="$USER"
 sudo sh -c "export USER='$CURRENT_USER' NIX_CONFIG='${NIX_CONFIG:-}'; nix run nix-darwin --extra-experimental-features 'nix-command flakes' --impure --show-trace -- switch --flake '.#mataku-macbook' --impure"
 
