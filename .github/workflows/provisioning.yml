@@ -79,12 +79,7 @@ jobs:
       run: |
         # Check that Nix profile exists
         brew install tree
-        tree -d ~/.config/ || true
-        tree -d ~/.local || true
-        tree -d ~/.nix-profile || true
-        tree /etc/profiles/per-user/ || true
-        which nix || true
-        which nvim || true
+        tree /etc/profiles/per-user/$USER/bin
   
     - name: Verify dotfiles are symlinked
       run: |
