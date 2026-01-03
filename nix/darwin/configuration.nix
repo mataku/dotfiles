@@ -95,6 +95,7 @@
     echo -e "  • WezTerm"
     echo -e "  • Discord"
     echo -e "  • Raycast"
+    echo -e "  • Karabiner-Elements"
     echo -e "  • Slack\033[0m"
     echo ""
     echo -e "\033[1;33m===================================================\033[0m"
