@@ -48,7 +48,7 @@
         NSAutomaticQuoteSubstitutionEnabled = false;
 
         # Sound settings
-        "com.apple.sound.beep.volume" = 0; # Disable sound feedback when changing volume
+        "com.apple.sound.beep.volume" = 0.000; # Disable sound feedback when changing volume
       };
 
       # Trackpad settings
