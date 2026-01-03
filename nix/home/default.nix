@@ -49,57 +49,41 @@
 
     # Ripgrep config (XDG-compliant path)
     RIPGREP_CONFIG_PATH = "${config.xdg.configHome}/ripgrep/config";
-
-    # FZF
-    FZF_DEFAULT_OPTS = "--cycle --ansi --select-1 --exit-0";
-    FZF_DEFAULT_COMMAND = "fd --type f --hidden --follow --exclude .git";
-
-    # Android SDK (from fish/environments/android.fish)
-    ANDROID_HOME = "${config.home.homeDirectory}/Library/Android/sdk";
-    ANDROID_SDK_ROOT = "${config.home.homeDirectory}/Library/Android/sdk";
-
-    # Disable Homebrew auto-update (even though we're removing Homebrew)
-    HOMEBREW_NO_AUTO_UPDATE = "1";
   };
 
-  # XDG-compliant dotfile symlinking
+  # XDG-compliant dotfile symlinking (using mkOutOfStoreSymlink for live editing)
   xdg.configFile = {
-    # Neovim configuration (complex Lua setup)
-    "nvim" = {
-      source = ../../nvim;
-      recursive = true;
-    };
+    # Neovim configuration (only init.lua and lua directory)
+    "nvim/init.lua".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/nvim/init.lua";
+    "nvim/lua".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/nvim/lua";
 
     # WezTerm configuration
-    "wezterm/wezterm.lua".source = ../../wezterm/wezterm.lua;
+    "wezterm/wezterm.lua".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/wezterm/wezterm.lua";
 
     # Lazygit configuration (XDG-compliant)
-    "lazygit/config.yml".source = ../../lazygit/config.yml;
+    "lazygit/config.yml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/lazygit/config.yml";
 
     # Tig configuration (XDG-compliant)
-    "tig/config".source = ../../.tigrc;
+    "tig/config".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.tigrc";
 
     # Ripgrep configuration (XDG-compliant)
-    "ripgrep/config".source = ../../.ripgreprc;
+    "ripgrep/config".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.ripgreprc";
 
     # Git commit template (XDG-compliant)
-    "git/commit_template".source = ../../.commit_template;
+    "git/commit_template".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.commit_template";
 
     # Fish configuration files (all managed via symlinks)
-    "fish/config.fish".source = ../../fish/config.fish;
-    "fish/env.fish".source = ../../fish/env.fish;
-    "fish/alias.fish".source = ../../fish/alias.fish;
-    "fish/fish_plugins".source = ../../fish/fish_plugins;
-    "fish/fishfile".source = ../../fish/fishfile;
+    "fish/config.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/config.fish";
+    "fish/env.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/env.fish";
+    "fish/alias.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/alias.fish";
+    "fish/fish_plugins".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/fish_plugins";
+    "fish/fishfile".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/fishfile";
 
     # Fish environment configurations
-    "fish/environments/android.fish".source = ../../fish/environments/android.fish;
+    "fish/environments/android.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/environments/android.fish";
 
     # Fish functions directory
-    "fish/functions" = {
-      source = ../../fish/functions;
-      recursive = true;
-    };
+    "fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/functions";
   };
 
   # Legacy dotfiles (for tools that don't support XDG yet)
