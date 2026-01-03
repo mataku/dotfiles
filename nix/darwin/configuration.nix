@@ -78,4 +78,24 @@
     name = username;
     home = "/Users/${username}";
   };
+
+  # Post-activation message for manual installations
+  system.activationScripts.postActivation.text = ''
+    echo ""
+    echo -e "\033[1;33m==================================================="
+    echo -e "Manual Installation Required"
+    echo -e "===================================================\033[0m"
+    echo "Please install the following applications manually:"
+    echo ""
+    echo -e "\033[1;32m  • Vivaldi"
+    echo -e "  • Xcode"
+    echo -e "  • Android Studio"
+    echo -e "  • Visual Studio Code"
+    echo -e "  • WezTerm"
+    echo -e "  • Discord"
+    echo -e "  • Slack\033[0m"
+    echo ""
+    echo -e "\033[1;33m===================================================\033[0m"
+    echo ""
+  '';
 }
