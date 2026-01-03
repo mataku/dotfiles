@@ -50,6 +50,7 @@
         # Sound settings
         "com.apple.sound.beep.volume" = 0.000;
         "com.apple.sound.beep.feedback" = 0;
+        AppleInterfaceStyle = "Dark";
       };
 
       # Trackpad settings
