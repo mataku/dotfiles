@@ -22,6 +22,7 @@
         orientation = "left";
         show-recents = false;
         tilesize = 38;
+        show-process-indicators = false; # Don't show indicator lights for open applications
       };
 
       # Finder settings
@@ -45,6 +46,9 @@
         NSAutomaticDashSubstitutionEnabled = false;
         NSAutomaticPeriodSubstitutionEnabled = false;
         NSAutomaticQuoteSubstitutionEnabled = false;
+
+        # Sound settings
+        "com.apple.sound.beep.volume" = 0; # Disable sound feedback when changing volume
       };
 
       # Trackpad settings
@@ -60,6 +64,11 @@
         type = "png";
       };
     };
+  };
+
+  # Disable startup chime
+  system.nvram.variables = {
+    "StartupMute" = "%01"; # Mute startup sound
   };
 
   # Enable sudo authentication with Touch ID
