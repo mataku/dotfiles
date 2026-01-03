@@ -30,7 +30,7 @@ if [ -f /etc/zshrc ]; then
 fi
 
 CURRENT_USER="$USER"
-sudo sh -c "export USER='$CURRENT_USER' NIX_CONFIG='${NIX_CONFIG:-}'; nix run nix-darwin --extra-experimental-features 'nix-command flakes' --impure --show-trace -- switch --flake '.#mataku-macbook' --impure"
+sudo sh -c "export USER='$CURRENT_USER' NIX_CONFIG='${NIX_CONFIG:-}'; nix run nix-darwin --extra-experimental-features 'nix-command flakes' --impure --show-trace -- switch --flake '.#macos' --impure"
 
 if [ $? -eq 0 ]; then
     info "✅ nix-darwin configuration activated successfully!"

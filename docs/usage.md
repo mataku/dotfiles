@@ -22,7 +22,7 @@ home.packages = with pkgs; [
 
 3. Rebuild:
 ```shell
-darwin-rebuild switch --flake ~/src/github.com/mataku/dotfiles#mataku-macbook
+darwin-rebuild switch --flake ~/src/github.com/mataku/dotfiles#macos
 ```
 
 ### Removing Packages
@@ -38,7 +38,7 @@ cd ~/src/github.com/mataku/dotfiles
 nix flake update
 
 # Rebuild system
-darwin-rebuild switch --flake .#mataku-macbook
+darwin-rebuild switch --flake .#macos
 ```
 
 ## Language Version Management
@@ -134,7 +134,7 @@ Changes take effect immediately or after restarting the application.
 For system-wide environment variables, edit [nix/home/default.nix](../nix/home/default.nix) → `home.sessionVariables`, then rebuild:
 
 ```shell
-darwin-rebuild switch --flake .#mataku-macbook
+darwin-rebuild switch --flake .#macos
 ```
 
 ### System Preferences
@@ -142,7 +142,7 @@ darwin-rebuild switch --flake .#mataku-macbook
 macOS system settings are managed in [nix/darwin/configuration.nix](../nix/darwin/configuration.nix). Edit `system.defaults` section and rebuild:
 
 ```shell
-darwin-rebuild switch --flake .#mataku-macbook
+darwin-rebuild switch --flake .#macos
 ```
 
 ## Common Tasks
@@ -225,7 +225,7 @@ git wip       # commit --allow-empty -m 'WIP'
 nix flake check
 
 # Build without activating
-nix build .#darwinConfigurations.mataku-macbook.system
+nix build .#darwinConfigurations.macos.system
 ```
 
 ### Package Not Found

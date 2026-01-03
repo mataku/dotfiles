@@ -195,7 +195,7 @@ cd ~/src/github.com/mataku/dotfiles
 nix flake update
 
 # Rebuild and activate
-darwin-rebuild switch --flake .#mataku-macbook
+darwin-rebuild switch --flake .#macos
 ```
 
 ### Update Specific Input
@@ -205,7 +205,7 @@ darwin-rebuild switch --flake .#mataku-macbook
 nix flake lock --update-input nixpkgs
 
 # Rebuild
-darwin-rebuild switch --flake .#mataku-macbook
+darwin-rebuild switch --flake .#macos
 ```
 
 ### Rollback to Previous Version
@@ -251,7 +251,7 @@ home.packages = with pkgs; [
 ### Step 3: Rebuild
 
 ```shell
-darwin-rebuild switch --flake ~/src/github.com/mataku/dotfiles#mataku-macbook
+darwin-rebuild switch --flake ~/src/github.com/mataku/dotfiles#macos
 ```
 
 ## Troubleshooting
@@ -272,10 +272,10 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 # Try building without activation
-nix build ~/src/github.com/mataku/dotfiles#darwinConfigurations.mataku-macbook.system
+nix build ~/src/github.com/mataku/dotfiles#darwinConfigurations.macos.system
 
 # If build succeeds, activate
-nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/src/github.com/mataku/dotfiles#mataku-macbook
+nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/src/github.com/mataku/dotfiles#macos
 ```
 
 ### Fish Shell Not Loading
@@ -338,7 +338,7 @@ If builds fail due to missing dependencies:
 nix-collect-garbage -d
 
 # Try building with verbose output
-darwin-rebuild switch --flake .#mataku-macbook --show-trace
+darwin-rebuild switch --flake .#macos --show-trace
 
 # Check for syntax errors in Nix files
 nix flake check

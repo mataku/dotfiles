@@ -55,22 +55,22 @@ jobs:
 
     - name: Build nix-darwin configuration
       run: |
-        nix build .#darwinConfigurations.mataku-macbook.system \
+        nix build .#darwinConfigurations.macos.system \
           --extra-experimental-features "nix-command flakes" --impure \
           --show-trace
 
     - name: Verify key packages
       run: |
-        nix eval .#darwinConfigurations.mataku-macbook.config.home-manager.users.$USER.home.packages \
+        nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.home.packages \
           --extra-experimental-features "nix-command flakes" \
           --apply 'pkgs: builtins.map (p: p.pname or p.name or "unknown") pkgs' \
           --impure --json | jq -r '.[]' | grep -E "(bat|fzf|ripgrep|git|fish)"
 
     - name: Check configurations
       run: |
-        nix eval .#darwinConfigurations.mataku-macbook.config.home-manager.users.$USER.xdg.enable --impure --extra-experimental-features "nix-command flakes"
-        nix eval .#darwinConfigurations.mataku-macbook.config.home-manager.users.$USER.programs.fish.enable --impure --extra-experimental-features "nix-command flakes"
-        nix eval .#darwinConfigurations.mataku-macbook.config.home-manager.users.$USER.programs.git.enable --impure --extra-experimental-features "nix-command flakes"
+        nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.xdg.enable --impure --extra-experimental-features "nix-command flakes"
+        nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.programs.fish.enable --impure --extra-experimental-features "nix-command flakes"
+        nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.programs.git.enable --impure --extra-experimental-features "nix-command flakes"
 
   install:
     runs-on: macos-15

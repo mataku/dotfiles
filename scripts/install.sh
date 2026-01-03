@@ -94,7 +94,7 @@ CURRENT_USER="$USER"
 
 # Run nix-darwin switch
 # NIX_CONFIG is mainly for CI like: "access-tokens = github.com=${GITHUB_TOKEN:-}"
-sudo sh -c "export USER='$CURRENT_USER' NIX_CONFIG='${NIX_CONFIG:-}'; nix run nix-darwin --extra-experimental-features 'nix-command flakes' --impure --show-trace -- switch --flake '.#mataku-macbook' --impure"
+sudo sh -c "export USER='$CURRENT_USER' NIX_CONFIG='${NIX_CONFIG:-}'; nix run nix-darwin --extra-experimental-features 'nix-command flakes' --impure --show-trace -- switch --flake '.#macos' --impure"
 
 if [ $? -eq 0 ]; then
     info "✅ nix-darwin configuration activated successfully!"

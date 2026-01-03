@@ -24,7 +24,7 @@
     {
       # macOS configuration for Apple Silicon
       darwinConfigurations = {
-        "mataku-macbook" = nix-darwin.lib.darwinSystem {
+        "macos" = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
 
           modules = [
