@@ -90,7 +90,7 @@
     glib             # Low-level core library
 
     # === Java ===
-    temurin-jre-bin-17  # Eclipse Temurin JRE 17 (replacing temurin@17 cask)
+    temurin-bin-17  # Eclipse Temurin JDK 17 (replacing temurin@17 cask)
 
     # === Mac App Store CLI ===
     mas              # Mac App Store command line
