@@ -66,17 +66,11 @@
     pngquant         # PNG compression
     potrace          # Bitmap to vector tracing
 
-    # === Database ===
-    postgresql_14    # PostgreSQL 14.x
-
     # === Cloud & DevOps ===
     kubectl          # Kubernetes CLI
 
     # === Testing & Coverage ===
     lcov             # Code coverage tool
-
-    # === HTML & Web ===
-    html-tidy        # HTML validator/formatter (tidy-html5)
 
     # === Security & Crypto ===
     gnupg            # GNU Privacy Guard
@@ -112,8 +106,6 @@
   # Mac App Store apps (installed manually with `mas`):
   # - Xcode (497799835)
   # - Amphetamine (937984704)
-  # - GarageBand (682658836)
-  # - iMovie (408981434)
   # - Keynote (409183694)
   # - Numbers (409203825)
   # - Pages (409201541)
