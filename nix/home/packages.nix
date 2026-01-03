@@ -52,8 +52,11 @@
     rustup           # Rust toolchain manager
     lua              # Lua programming language
 
+    # === Version Managers ===
+    rbenv            # Ruby version manager
+    fvm              # Flutter Version Manager
+
     # === Build Tools ===
-    gradle           # Build automation for JVM
     cocoapods        # Dependency manager for Swift/Objective-C
 
     # === Image & Video Processing ===
@@ -103,10 +106,6 @@
   ];
 
   # Note: The following are NOT included as they are replaced by Nix's declarative approach:
-  # - rbenv, ruby-build (use rbenv separately for Ruby version management)
-  # - nodenv, node-build (using nodejs_20 directly)
-  # - leoafarias/fvm/fvm (Flutter Version Manager - manual installation)
-  # - flutter (cask - manual installation)
   # - font-cica (will be custom derivation)
   # - swiftformat-for-xcode (Xcode extension - manual installation)
 
