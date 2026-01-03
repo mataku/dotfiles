@@ -51,6 +51,7 @@
         "com.apple.sound.beep.volume" = 0.000;
         "com.apple.sound.beep.feedback" = 0;
         AppleInterfaceStyle = "Dark";
+        AppleInterfaceStyleSwitchesAutomatically = false;
       };
 
       # Trackpad settings
@@ -96,6 +97,9 @@
     echo -e "  • WezTerm"
     echo -e "  • Discord"
     echo -e "  • Raycast"
+    echo -e "  • Logicool Options+"
+    echo -e "  • Google IME"
+    echo -e "  • Spotify"
     echo -e "  • Karabiner-Elements"
     echo -e "  • Slack\033[0m"
     echo ""
