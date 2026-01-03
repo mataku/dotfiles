@@ -47,8 +47,9 @@ darwin-rebuild switch --flake .#mataku-macbook
 
 Configured in [nix/home/packages.nix](../nix/home/packages.nix):
 - Node.js: `nodejs_20`
-- Ruby: `ruby_3_2`
 - Go: `go`
+- Kotlin: `kotlin`
+- Java: `temurin-bin-17` (managed via `programs.java`)
 
 To change, edit the package name and rebuild.
 
@@ -61,9 +62,9 @@ Use direnv + shell.nix for project-specific versions:
 { pkgs ? import <nixpkgs> {} }:
 pkgs.mkShell {
   buildInputs = with pkgs; [
-    nodejs_18
-    ruby_3_1
-    postgresql_14
+    nodejs_18      # Different Node.js version
+    temurin-bin-11 # Different Java version
+    postgresql_14  # Database
   ];
 }
 ```
@@ -84,23 +85,65 @@ Environment activates automatically when you `cd` into the directory.
 
 ### Git Configuration
 
-Edit [nix/home/programs/git.nix](../nix/home/programs/git.nix), then rebuild.
+Git is configured via `.gitconfig` in the repository root, which is symlinked to `~/.gitconfig`. Edit the file directly:
+
+```shell
+# Edit Git configuration
+vim ~/src/github.com/mataku/dotfiles/.gitconfig
+
+# Changes take effect immediately (no rebuild needed)
+```
 
 ### Fish Shell
 
-Edit [nix/home/programs/fish.nix](../nix/home/programs/fish.nix), then rebuild and restart Fish:
+Fish shell configuration files are symlinked from the `fish/` directory. Edit them directly:
+
 ```shell
-darwin-rebuild switch --flake .#mataku-macbook
+# Edit Fish configuration
+vim ~/src/github.com/mataku/dotfiles/fish/config.fish
+vim ~/src/github.com/mataku/dotfiles/fish/alias.fish
+vim ~/src/github.com/mataku/dotfiles/fish/env.fish
+
+# Reload Fish to apply changes
 exec fish
 ```
 
+### Neovim Configuration
+
+Neovim configuration is symlinked from the `nvim/` directory:
+
+```shell
+# Edit Neovim configuration
+vim ~/src/github.com/mataku/dotfiles/nvim/init.lua
+
+# Changes take effect on next Neovim restart
+```
+
+### Other Dotfiles
+
+Most dotfiles are symlinked and can be edited directly:
+- WezTerm: `wezterm/wezterm.lua`
+- Lazygit: `lazygit/config.yml`
+- Tig: `.tigrc`
+- Ripgrep: `.ripgreprc`
+
+Changes take effect immediately or after restarting the application.
+
 ### Environment Variables
 
-Edit [nix/home/default.nix](../nix/home/default.nix) → `home.sessionVariables`, then rebuild.
+For system-wide environment variables, edit [nix/home/default.nix](../nix/home/default.nix) → `home.sessionVariables`, then rebuild:
+
+```shell
+darwin-rebuild switch --flake .#mataku-macbook
+```
 
 ### System Preferences
 
-Edit [nix/darwin/configuration.nix](../nix/darwin/configuration.nix) → `system.defaults`, then rebuild.
+macOS system settings are managed in [nix/darwin/configuration.nix](../nix/darwin/configuration.nix). Edit `system.defaults` section and rebuild:
+
+```shell
+darwin-rebuild switch --flake .#mataku-macbook
+```
 
 ## Common Tasks
 
@@ -132,24 +175,28 @@ nix-collect-garbage --delete-older-than 7d
 du -sh /nix/store
 ```
 
-## Fish Shell
+## Fish Shell Features
 
-### FZF History
+Fish shell configuration is managed manually via symlinked files. Install plugins using Fisher or your preferred plugin manager.
 
-Press `Ctrl+R` to search command history with FZF.
-
-### z for Directory Jumping
+### Common Commands
 
 ```shell
-z dotfiles    # Jump to frecent directory
-z -l src      # List matching directories
-```
-
-### ghq for Git Repositories
-
-```shell
+# ghq for Git repository management
 ghq get github.com/user/repo   # Clone to ~/src
-ghq list                         # List repos
+ghq list                         # List all repositories
+
+# bat for better cat
+bat README.md                    # Syntax-highlighted file view
+
+# fd for better find
+fd pattern                       # Fast file search
+
+# ripgrep for better grep
+rg pattern                       # Fast code search
+
+# lsd for better ls
+lsd -la                          # Colorful directory listing
 ```
 
 ## Tmux

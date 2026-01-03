@@ -18,14 +18,19 @@ This configuration follows the [XDG Base Directory specification](https://specif
 - **Cache**: `~/.cache/` (XDG_CACHE_HOME)
 - **State**: `~/.local/state/` (XDG_STATE_HOME)
 
-Configurations are placed in appropriate XDG directories:
-- Git: `~/.config/git/`
+Configurations are symlinked to appropriate XDG directories:
 - Neovim: `~/.config/nvim/`
 - Fish: `~/.config/fish/`
-- Tmux: `~/.config/tmux/`
+- WezTerm: `~/.config/wezterm/`
 - Tig: `~/.config/tig/`
 - Lazygit: `~/.config/lazygit/`
 - Ripgrep: `~/.config/ripgrep/`
+- Git commit template: `~/.config/git/`
+
+Legacy dotfiles (symlinked to home directory):
+- Git: `~/.gitconfig`
+- IRB: `~/.irbrc`
+- Gem: `~/.gemrc`
 
 ## Repository Structure
 
@@ -40,14 +45,14 @@ dotfiles/
 │   │   ├── default.nix            # Home-manager config (XDG-enabled)
 │   │   ├── packages.nix           # Package list (60+ packages)
 │   │   └── programs/
-│   │       ├── fish.nix           # Fish shell config
-│   │       └── git.nix            # Git config
+│   │       └── fish.nix           # Fish shell config placeholder
 │   └── packages/
 │       └── font-cica.nix          # Custom Font Cica derivation
-├── fish/                          # Fish shell dotfiles
+├── fish/                          # Fish shell dotfiles (manually managed)
 ├── nvim/                          # Neovim configuration
 ├── wezterm/                       # WezTerm configuration
 ├── lazygit/                       # Lazygit configuration
+├── .gitconfig                     # Git configuration (symlinked)
 ├── scripts/
 │   └── install.sh                 # Installation script
 └── docs/
@@ -98,34 +103,48 @@ bat --version
 fzf --version
 git --version
 fish --version
+neovim --version
 
 # Verify Nix installation
 nix --version
 darwin-rebuild --version
 
-# Check that Fish plugins loaded
-fish -c 'type z'  # Should show z function
+# Check that Fish shell works
+fish -c 'echo $SHELL'
+
+# Verify direnv integration
+direnv --version
 ```
 
 ## Post-Installation Setup
 
-### 1. Install Mac App Store Apps (Optional)
+### 1. Install Applications Manually
 
-Mac App Store apps cannot be managed by Nix. Install them manually:
+The following applications cannot be managed by Nix and need manual installation:
 
+**Via Mac App Store** (or use `mas` CLI):
 ```shell
 # Install using mas CLI (included in Nix packages)
 mas install 497799835   # Xcode
 mas install 937984704   # Amphetamine
-mas install 682658836   # GarageBand
-mas install 408981434   # iMovie
 mas install 409183694   # Keynote
 mas install 409203825   # Numbers
 mas install 409201541   # Pages
 mas install 425424353   # The Unarchiver
 ```
 
-Or install through the Mac App Store GUI.
+**Direct Download Required**:
+- Vivaldi (https://vivaldi.com/)
+- Android Studio (https://developer.android.com/studio)
+- Visual Studio Code (https://code.visualstudio.com/)
+- WezTerm (https://wezfurlong.org/wezterm/)
+- Discord (https://discord.com/)
+- Raycast (https://raycast.com/)
+- Logicool Options+ (https://www.logicool.co.jp/ja-jp/software/logi-options-plus.html)
+- Google IME (https://www.google.co.jp/ime/)
+- Spotify (https://www.spotify.com/)
+- Karabiner-Elements (https://karabiner-elements.pqrs.org/)
+- Slack (https://slack.com/)
 
 ### 2. Set Up Rust Toolchain (Optional)
 
@@ -154,14 +173,15 @@ flutter doctor
 Create optional configuration files for private settings:
 
 ```shell
-# GitHub personal access token
+# GitHub personal access token (optional, for private repositories)
 echo "set -x GITHUB_TOKEN your_token_here" > ~/.config/fish/github_access_token.fish
 
-# Work-specific configuration
+# Work-specific configuration (optional)
 touch ~/.config/fish/work.fish
 
-# Android-specific configuration (if not using the default)
-# Edit ~/.config/fish/environments/android.fish
+# Android environment variables are configured in:
+# ~/.config/fish/environments/android.fish (already symlinked)
+# Edit the source file in the dotfiles repository if needed
 ```
 
 ## Updating the System
