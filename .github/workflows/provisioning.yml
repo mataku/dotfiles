@@ -103,7 +103,7 @@ jobs:
         # Check that dotfiles are properly symlinked via XDG
         test -L ~/.config/nvim || test -d ~/.config/nvim || exit 1
         test -f ~/.config/fish/config.fish || exit 1
-        test -f ~/.config/git/config || exit 1
+        test -f ~/.gitconfig || exit 1 # ~/.config/git/config
         test -f ~/.config/tig/config || exit 1
         test -f ~/.config/ripgrep/config || exit 1
         test -f ~/.config/git/commit_template || exit 1
