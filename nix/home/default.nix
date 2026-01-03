@@ -111,6 +111,13 @@
     # Git commit template (XDG-compliant)
     "git/commit_template".source = ../../.commit_template;
 
+    # Fish configuration files (all managed via symlinks)
+    "fish/config.fish".source = ../../fish/config.fish;
+    "fish/env.fish".source = ../../fish/env.fish;
+    "fish/alias.fish".source = ../../fish/alias.fish;
+    "fish/fish_plugins".source = ../../fish/fish_plugins;
+    "fish/fishfile".source = ../../fish/fishfile;
+
     # Fish environment configurations
     "fish/environments/android.fish".source = ../../fish/environments/android.fish;
 
