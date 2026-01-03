@@ -48,7 +48,8 @@
         NSAutomaticQuoteSubstitutionEnabled = false;
 
         # Sound settings
-        "com.apple.sound.beep.volume" = 0.000; # Disable sound feedback when changing volume
+        "com.apple.sound.beep.volume" = 0.000;
+        "com.apple.sound.beep.feedback" = 0;
       };
 
       # Trackpad settings
@@ -93,6 +94,7 @@
     echo -e "  • Visual Studio Code"
     echo -e "  • WezTerm"
     echo -e "  • Discord"
+    echo -e "  • Raycast"
     echo -e "  • Slack\033[0m"
     echo ""
     echo -e "\033[1;33m===================================================\033[0m"
