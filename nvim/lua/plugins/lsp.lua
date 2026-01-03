@@ -63,21 +63,17 @@ return {
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      local lspconfig = require('lspconfig')
+      -- Setup capabilities for nvim-cmp integration
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
-      lspconfig.solargraph.setup{
-        capabilities = capabilities
-      }
-      lspconfig.rust_analyzer.setup{
+
+      -- Configure default capabilities for all LSP servers
+      vim.lsp.config('*', {
         capabilities = capabilities,
-        settings = {
-          ['rust-analyzer'] = {
-            diagnostics = {
-              enable = false;
-            }
-          },
-        },
-      }
+      })
+
+      -- Enable LSP servers (configs are in ~/.config/nvim/lsp/)
+      vim.lsp.enable('ruby_lsp')
+      vim.lsp.enable('rust_analyzer')
     end
   }
 }
