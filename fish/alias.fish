@@ -3,8 +3,8 @@ alias t tig
 alias v nvim
 
 if string match -q 'Darwin' (uname)
-  alias grep ggrep
-  alias sed gsed
+#  alias grep ggrep
+#  alias sed gsed
 end
 
 alias ls 'lsd -a'
