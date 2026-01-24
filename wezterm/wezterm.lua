@@ -21,7 +21,6 @@ if wezterm.target_triple == 'aarch64-apple-darwin' then
   end
 end
 
-
 config.colors = {
   foreground = '#eceef0',
   background = '#283137',
