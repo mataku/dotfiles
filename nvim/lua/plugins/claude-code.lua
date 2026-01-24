@@ -4,7 +4,6 @@ return {
     "folke/snacks.nvim",
   },
   opts = {
-    log_level = "debug",
     auto_start = true,
     terminal = {
       split_side = "right",
