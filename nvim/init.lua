@@ -23,7 +23,7 @@ vim.cmd([[
   set notitle
   set mouse=a
   set shell=fish
-  set ambiwidth=double
+  set ambiwidth=single
   set clipboard=unnamed
   set backspace=start,eol,indent
   set number

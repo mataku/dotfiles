@@ -2,7 +2,24 @@ local wezterm = require 'wezterm'
 
 local config = wezterm.config_builder()
 
-config.default_prog = { 'fish', '-l' }
+local function file_exists(path)
+  local f = io.open(path, "r")
+  if f then
+    f:close()
+    return true
+  end
+  return false
+end
+
+if wezterm.target_triple == 'aarch64-apple-darwin' then
+  local user = os.getenv("USER")
+  local nix_fish = '/etc/profiles/per-user/' .. user .. '/bin/fish'
+  if file_exists(nix_fish) then
+    config.default_prog = { nix_fish, '-l' }
+  else
+    config.default_prog = { '/opt/homebrew/bin/fish', '-l' }
+  end
+end
 
 config.colors = {
   foreground = '#eceef0',
