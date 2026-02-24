@@ -27,6 +27,7 @@
   imports = [
     ./packages.nix
     ./programs/fish.nix
+    ./programs/zsh.nix
   ];
 
   home.sessionVariables = {
@@ -70,6 +71,14 @@
 
     # Fish functions directory
     "fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/functions";
+
+    # Zsh configuration files
+    "zsh/.zshrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/.zshrc";
+    "zsh/alias.zsh".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/alias.zsh";
+    "zsh/env.zsh".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/env.zsh";
+    "zsh/prompt.zsh".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/prompt.zsh";
+    "zsh/functions.zsh".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/functions.zsh";
+    "zsh/environments/android.zsh".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/environments/android.zsh";
   };
 
   # Legacy dotfiles (for tools that don't support XDG yet)
@@ -85,6 +94,9 @@
 
     # Gem configuration - no XDG support yet
     ".gemrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.gemrc";
+
+    # Zsh bootstrap (sets ZDOTDIR for XDG compliance)
+    ".zshenv".text = ''export ZDOTDIR="$HOME/.config/zsh"'';
   };
 
   # Let Home Manager install and manage itself
