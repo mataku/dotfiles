@@ -22,9 +22,9 @@ _set_prompt() {
 
   local arrow
   if [[ $last_status -eq 0 ]]; then
-    arrow="%{$fg[green]%}⫸%{$reset_color%} "
+    arrow="%{$fg[green]%}⫸%{$reset_color%}  "
   else
-    arrow="%{$fg[red]%}⫸%{$reset_color%} "
+    arrow="%{$fg[red]%}⫸%{$reset_color%}  "
   fi
 
   PROMPT="${git_info}${arrow}"
