@@ -1,0 +1,10 @@
+export PATH="$HOME/Library/Android/sdk/tools:$PATH"
+export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
+export PATH="$HOME/Library/Android/sdk/tools/bin:$PATH"
+export PATH="$HOME/Library/Android/sdk/emulator:$PATH"
+export PATH="$HOME/Library/Android/sdk/cmdline-tools/latest/bin:$PATH"
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
+export PATH="/Applications/Android Studio.app/Contents/MacOS:$PATH"
+export PATH="$HOME/Library/Android/sdk/build-tools/35.0.0:$PATH"
+alias clean='./gradlew clean'

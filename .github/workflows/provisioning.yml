@@ -64,12 +64,12 @@ jobs:
         nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.home.packages \
           --extra-experimental-features "nix-command flakes" \
           --apply 'pkgs: builtins.map (p: p.pname or p.name or "unknown") pkgs' \
-          --impure --json | jq -r '.[]' | grep -E "(bat|fzf|ripgrep|git|fish)"
+          --impure --json | jq -r '.[]' | grep -E "(bat|fzf|ripgrep|git|zsh)"
 
     - name: Check configurations
       run: |
         nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.xdg.enable --impure --extra-experimental-features "nix-command flakes"
-        nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.programs.fish.enable --impure --extra-experimental-features "nix-command flakes"
+        nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.programs.zsh.enable --impure --extra-experimental-features "nix-command flakes"
         nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.programs.git.enable --impure --extra-experimental-features "nix-command flakes"
 
   install:
@@ -102,7 +102,7 @@ jobs:
       run: |
         # Check that dotfiles are properly symlinked via XDG
         test -L ~/.config/nvim || test -d ~/.config/nvim || exit 1
-        test -f ~/.config/fish/config.fish || exit 1
+        test -f ~/.config/zsh/.zshrc || exit 1
         test -f ~/.gitconfig || exit 1 # ~/.config/git/config
         test -f ~/.config/tig/config || exit 1
         test -f ~/.config/ripgrep/config || exit 1
