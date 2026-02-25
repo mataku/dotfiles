@@ -87,16 +87,15 @@
     glib             # Low-level core library
 
     # === Java ===
-    temurin-bin-17  # Eclipse Temurin JDK 17 (replacing temurin@17 cask)
+    temurin-bin-17
+    temurin-bin-21
 
     # === Mac App Store CLI ===
     mas              # Mac App Store command line
 
-    # === Static Site Generator ===
-    hugo             # Fast static site generator
-
     # === Additional Tools ===
     pinact           # Pin clipboard manager (check availability)
+    octorus
   ];
 
   # Note: The following are NOT included as they are replaced by Nix's declarative approach:
