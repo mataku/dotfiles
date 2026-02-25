@@ -6,6 +6,7 @@
 /fish/functions/*
 /fish/completions
 /fish/work.fish
+/zsh/work.zsh
 /fish/github_access_token.fish
 /fish/fish_variables
 /fish/conf.d
