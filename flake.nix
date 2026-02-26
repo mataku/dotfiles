@@ -36,7 +36,7 @@
             {
               # home-manager configuration
               home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
+              home-manager.useUserPackages = false;
               home-manager.users.${username} = import ./nix/home/default.nix;
 
               # Pass inputs to home-manager modules
