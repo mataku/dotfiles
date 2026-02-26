@@ -84,6 +84,11 @@
 
   # Post-activation message for manual installations
   system.activationScripts.postActivation.text = ''
+    ZSH_PATH="/Users/${username}/.nix-profile/bin/zsh"
+    if ! grep -qF "$ZSH_PATH" /etc/shells; then
+      echo "$ZSH_PATH" >> /etc/shells
+    fi
+
     echo ""
     echo -e "\033[1;33m==================================================="
     echo -e "Manual Installation Required"
