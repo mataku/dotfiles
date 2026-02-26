@@ -96,7 +96,7 @@ jobs:
       run: |
         # Check that Nix profile exists
         brew install tree
-        tree /etc/profiles/per-user/$USER/bin
+        tree $HOME/.nix-profile/bin
   
     - name: Verify dotfiles are symlinked
       run: |
