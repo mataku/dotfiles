@@ -30,7 +30,6 @@
         AppleShowAllExtensions = true;
         AppleShowAllFiles = false;
         FXEnableExtensionChangeWarning = false;
-        FXPreferredViewStyle = "Nlsv"; # List view
         ShowPathbar = true;
         ShowStatusBar = true;
       };
