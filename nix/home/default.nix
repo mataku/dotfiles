@@ -110,6 +110,6 @@
 
   programs.java = {
     enable = true;
-    package = pkgs.temurin-bin-17;
+    package = pkgs.temurin-bin-21;
   };
 }

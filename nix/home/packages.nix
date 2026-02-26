@@ -86,10 +86,6 @@
     fontconfig       # Font configuration
     glib             # Low-level core library
 
-    # === Java ===
-    temurin-bin-17
-    temurin-bin-21
-
     # === Mac App Store CLI ===
     mas              # Mac App Store command line
 
