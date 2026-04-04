@@ -9,13 +9,15 @@ source "$ZINIT_HOME/zinit.zsh"
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
+zinit light olets/zsh-abbr
 
 setopt GLOB_DOTS
 
+zmodload zsh/complist
 autoload -Uz compinit && compinit
 
 LISTMAX=500
-zstyle ':completion:*' menu select
+zstyle ':completion:*' menu select=0
 zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more%s'
 
 eval "$(rbenv init - zsh)"

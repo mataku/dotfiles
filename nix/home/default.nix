@@ -79,6 +79,8 @@
     "zsh/prompt.zsh".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/prompt.zsh";
     "zsh/functions.zsh".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/functions.zsh";
     "zsh/environments/android.zsh".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/environments/android.zsh";
+
+    "zsh-abbr/user-abbreviations".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/zsh-abbr/user-abbreviations";
   };
 
   # Legacy dotfiles (for tools that don't support XDG yet)

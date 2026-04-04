@@ -88,3 +88,8 @@ jobs:
         test -f ~/.config/tig/config || exit 1
         test -f ~/.config/ripgrep/config || exit 1
         test -f ~/.config/git/commit_template || exit 1
+        test -f ~/.config/zsh-abbr/user-abbreviations || exit 1
+
+    - name: Verify zsh initialization
+      run: |
+        ZDOTDIR="$HOME/.config/zsh" zsh -ic 'exit' 2>&1

@@ -20,3 +20,5 @@ ln -sf ~/src/github.com/mataku/dotfiles/zsh/env.zsh ~/.config/zsh/env.zsh
 ln -sf ~/src/github.com/mataku/dotfiles/zsh/prompt.zsh ~/.config/zsh/prompt.zsh
 ln -sf ~/src/github.com/mataku/dotfiles/zsh/functions.zsh ~/.config/zsh/functions.zsh
 ln -sf ~/src/github.com/mataku/dotfiles/zsh/environments/android.zsh ~/.config/zsh/environments/android.zsh
+mkdir -p ~/.config/zsh-abbr
+ln -sf ~/src/github.com/mataku/dotfiles/zsh/zsh-abbr/user-abbreviations ~/.config/zsh-abbr/user-abbreviations
