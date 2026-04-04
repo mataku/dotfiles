@@ -10,9 +10,17 @@ zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 
+setopt GLOB_DOTS
+
+autoload -Uz compinit && compinit
+
+LISTMAX=500
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more%s'
+
 eval "$(rbenv init - zsh)"
 eval "$(nodenv init - zsh)"
 
-[ -f "$ZDOTDIR/github_access_token.zsh" ] && source "$ZDOTDIR/github_access_token.zsh"
-[ -f "$ZDOTDIR/work.zsh" ] && source "$ZDOTDIR/work.zsh"
-[ -f "$ZDOTDIR/android_env.zsh" ] && source "$ZDOTDIR/android_env.zsh"
+[ -f "$ZDOTDIR/github_access_token.zsh" ] && source "$ZDOTDIR/github_access_token.zsh" || true
+[ -f "$ZDOTDIR/work.zsh" ] && source "$ZDOTDIR/work.zsh" || true
+[ -f "$ZDOTDIR/android_env.zsh" ] && source "$ZDOTDIR/android_env.zsh" || true
