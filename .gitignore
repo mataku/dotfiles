@@ -37,3 +37,5 @@ git/workconfig
 
 # Nix
 result
+
+tmux-client-*.log
