@@ -92,8 +92,8 @@ jobs:
 
     - name: Verify zsh initialization
       run: |
-        ZDOTDIR="$HOME/.config/zsh" zsh -ic 'exit' 2>&1
+        ZDOTDIR="$HOME/.config/zsh" ~/.nix-profile/bin/zsh -ic 'exit' 2>&1
 
     - name: Verify tmux initialization
       run: |
-        tmux new-session -d -s test \; kill-session -t test
+        ~/.nix-profile/bin/tmux new-session -d -s test \; kill-session -t test
