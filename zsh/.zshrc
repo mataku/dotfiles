@@ -20,6 +20,8 @@ LISTMAX=500
 zstyle ':completion:*' menu select=0
 zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more%s'
 
+source <(fzf --zsh)
+
 eval "$(rbenv init - zsh)"
 eval "$(nodenv init - zsh)"
 
