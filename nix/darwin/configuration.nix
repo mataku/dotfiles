@@ -117,5 +117,12 @@
     echo -e "\033[1;32m  https://docs.claude.com/claude-code\033[0m"
     echo -e "\033[1;36m===================================================\033[0m"
     echo ""
+    echo -e "\033[1;36m==================================================="
+    echo -e "Cica Font Installation"
+    echo -e "===================================================\033[0m"
+    echo "Download and install the Cica font (used by WezTerm):"
+    echo -e "\033[1;32m  https://github.com/miiton/Cica\033[0m"
+    echo -e "\033[1;36m===================================================\033[0m"
+    echo ""
   '';
 }

@@ -78,6 +78,9 @@ jobs:
     - name: Install wezterm for config verification
       run: brew install --cask wezterm
 
+    - name: Install Cica font for wezterm config verification
+      run: brew install --cask font-cica
+
     - name: Verify wezterm config
       run: |
         /Applications/WezTerm.app/Contents/MacOS/wezterm --config-file ~/.config/wezterm/wezterm.lua ls-fonts > /dev/null
