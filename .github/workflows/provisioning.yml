@@ -70,3 +70,14 @@ jobs:
     - name: Verify tmux initialization
       run: |
         ~/.nix-profile/bin/tmux new-session -d -s test \; kill-session -t test
+
+    - name: Verify nvim initialization
+      run: |
+        ~/.nix-profile/bin/nvim --headless "+qa" 2>&1
+
+    - name: Install wezterm for config verification
+      run: brew install --cask wezterm
+
+    - name: Verify wezterm config
+      run: |
+        /Applications/WezTerm.app/Contents/MacOS/wezterm --config-file ~/.config/wezterm/wezterm.lua ls-fonts > /dev/null
