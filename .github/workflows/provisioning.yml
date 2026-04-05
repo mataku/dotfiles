@@ -83,6 +83,21 @@ jobs:
         HOMEBREW_NO_ENV_HINTS: "1"
       run: brew install --cask wezterm font-cica
 
+    - name: Refresh font cache for wezterm verification
+      run: ~/.nix-profile/bin/fc-cache -vf
+
     - name: Verify wezterm config
       run: |
-        /Applications/WezTerm.app/Contents/MacOS/wezterm --config-file ~/.config/wezterm/wezterm.lua ls-fonts > /dev/null
+        set +e
+        output=$(/Applications/WezTerm.app/Contents/MacOS/wezterm --config-file ~/.config/wezterm/wezterm.lua ls-fonts 2>&1)
+        status=$?
+        set -e
+        echo "$output"
+        if [ $status -ne 0 ]; then
+          echo "::error::wezterm exited with status $status"
+          exit $status
+        fi
+        if echo "$output" | grep -q "Unable to load a font"; then
+          echo "::error::wezterm failed to load a configured font"
+          exit 1
+        fi
