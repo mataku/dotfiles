@@ -48,7 +48,6 @@ darwin-rebuild switch --flake .#macos
 Configured in [nix/home/packages.nix](../nix/home/packages.nix):
 - Node.js: managed via `nodenv` (not installed through Nix)
 - Go: `go`
-- Kotlin: `kotlin`
 - Java: `temurin-bin-17` (managed via `programs.java`)
 
 To change, edit the package name and rebuild.

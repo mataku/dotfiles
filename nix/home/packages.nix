@@ -45,7 +45,6 @@
     pkg-config       # Package config helper
 
     # === Language Runtimes ===
-    go               # Go programming language
     nodenv           # Node.js version manager
     rustup           # Rust toolchain manager
     lua              # Lua programming language
@@ -83,9 +82,6 @@
     libsodium        # Cryptography library
     fontconfig       # Font configuration
     glib             # Low-level core library
-
-    # === Mac App Store CLI ===
-    mas              # Mac App Store command line
 
     # === Additional Tools ===
     pinact           # Pin clipboard manager (check availability)
