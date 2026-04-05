@@ -26,7 +26,6 @@
   # Import packages and program configurations
   imports = [
     ./packages.nix
-    ./programs/fish.nix
     ./programs/zsh.nix
   ];
 
@@ -58,19 +57,6 @@
 
     # Git commit template (XDG-compliant)
     "git/commit_template".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.commit_template";
-
-    # Fish configuration files (all managed via symlinks)
-    "fish/config.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/config.fish";
-    "fish/env.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/env.fish";
-    "fish/alias.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/alias.fish";
-    "fish/fish_plugins".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/fish_plugins";
-    "fish/fishfile".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/fishfile";
-
-    # Fish environment configurations
-    "fish/environments/android.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/environments/android.fish";
-
-    # Fish functions directory
-    "fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/functions";
 
     # Zsh configuration files
     "zsh/.zshrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/.zshrc";
