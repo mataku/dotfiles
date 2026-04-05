@@ -136,6 +136,64 @@ adb-screenrecord() {
   adb -s "$device" pull /sdcard/record.mp4
 }
 
+_tmuxpopup() {
+  local initial_cmd="${1:-}"
+  local title="${2:-}"
+
+  local width='80%'
+  local height='80%'
+
+  local session
+  session="$(tmux display-message -p -F '#{session_name}' 2>/dev/null)" || return 1
+
+  local pane_path
+  pane_path="$(tmux display-message -p -F '#{pane_current_path}')" || return 1
+
+  local home_src="${HOME}/src"
+  local key=""
+
+  if [[ "$pane_path" == ${home_src}/*/*/*(|/*) ]]; then
+    local rest="${pane_path#${home_src}/}"
+    local parts=(${(s:/:)rest})
+    local org="${parts[2]}"
+    local repo="${parts[3]}"
+    repo="${repo%-wt}"
+    key="${org}/${repo}"
+  else
+    key="${pane_path:t}"
+  fi
+
+  local safe_key="${key//\//_}"
+  safe_key="${safe_key//[^A-Za-z0-9_.-]/_}"
+
+  local popup_session="popup_${title}_${safe_key}"
+
+  if [[ "$session" == popup_* ]]; then
+    tmux detach-client
+    return 0
+  fi
+
+  local create_cmd
+  if [[ -n "$initial_cmd" ]]; then
+    create_cmd="tmux new-session -d -s ${popup_session} '${initial_cmd}'"
+  else
+    create_cmd="tmux new-session -d -s ${popup_session}"
+  fi
+
+  local exec_cmd="tmux has-session -t ${popup_session} 2>/dev/null || { ${create_cmd} && tmux set-option -t ${popup_session} status off; }; tmux attach -t ${popup_session}"
+
+  tmux display-popup \
+    -d "#{pane_current_path}" \
+    -xC -yC \
+    -w "$width" -h "$height" \
+    -T "$title" \
+    -E "$exec_cmd"
+}
+
+_tmuxpopup-claude() {
+  _tmuxpopup "claude" "claude"
+}
+
 emu() {
   local option=""
   if [[ "$1" == "--coldboot" ]]; then
