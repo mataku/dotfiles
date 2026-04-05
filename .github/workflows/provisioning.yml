@@ -65,7 +65,7 @@ jobs:
       env:
         TERM: xterm-256color
       run: |
-        ZDOTDIR="$HOME/.config/zsh" ~/.nix-profile/bin/zsh -ixc 'exit' 2>&1
+        ZDOTDIR="$HOME/.config/zsh" ~/.nix-profile/bin/zsh -ic 'exit' 2>&1
 
     - name: Verify tmux initialization
       run: |
