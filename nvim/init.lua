@@ -22,7 +22,7 @@ vim.cmd([[
   " Setting options
   set notitle
   set mouse=a
-  set shell=fish
+  set shell=zsh
   set ambiwidth=single
   set clipboard=unnamed
   set backspace=start,eol,indent
