@@ -45,9 +45,6 @@
     pkg-config       # Package config helper
 
     # === Language Runtimes ===
-    go               # Go programming language
-    kotlin           # Kotlin JVM language
-    nodejs_20        # Node.js 20.x (default version)
     nodenv           # Node.js version manager
     rustup           # Rust toolchain manager
     lua              # Lua programming language
@@ -79,15 +76,12 @@
     # === Code Tools ===
     universal-ctags  # Source code indexing
     sourceHighlight  # Source code syntax highlighter
-    nixfmt-rfc-style # Nix code formatter
+    nixfmt          # Nix code formatter
 
     # === Libraries ===
     libsodium        # Cryptography library
     fontconfig       # Font configuration
     glib             # Low-level core library
-
-    # === Mac App Store CLI ===
-    mas              # Mac App Store command line
 
     # === Additional Tools ===
     pinact           # Pin clipboard manager (check availability)

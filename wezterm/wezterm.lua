@@ -12,8 +12,8 @@ local function file_exists(path)
 end
 
 if wezterm.target_triple == 'aarch64-apple-darwin' then
-  local user = os.getenv("USER")
-  local nix_fish = '/etc/profiles/per-user/' .. user .. '/bin/fish'
+  local home = os.getenv("HOME")
+  local nix_fish = home .. '/.nix-profile/bin/fish'
   if file_exists(nix_fish) then
     config.default_prog = { nix_fish, '-l' }
   else

@@ -31,3 +31,11 @@ _ghq_repository_search() {
 }
 zle -N _ghq_repository_search
 bindkey '^g' _ghq_repository_search
+
+gpr() {
+  local branch
+  branch=$(git branch -a | fzf | tr -d ' ')
+  [[ -z "$branch" ]] && return
+  branch=${branch#remotes/origin/}
+  hub mkpr "$branch"
+}

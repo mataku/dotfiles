@@ -55,7 +55,7 @@ vim.cmd([[
 
   au FileType go setlocal noexpandtab tabstop=4 shiftwidth=4 autoindent
 
-  au FileType gitcommit set omnifunc=emoji#complete filetype=markdown
+  au FileType gitcommit set omnifunc=emoji#complete
   au FileType markdown set omnifunc=emoji#complete
 
   let g:PaperColor_Theme_Options = {
