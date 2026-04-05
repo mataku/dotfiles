@@ -105,9 +105,17 @@
     echo -e "  • Google IME"
     echo -e "  • Spotify"
     echo -e "  • Karabiner-Elements"
-    echo -e "  • Slack\033[0m"
+    echo -e "  • Slack"
+    echo -e "  • azooKey (https://azookey.com/macOS)\033[0m"
     echo ""
     echo -e "\033[1;33m===================================================\033[0m"
+    echo ""
+    echo -e "\033[1;36m==================================================="
+    echo -e "Claude Code Installation"
+    echo -e "===================================================\033[0m"
+    echo "Check the latest installation instructions at:"
+    echo -e "\033[1;32m  https://docs.claude.com/claude-code\033[0m"
+    echo -e "\033[1;36m===================================================\033[0m"
     echo ""
   '';
 }
