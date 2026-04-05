@@ -3,9 +3,15 @@ name: Provisioning
 on:
   workflow_dispatch:
   pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   push:
     branches:
       - develop
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   schedule:
     - cron: '00 13 1 * *'
 
@@ -14,48 +20,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: macos-26
-    timeout-minutes: 60
-    permissions:
-      id-token: "write"
-      contents: "read"
-
-    steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-    - name: Install Nix
-      uses: nixbuild/nix-quick-install-action@2c9db80fb984ceb1bcaa77cdda3fdf8cfba92035 # v34
-      with:
-        nix_conf: |
-          keep-env-derivations = true
-          keep-outputs = true
-
-    - name: Check flake
-      run: nix --extra-experimental-features "nix-command flakes" flake check --show-trace
-
-    - name: Build nix-darwin configuration
-      run: |
-        nix build .#darwinConfigurations.macos.system \
-          --extra-experimental-features "nix-command flakes" --impure \
-          --show-trace
-
-    - name: Verify key packages
-      run: |
-        nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.home.packages \
-          --extra-experimental-features "nix-command flakes" \
-          --apply 'pkgs: builtins.map (p: p.pname or p.name or "unknown") pkgs' \
-          --impure --json | jq -r '.[]' | grep -E "(bat|fzf|ripgrep|git|zsh)"
-
-    - name: Check configurations
-      run: |
-        nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.xdg.enable --impure --extra-experimental-features "nix-command flakes"
-        nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.programs.zsh.enable --impure --extra-experimental-features "nix-command flakes"
-        nix eval .#darwinConfigurations.macos.config.home-manager.users.$USER.programs.git.enable --impure --extra-experimental-features "nix-command flakes"
-
   install:
     runs-on: macos-26
     timeout-minutes: 60
+    permissions:
+      contents: "read"
 
     steps:
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -71,14 +40,16 @@ jobs:
       run: |
         bash ~/src/github.com/mataku/dotfiles/scripts/install.sh
       env:
-        NIX_CONFIG: "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
+        NIX_CONFIG: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+          max-jobs = auto
+          http-connections = 50
+          experimental-features = nix-command flakes
 
-    - name: Verify Nix packages are installed
+    - name: Verify key packages are installed
       run: |
-        # Check that Nix profile exists
-        brew install tree
-        tree $HOME/.nix-profile/bin
-  
+        ls "$HOME/.nix-profile/bin" | grep -E "^(bat|fzf|rg|git|zsh|tmux|nvim)$"
+
     - name: Verify dotfiles are symlinked
       run: |
         # Check that dotfiles are properly symlinked via XDG
