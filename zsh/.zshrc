@@ -13,6 +13,11 @@ zinit light olets/zsh-abbr
 setopt GLOB_DOTS
 
 zmodload zsh/complist
+if command -v brew >/dev/null; then
+  fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
+fi
+[[ -d "$HOME/.nix-profile/share/zsh/site-functions" ]] && \
+  fpath=("$HOME/.nix-profile/share/zsh/site-functions" $fpath)
 autoload -Uz compinit && compinit
 
 zinit light Aloxaf/fzf-tab
