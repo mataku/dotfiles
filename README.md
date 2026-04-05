@@ -4,8 +4,6 @@
 curl -fsSL https://raw.githubusercontent.com/mataku/dotfiles/develop/setup.sh | sh
 ```
 
-The bootstrap script installs the Xcode Command Line Tools (if missing), clones this repository to `~/src/github.com/mataku/dotfiles`, then hands off to `scripts/install.sh` which installs Nix and activates the nix-darwin configuration.
-
 ## Documentation
 
 - [Usage Guide](docs/usage.md) - Daily workflows, package management, manual app list, private settings, and troubleshooting
