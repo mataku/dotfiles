@@ -1,17 +1,31 @@
-if ! command -v brew &>/dev/null; then
-  echo "Installing Homebrew."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+#!/usr/bin/env bash
+#
+# Bootstrap entrypoint — suitable for `curl -fsSL .../setup.sh | sh`.
+# Ensures prerequisites, clones the repository, then hands off to
+# scripts/install.sh for the Nix-based setup.
+
+set -euo pipefail
+
+DOTFILES_REPO="https://github.com/mataku/dotfiles.git"
+DOTFILES_DIR="${HOME}/src/github.com/mataku/dotfiles"
+
+if [[ "$(uname)" != "Darwin" ]]; then
+  echo "This script is designed for macOS only" >&2
+  exit 1
 fi
 
-echo 'Installing bundle'
-/opt/homebrew/bin/brew bundle
+if ! xcode-select -p >/dev/null 2>&1; then
+  echo "Installing Xcode Command Line Tools..."
+  xcode-select --install
+  echo "Re-run this script after Xcode Command Line Tools finish installing."
+  exit 1
+fi
 
-echo 'Setup dotfiles'
-mkdir -p ~/.config/nvim/lua/config
-mkdir -p ~/.config/wezterm
-mkdir -p ~/Library/Application\ Support/lazygit
-./link_files.sh
+if [ ! -d "$DOTFILES_DIR" ]; then
+  echo "Cloning dotfiles to $DOTFILES_DIR..."
+  mkdir -p "$(dirname "$DOTFILES_DIR")"
+  git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
+fi
 
-/opt/homebrew/bin/rustup default stable
-/opt/homebrew/bin/rustup component add rust-analyzer
-curl -fsSL https://claude.ai/install.sh | bash
+cd "$DOTFILES_DIR"
+exec ./scripts/install.sh

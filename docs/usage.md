@@ -93,18 +93,18 @@ vim ~/src/github.com/mataku/dotfiles/.gitconfig
 # Changes take effect immediately (no rebuild needed)
 ```
 
-### Fish Shell
+### Zsh Shell
 
-Fish shell configuration files are symlinked from the `fish/` directory. Edit them directly:
+Zsh shell configuration files are symlinked from the `zsh/` directory. Edit them directly:
 
 ```shell
-# Edit Fish configuration
-vim ~/src/github.com/mataku/dotfiles/fish/config.fish
-vim ~/src/github.com/mataku/dotfiles/fish/alias.fish
-vim ~/src/github.com/mataku/dotfiles/fish/env.fish
+# Edit Zsh configuration
+vim ~/src/github.com/mataku/dotfiles/zsh/.zshrc
+vim ~/src/github.com/mataku/dotfiles/zsh/alias.zsh
+vim ~/src/github.com/mataku/dotfiles/zsh/env.zsh
 
-# Reload Fish to apply changes
-exec fish
+# Reload Zsh to apply changes
+exec zsh
 ```
 
 ### Neovim Configuration
@@ -174,9 +174,9 @@ nix-collect-garbage --delete-older-than 7d
 du -sh /nix/store
 ```
 
-## Fish Shell Features
+## Zsh Shell Features
 
-Fish shell configuration is managed manually via symlinked files. Install plugins using Fisher or your preferred plugin manager.
+Zsh shell configuration is managed manually via symlinked files. Plugins are managed with zinit in `.zshrc`.
 
 ### Common Commands
 
@@ -215,6 +215,51 @@ git cm        # commit -v -S
 git wip       # commit --allow-empty -m 'WIP'
 ```
 
+## Manual Applications
+
+Applications that cannot be managed by Nix and need manual installation.
+
+**Via Mac App Store** (the `mas` CLI is included in Nix packages):
+
+```shell
+mas install 497799835   # Xcode
+mas install 937984704   # Amphetamine
+mas install 409183694   # Keynote
+mas install 409203825   # Numbers
+mas install 409201541   # Pages
+mas install 425424353   # The Unarchiver
+```
+
+**Direct download required:**
+
+- Vivaldi (https://vivaldi.com/)
+- Android Studio (https://developer.android.com/studio)
+- Visual Studio Code (https://code.visualstudio.com/)
+- WezTerm (https://wezfurlong.org/wezterm/)
+- Discord (https://discord.com/)
+- Raycast (https://raycast.com/)
+- Logicool Options+ (https://www.logicool.co.jp/ja-jp/software/logi-options-plus.html)
+- Google IME (https://www.google.co.jp/ime/)
+- Spotify (https://www.spotify.com/)
+- Karabiner-Elements (https://karabiner-elements.pqrs.org/)
+- Slack (https://slack.com/)
+
+## Private Settings
+
+Optional configuration files for private / machine-local settings. These paths live under `~/.config/zsh/` (via `ZDOTDIR`) and are sourced from `.zshrc`.
+
+```shell
+# GitHub personal access token (optional, for private repositories)
+echo 'export GITHUB_TOKEN=your_token_here' > ~/.config/zsh/github_access_token.zsh
+
+# Work-specific configuration (optional)
+touch ~/.config/zsh/work.zsh
+
+# Android environment variables are configured in:
+# ~/.config/zsh/environments/android.zsh (already symlinked)
+# Edit the source file in the dotfiles repository if needed
+```
+
 ## Troubleshooting
 
 ### Rebuild Failed
@@ -237,7 +282,18 @@ which <command>
 echo $PATH
 
 # Reload shell
-exec fish
+exec zsh
 ```
 
-For more details, see [Installation Guide](installation.md).
+### Zsh Not Set as Default Shell
+
+```shell
+# Check if Zsh is installed
+which zsh
+
+# Verify Zsh is in /etc/shells (nix-darwin adds ~/.nix-profile/bin/zsh automatically)
+cat /etc/shells | grep zsh
+
+# Set Zsh as default shell
+chsh -s ~/.nix-profile/bin/zsh
+```
