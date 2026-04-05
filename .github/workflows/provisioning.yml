@@ -75,11 +75,8 @@ jobs:
       run: |
         ~/.nix-profile/bin/nvim --headless "+qa" 2>&1
 
-    - name: Install wezterm for config verification
-      run: brew install --cask wezterm
-
-    - name: Install Cica font for wezterm config verification
-      run: brew install --cask font-cica
+    - name: Install wezterm and Cica font for config verification
+      run: brew install --cask wezterm font-cica
 
     - name: Verify wezterm config
       run: |
