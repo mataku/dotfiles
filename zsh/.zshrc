@@ -11,6 +11,7 @@ zinit light zsh-users/zsh-completions
 zinit light olets/zsh-abbr
 
 setopt GLOB_DOTS
+setopt AUTO_CD
 
 zmodload zsh/complist
 if command -v brew >/dev/null; then
@@ -22,6 +23,10 @@ autoload -Uz compinit && compinit
 
 zinit light Aloxaf/fzf-tab
 zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-history-substring-search
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 LISTMAX=500
 zstyle ':completion:*' menu no
