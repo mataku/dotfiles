@@ -81,3 +81,4 @@ vim.cmd([[
 ]])
 
 require("config.lazy")
+require("config.markdown")

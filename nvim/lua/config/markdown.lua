@@ -1,0 +1,31 @@
+vim.api.nvim_set_hl(0, "MarkdownFrontmatterDelimiter", { fg = "#ffffff" })
+vim.api.nvim_set_hl(0, "MarkdownFrontmatterKey", { fg = "#ff5370" })
+vim.api.nvim_set_hl(0, "MarkdownFrontmatterValue", { fg = "#afd182" })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.api.nvim_set_hl(0, "@markup.heading.1.markdown", { fg = "#78ccf0", bold = true })
+    vim.api.nvim_set_hl(0, "@markup.heading.2.markdown", { fg = "#78ccf0", bold = true })
+    vim.api.nvim_set_hl(0, "@markup.heading.3.markdown", { fg = "#78ccf0", bold = true })
+    vim.api.nvim_set_hl(0, "@markup.heading.4.markdown", { fg = "#78ccf0", bold = true })
+    vim.api.nvim_set_hl(0, "@markup.heading.5.markdown", { fg = "#78ccf0", bold = true })
+    vim.api.nvim_set_hl(0, "@markup.heading.6.markdown", { fg = "#78ccf0", bold = true })
+    vim.api.nvim_set_hl(0, "@markup.heading.marker.markdown", { fg = "#78ccf0", bold = true })
+    vim.api.nvim_set_hl(0, "@markup.strong.markdown_inline", { fg = "#ffcb6b", bold = true })
+    vim.api.nvim_set_hl(0, "@markup.italic.markdown_inline", { fg = "#c792ea", italic = true })
+    vim.api.nvim_set_hl(0, "@markup.raw.markdown_inline", { fg = "#f1e655" })
+    vim.api.nvim_set_hl(0, "@markup.raw.block.markdown", { fg = "#f1e655" })
+    vim.api.nvim_set_hl(0, "@markup.link.markdown_inline", { fg = "#ff5370" })
+    vim.api.nvim_set_hl(0, "@markup.link.label.markdown_inline", { fg = "#ff5370" })
+    vim.api.nvim_set_hl(0, "@markup.link.url.markdown_inline", { fg = "#F77669" })
+    vim.api.nvim_set_hl(0, "@markup.list.markdown", { fg = "#ff5370" })
+    vim.api.nvim_set_hl(0, "@markup.quote.markdown", { fg = "#F77669" })
+
+    vim.fn.matchadd("MarkdownFrontmatterDelimiter", "\\%^---$")
+    vim.fn.matchadd("MarkdownFrontmatterDelimiter", "^---$")
+    vim.fn.matchadd("MarkdownFrontmatterKey", "^[a-zA-Z_][a-zA-Z0-9_]*\\ze:")
+    vim.fn.matchadd("MarkdownFrontmatterValue", "^[a-zA-Z_][a-zA-Z0-9_]*:\\s*\\zs.*$")
+    vim.fn.matchadd("MarkdownFrontmatterValue", "^\\s\\+-\\s\\+\\zs.*$")
+  end,
+})

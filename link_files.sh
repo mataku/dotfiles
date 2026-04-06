@@ -6,6 +6,7 @@ ln -sf ~/src/github.com/mataku/dotfiles/.irbrc ~/.irbrc
 ln -sf ~/src/github.com/mataku/dotfiles/nvim/init.lua ~/.config/nvim/init.lua
 ln -sfn ~/src/github.com/mataku/dotfiles/nvim/lua/plugins  ~/.config/nvim/lua/plugins
 ln -sf ~/src/github.com/mataku/dotfiles/nvim/lua/config/lazy.lua ~/.config/nvim/lua/config/lazy.lua
+ln -sf ~/src/github.com/mataku/dotfiles/nvim/lua/config/markdown.lua ~/.config/nvim/lua/config/markdown.lua
 ln -sf ~/src/github.com/mataku/dotfiles/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
 ln -sf ~/src/github.com/mataku/dotfiles/lazygit/config.yml ~/Library/Application\ Support/lazygit/config.yml
 
