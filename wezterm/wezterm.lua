@@ -13,11 +13,11 @@ end
 
 if wezterm.target_triple == 'aarch64-apple-darwin' then
   local home = os.getenv("HOME")
-  local nix_zsh = home .. '/.nix-profile/bin/zsh'
-  if file_exists(nix_zsh) then
-    config.default_prog = { nix_zsh, '-l' }
+  local nix_fish = home .. '/.nix-profile/bin/fish'
+  if file_exists(nix_fish) then
+    config.default_prog = { nix_fish, '-l' }
   else
-    config.default_prog = { '/opt/homebrew/bin/zsh', '-l' }
+    config.default_prog = { '/opt/homebrew/bin/fish', '-l' }
   end
 end
 

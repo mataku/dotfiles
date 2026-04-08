@@ -29,6 +29,8 @@
 !/fish/functions/adb-screenrecord.fish
 !/fish/functions/adb-screenshot.fish
 !/fish/functions/adb-open-app.fish
+!/fish/functions/_tmuxpopup.fish
+!/fish/functions/_tmuxpopup-claude.fish
 
 emacs.d/elpa/
 

@@ -67,6 +67,16 @@
     "zsh/environments/android.zsh".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/environments/android.zsh";
 
     "zsh-abbr/user-abbreviations".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/zsh-abbr/user-abbreviations";
+
+    # Fish configuration files
+    "fish/config.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/config.fish";
+    "fish/alias.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/alias.fish";
+    "fish/env.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/env.fish";
+    "fish/environments/android.fish".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/environments/android.fish";
+    "fish/functions".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/functions";
+    "fish/completions".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/completions";
+    "fish/conf.d".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/conf.d";
+    "fish/fish_plugins".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/fish/fish_plugins";
   };
 
   # Legacy dotfiles (for tools that don't support XDG yet)

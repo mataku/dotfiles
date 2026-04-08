@@ -22,3 +22,13 @@ ln -sf ~/src/github.com/mataku/dotfiles/zsh/functions.zsh ~/.config/zsh/function
 ln -sf ~/src/github.com/mataku/dotfiles/zsh/environments/android.zsh ~/.config/zsh/environments/android.zsh
 mkdir -p ~/.config/zsh-abbr
 ln -sf ~/src/github.com/mataku/dotfiles/zsh/zsh-abbr/user-abbreviations ~/.config/zsh-abbr/user-abbreviations
+
+# Fish configuration
+ln -sf ~/src/github.com/mataku/dotfiles/fish/config.fish ~/.config/fish/config.fish
+ln -sf ~/src/github.com/mataku/dotfiles/fish/alias.fish ~/.config/fish/alias.fish
+ln -sf ~/src/github.com/mataku/dotfiles/fish/env.fish ~/.config/fish/env.fish
+mkdir -p ~/.config/fish/environments
+ln -sf ~/src/github.com/mataku/dotfiles/fish/environments/android.fish ~/.config/fish/environments/android.fish
+ln -sfn ~/src/github.com/mataku/dotfiles/fish/functions ~/.config/fish/functions
+ln -sfn ~/src/github.com/mataku/dotfiles/fish/completions ~/.config/fish/completions
+ln -sfn ~/src/github.com/mataku/dotfiles/fish/conf.d ~/.config/fish/conf.d
