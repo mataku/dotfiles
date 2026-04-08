@@ -28,6 +28,7 @@
     # === Terminal & Shell ===
     tmux             # Terminal multiplexer
     zsh              # Z shell
+    fish             # Fish shell (default)
     reattach-to-user-namespace  # tmux macOS clipboard support
 
     # === Editor ===

@@ -88,6 +88,11 @@
       echo "$ZSH_PATH" >> /etc/shells
     fi
 
+    FISH_PATH="/Users/${username}/.nix-profile/bin/fish"
+    if ! grep -qF "$FISH_PATH" /etc/shells; then
+      echo "$FISH_PATH" >> /etc/shells
+    fi
+
     echo ""
     echo -e "\033[1;33m==================================================="
     echo -e "Manual Installation Required"
