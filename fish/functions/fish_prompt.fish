@@ -32,9 +32,9 @@ function fish_prompt
   end
 
   if test $last_status = 0
-    set prompt "$green⫸ $normal "
+    set prompt "$green⪢$normal "
   else
-    set prompt "$red⫸ $normal "
+    set prompt "$red⪢$normal "
   end
 
   echo -n -s $git_info $prompt
