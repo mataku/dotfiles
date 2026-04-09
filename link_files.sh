@@ -32,3 +32,8 @@ ln -sf ~/src/github.com/mataku/dotfiles/fish/environments/android.fish ~/.config
 ln -sfn ~/src/github.com/mataku/dotfiles/fish/functions ~/.config/fish/functions
 ln -sfn ~/src/github.com/mataku/dotfiles/fish/completions ~/.config/fish/completions
 ln -sfn ~/src/github.com/mataku/dotfiles/fish/conf.d ~/.config/fish/conf.d
+
+# Claude Code
+ln -sf ~/src/github.com/mataku/dotfiles/claude/settings.json ~/.claude/settings.json
+mkdir -p ~/.claude/hooks
+ln -sf ~/src/github.com/mataku/dotfiles/claude/hooks/permission-notify.sh ~/.claude/hooks/permission-notify.sh

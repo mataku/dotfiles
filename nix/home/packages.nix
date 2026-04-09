@@ -87,6 +87,7 @@
     # === Additional Tools ===
     pinact           # Pin clipboard manager (check availability)
     octorus
+    terminal-notifier
   ];
 
   # Note: The following are NOT included as they are replaced by Nix's declarative approach:
