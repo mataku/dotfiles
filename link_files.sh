@@ -37,3 +37,4 @@ ln -sfn ~/src/github.com/mataku/dotfiles/fish/conf.d ~/.config/fish/conf.d
 ln -sf ~/src/github.com/mataku/dotfiles/claude/settings.json ~/.claude/settings.json
 mkdir -p ~/.claude/hooks
 ln -sf ~/src/github.com/mataku/dotfiles/claude/hooks/permission-notify.sh ~/.claude/hooks/permission-notify.sh
+ln -sf ~/src/github.com/mataku/dotfiles/claude/hooks/idle-notify.sh ~/.claude/hooks/idle-notify.sh

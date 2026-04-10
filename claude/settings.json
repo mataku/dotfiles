@@ -1,9 +1,20 @@
 {
   "cleanupPeriodDays": 365,
   "enabledPlugins": {
-    "swift-lsp@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/mataku/.claude/hooks/rtk-rewrite.sh"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
@@ -20,6 +31,17 @@
           {
             "type": "command",
             "command": "bash ~/.claude/hooks/permission-notify.sh"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/idle-notify.sh"
           }
         ]
       }

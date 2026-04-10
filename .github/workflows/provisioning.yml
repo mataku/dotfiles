@@ -63,6 +63,7 @@ jobs:
         test -f ~/.config/fish/config.fish || exit 1
         test -f ~/.claude/settings.json || exit 1
         test -f ~/.claude/hooks/permission-notify.sh || exit 1
+        test -f ~/.claude/hooks/idle-notify.sh || exit 1
 
     - name: Verify zsh initialization
       env:
