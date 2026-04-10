@@ -95,6 +95,11 @@
 
     # Zsh bootstrap (sets ZDOTDIR for XDG compliance)
     ".zshenv".text = ''export ZDOTDIR="$HOME/.config/zsh"'';
+
+    # Claude Code
+    ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/claude/settings.json";
+    ".claude/hooks/permission-notify.sh".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/claude/hooks/permission-notify.sh";
+    ".claude/hooks/idle-notify.sh".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/claude/hooks/idle-notify.sh";
   };
 
   # Let Home Manager install and manage itself

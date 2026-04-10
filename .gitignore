@@ -41,3 +41,6 @@ git/workconfig
 result
 
 tmux-client-*.log
+
+# Serena
+.serena/

@@ -9,6 +9,7 @@
     fzf              # Fuzzy finder
     ripgrep          # Better grep
     lsd              # Better ls
+    rtk              # Rust Token Killer (Claude Code proxy)
     tree             # Directory tree view
 
     # === Text Processing ===
@@ -87,6 +88,7 @@
     # === Additional Tools ===
     pinact           # Pin clipboard manager (check availability)
     octorus
+    terminal-notifier
   ];
 
   # Note: The following are NOT included as they are replaced by Nix's declarative approach:

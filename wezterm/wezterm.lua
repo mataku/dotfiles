@@ -151,6 +151,12 @@ function prompt_pwd(current_dir)
   return result
 end
 
+local bell_panes = {}
+
+wezterm.on('bell', function(window, pane)
+  bell_panes[tostring(pane:pane_id())] = true
+end)
+
 wezterm.on('format-window-title', function(tab, pane, tabs, panes, config)
   return prompt_pwd(pane.current_working_dir.path)
 end)
@@ -158,11 +164,19 @@ end)
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
   local active_pane = tab.active_pane
   local process_name = active_pane.foreground_process_name
+  local title
   if (process_name == '') then
-    return basename(active_pane.current_working_dir.path)
+    title = basename(active_pane.current_working_dir.path)
   else
-    return basename(active_pane.current_working_dir.path) .. ' ' .. '(' .. basename(process_name) .. ')'
+    title = basename(active_pane.current_working_dir.path) .. ' ' .. '(' .. basename(process_name) .. ')'
   end
+  local pane_id = tostring(active_pane.pane_id)
+  if tab.is_active then
+    bell_panes[pane_id] = nil
+  elseif bell_panes[pane_id] then
+    title = '● ' .. title
+  end
+  return title
 end)
 
 return config
