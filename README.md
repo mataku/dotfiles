@@ -4,10 +4,6 @@
 curl -fsSL https://raw.githubusercontent.com/mataku/dotfiles/develop/setup.sh | sh
 ```
 
-## Documentation
-
-- [Usage Guide](docs/usage.md) - Daily workflows, package management, manual app list, private settings, and troubleshooting
-
 ## Screenshots
 
 <table width="100%">
