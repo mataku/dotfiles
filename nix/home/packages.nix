@@ -9,7 +9,6 @@
     fzf              # Fuzzy finder
     ripgrep          # Better grep
     lsd              # Better ls
-    rtk              # Rust Token Killer (Claude Code proxy)
     tree             # Directory tree view
 
     # === Text Processing ===
