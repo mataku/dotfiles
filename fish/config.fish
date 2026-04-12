@@ -5,10 +5,16 @@ end
 . ~/.config/fish/alias.fish
 . ~/.config/fish/env.fish
 
-rbenv init - | .
+if type -q rbenv
+  rbenv init - | .
+end
 # pyenv init - | .
-nodenv init - | .
-direnv hook fish | .
+if type -q nodenv
+  nodenv init - | .
+end
+if type -q direnv
+  direnv hook fish | .
+end
 
 if test -e ~/.config/fish/github_access_token.fish
   . ~/.config/fish/github_access_token.fish
