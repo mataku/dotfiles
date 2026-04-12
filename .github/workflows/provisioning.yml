@@ -115,3 +115,20 @@ jobs:
           echo "::error::wezterm failed to load a configured font"
           exit 1
         fi
+
+    - name: Notify Discord on failure
+      if: failure()
+      run: |
+        curl -sS -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "embeds": [{
+              "title": "Provisioning failed",
+              "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "color": 15548997,
+              "fields": [
+                { "name": "Branch", "value": "`${{ github.ref_name }}`", "inline": true },
+                { "name": "Trigger", "value": "`${{ github.event_name }}`", "inline": true }
+              ]
+            }]
+          }'
