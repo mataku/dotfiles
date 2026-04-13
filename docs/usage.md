@@ -84,11 +84,11 @@ Environment activates automatically when you `cd` into the directory.
 
 ### Git Configuration
 
-Git is configured via `.gitconfig` in the repository root, which is symlinked to `~/.gitconfig`. Edit the file directly:
+Git is configured via `git/gitconfig`, which is symlinked to `~/.gitconfig`. Edit the file directly:
 
 ```shell
 # Edit Git configuration
-vim ~/src/github.com/mataku/dotfiles/.gitconfig
+vim ~/src/github.com/mataku/dotfiles/git/gitconfig
 
 # Changes take effect immediately (no rebuild needed)
 ```
@@ -123,8 +123,10 @@ vim ~/src/github.com/mataku/dotfiles/nvim/init.lua
 Most dotfiles are symlinked and can be edited directly:
 - WezTerm: `wezterm/wezterm.lua`
 - Lazygit: `lazygit/config.yml`
-- Tig: `.tigrc`
-- Ripgrep: `.ripgreprc`
+- Tig: `tig/tigrc`
+- Ripgrep: `ripgrep/ripgreprc`
+- Tmux: `tmux/tmux.conf`
+- Ruby (IRB/Gem): `ruby/irbrc`, `ruby/gemrc`
 
 Changes take effect immediately or after restarting the application.
 

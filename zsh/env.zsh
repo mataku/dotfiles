@@ -15,7 +15,7 @@ export EDITOR="nvim"
 export HOMEBREW_NO_AUTO_UPDATE=1
 export LANG="ja_JP.UTF-8"
 
-export RIPGREP_CONFIG_PATH="$HOME/src/github.com/mataku/dotfiles/.ripgreprc"
+export RIPGREP_CONFIG_PATH="$HOME/src/github.com/mataku/dotfiles/ripgrep/ripgreprc"
 
 export FZF_DEFAULT_OPTS='--cycle --ansi --select-1 --exit-0'
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
