@@ -50,13 +50,13 @@
     "lazygit/config.yml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/lazygit/config.yml";
 
     # Tig configuration (XDG-compliant)
-    "tig/config".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.tigrc";
+    "tig/config".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/tig/tigrc";
 
     # Ripgrep configuration (XDG-compliant)
-    "ripgrep/config".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.ripgreprc";
+    "ripgrep/config".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/ripgrep/ripgreprc";
 
     # Git commit template (XDG-compliant)
-    "git/commit_template".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.commit_template";
+    "git/commit_template".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/git/commit_template";
 
     # Zsh configuration files
     "zsh/.zshrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/zsh/.zshrc";
@@ -83,15 +83,15 @@
   home.file = {
     # Git configuration
     ".gitconfig" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.gitconfig";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/git/gitconfig";
       force = true;  # .gitconfig may already exist from git's first use
     };
 
     # IRB (Ruby REPL) - no XDG support yet
-    ".irbrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.irbrc";
+    ".irbrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/ruby/irbrc";
 
     # Gem configuration - no XDG support yet
-    ".gemrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/.gemrc";
+    ".gemrc".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/ruby/gemrc";
 
     # Zsh bootstrap (sets ZDOTDIR for XDG compliance)
     ".zshenv".text = ''export ZDOTDIR="$HOME/.config/zsh"'';
