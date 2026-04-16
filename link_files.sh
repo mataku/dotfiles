@@ -8,6 +8,8 @@ ln -sfn ~/src/github.com/mataku/dotfiles/nvim/lua/plugins  ~/.config/nvim/lua/pl
 ln -sf ~/src/github.com/mataku/dotfiles/nvim/lua/config/lazy.lua ~/.config/nvim/lua/config/lazy.lua
 ln -sf ~/src/github.com/mataku/dotfiles/nvim/lua/config/markdown.lua ~/.config/nvim/lua/config/markdown.lua
 ln -sf ~/src/github.com/mataku/dotfiles/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
+mkdir -p ~/.config/ghostty
+ln -sf ~/src/github.com/mataku/dotfiles/ghostty/config ~/.config/ghostty/config
 ln -sf ~/src/github.com/mataku/dotfiles/lazygit/config.yml ~/Library/Application\ Support/lazygit/config.yml
 
 # Pre-nix migration: ZDOTDIR must be set in ~/.zshenv (zsh requirement)

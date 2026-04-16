@@ -46,6 +46,9 @@
     # WezTerm configuration
     "wezterm/wezterm.lua".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/wezterm/wezterm.lua";
 
+    # Ghostty configuration
+    "ghostty/config".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/ghostty/config";
+
     # Lazygit configuration (XDG-compliant)
     "lazygit/config.yml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/lazygit/config.yml";
 

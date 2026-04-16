@@ -1,0 +1,45 @@
+command = /Users/mataku/.nix-profile/bin/fish --login
+
+background = #283137
+foreground = #eceef0
+cursor-color = #edeeed
+selection-background = #657c89
+selection-foreground = #eceef0
+
+palette = 0=#596d78
+palette = 1=#eb5f59
+palette = 2=#8eedb3
+palette = 3=#f8d85e
+palette = 4=#68c1f9
+palette = 5=#eb5181
+palette = 6=#8ff8db
+palette = 7=#fefefe
+palette = 8=#b2bdc4
+palette = 9=#ef9084
+palette = 10=#c5f4cd
+palette = 11=#fae58d
+palette = 12=#94d5fa
+palette = 13=#ee86aa
+palette = 14=#bafaeb
+palette = 15=#fefefe
+
+font-family = Cica
+font-size = 14
+
+window-padding-x = 8
+window-padding-y = 4
+window-padding-balance = true
+
+window-show-tab-bar = auto
+
+copy-on-select = clipboard
+
+macos-option-as-alt = false
+
+keybind = super+left=previous_tab
+keybind = super+right=next_tab
+keybind = ctrl+shift+left_bracket=move_tab:-1
+keybind = ctrl+shift+right_bracket=move_tab:1
+keybind = ctrl+equal=unbind
+keybind = ctrl+minus=unbind
+keybind = alt+three=unbind
