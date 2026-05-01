@@ -1,10 +1,7 @@
 {
+  "cleanupPeriodDays": 365,
   "env": {
     "CLAUDE_CODE_NO_FLICKER": "1"
-  },
-  "cleanupPeriodDays": 365,
-  "enabledPlugins": {
-    "skill-creator@claude-plugins-official": true
   },
   "hooks": {
     "Stop": [
@@ -38,5 +35,10 @@
         ]
       }
     ]
-  }
+  },
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true
+  },
+  "skipAutoPermissionPrompt": true
 }
