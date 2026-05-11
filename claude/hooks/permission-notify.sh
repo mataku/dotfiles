@@ -13,8 +13,8 @@ if [ -n "$DETAIL" ]; then
   MSG="${MSG} - ${DETAIL}"
 fi
 
-terminal-notifier \
-  -title "Claude Code" \
-  -message "$MSG" \
-  -activate com.github.wez.wezterm \
-  -sender com.github.wez.wezterm
+osascript - "Claude Code" "$MSG" <<'EOF'
+on run argv
+  display notification (item 2 of argv) with title (item 1 of argv)
+end run
+EOF

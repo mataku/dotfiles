@@ -87,7 +87,6 @@
     # === Additional Tools ===
     pinact           # Pin clipboard manager (check availability)
     octorus
-    terminal-notifier
     agent-browser
   ];
 
