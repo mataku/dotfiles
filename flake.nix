@@ -2,30 +2,39 @@
   description = "mataku's macOS system configuration with Nix";
 
   inputs = {
-    # Use nixpkgs unstable for latest packages
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    # Main: stable channel (supply-chain surface)
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+
+    # Unstable: only for packages not yet in stable (e.g. octorus)
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # nix-darwin for macOS system configuration
     nix-darwin = {
-      url = "github:LnL7/nix-darwin";
+      url = "github:LnL7/nix-darwin/nix-darwin-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # home-manager for user environment and dotfiles
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }:
-    let username = builtins.getEnv "USER";
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nix-darwin, home-manager, ... }:
+    let
+      username = builtins.getEnv "USER";
+      system = "aarch64-darwin";
+      pkgs-unstable = import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
     in
     {
       # macOS configuration for Apple Silicon
       darwinConfigurations = {
         "macos" = nix-darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
+          inherit system;
 
           modules = [
             # Main nix-darwin configuration
@@ -39,8 +48,8 @@
               home-manager.useUserPackages = false;
               home-manager.users.${username} = import ./nix/home/default.nix;
 
-              # Pass inputs to home-manager modules
-              home-manager.extraSpecialArgs = { inherit inputs; };
+              # Pass inputs and unstable pkgs to home-manager modules
+              home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
             }
           ];
 
