@@ -2,19 +2,16 @@
   description = "mataku's macOS system configuration with Nix";
 
   inputs = {
-    # Main: stable channel (supply-chain surface)
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
-    # Unstable: only for packages not yet in stable (e.g. octorus)
+    # Unstable: only for packages not yet in stable
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    # nix-darwin for macOS system configuration
     nix-darwin = {
       url = "github:LnL7/nix-darwin/nix-darwin-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # home-manager for user environment and dotfiles
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -37,13 +34,11 @@
           inherit system;
 
           modules = [
-            # Main nix-darwin configuration
             ./nix/darwin/configuration.nix
 
             # Integrate home-manager as a nix-darwin module
             home-manager.darwinModules.home-manager
             {
-              # home-manager configuration
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = false;
               home-manager.users.${username} = import ./nix/home/default.nix;
