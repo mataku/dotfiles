@@ -1,8 +1,10 @@
-command = /Users/mataku/.nix-profile/bin/fish --login
+command = /opt/homebrew/bin/fish --login --interactive
+shell-integration = fish
 
 background = #283137
 foreground = #eceef0
 cursor-color = #edeeed
+cursor-style-blink = false
 selection-background = #657c89
 selection-foreground = #eceef0
 
