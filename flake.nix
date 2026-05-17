@@ -22,10 +22,7 @@
     let
       username = builtins.getEnv "USER";
       system = "aarch64-darwin";
-      pkgs-unstable = import nixpkgs-unstable {
-        inherit system;
-        config.allowUnfree = true;
-      };
+      pkgs-unstable = import nixpkgs-unstable { inherit system; };
     in
     {
       # macOS configuration for Apple Silicon
