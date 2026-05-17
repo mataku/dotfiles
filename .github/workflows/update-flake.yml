@@ -160,11 +160,11 @@ jobs:
           gh pr comment "$PR_NUMBER" --body-file /tmp/diff.md
         fi
 
-    - name: Enable auto-merge
+    - name: Request review
       env:
         GH_TOKEN: ${{ steps.app-token.outputs.token }}
       run: |
         PR_NUMBER=$(gh pr list --head update-flake-lock --json number --jq '.[0].number')
         if [ -n "$PR_NUMBER" ]; then
-          gh pr merge "$PR_NUMBER" --auto --squash
+          gh pr edit "$PR_NUMBER" --add-reviewer mataku
         fi
