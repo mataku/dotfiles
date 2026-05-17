@@ -1,8 +1,8 @@
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-unstable, ... }:
 
 {
   # All packages migrated from Brewfile
-  home.packages = with pkgs; [
+  home.packages = (with pkgs; [
     # === CLI Tools ===
     bat              # Better cat with syntax highlighting
     fd               # Better find
@@ -86,8 +86,9 @@
 
     # === Additional Tools ===
     pinact           # Pin clipboard manager (check availability)
-    octorus
-    agent-browser
+  ]) ++ [
+    # Packages only available in nixpkgs-unstable
+    pkgs-unstable.octorus
   ];
 
   # Note: The following are NOT included as they are replaced by Nix's declarative approach:
