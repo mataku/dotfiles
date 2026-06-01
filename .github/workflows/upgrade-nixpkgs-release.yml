@@ -1,0 +1,108 @@
+name: Upgrade nixpkgs Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "Target nixpkgs/nix-darwin/home-manager release (e.g. 26.05)"
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+
+    env:
+      RELEASE: ${{ inputs.release }}
+      BRANCH: upgrade-nixpkgs-${{ inputs.release }}
+
+    steps:
+    - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+      id: app-token
+      with:
+        app-id: ${{ vars.APP_ID }}
+        private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+    - name: Checkout repository
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      with:
+        token: ${{ steps.app-token.outputs.token }}
+
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
+
+    - name: Capture package versions (before)
+      env:
+        USER: runner
+      run: bash scripts/nix-capture-versions.sh /tmp/packages-before.json
+
+    - name: Bump release refs and update flake.lock
+      run: |
+        sed -E -i \
+          "s#(nixos|nix-darwin|release)-[0-9]+\.[0-9]+#\1-${RELEASE}#g" \
+          flake.nix
+        echo "--- flake.nix inputs after bump ---"
+        grep -E 'url = "github:' flake.nix
+        nix flake update
+
+    - name: Check for changes
+      id: changes
+      run: |
+        if git diff --quiet flake.nix flake.lock; then
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+          echo "No changes after bumping to ${RELEASE}; nothing to do."
+        else
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Capture package versions (after)
+      if: steps.changes.outputs.changed == 'true'
+      env:
+        USER: runner
+      run: bash scripts/nix-capture-versions.sh /tmp/packages-after.json
+
+    - name: Generate version diff
+      if: steps.changes.outputs.changed == 'true'
+      run: bash scripts/nix-version-diff.sh /tmp/packages-before.json /tmp/packages-after.json /tmp/diff.md
+
+    - name: Create pull request
+      if: steps.changes.outputs.changed == 'true'
+      env:
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+        git switch -C "$BRANCH"
+        git add flake.nix flake.lock
+        git commit -m "chore: upgrade nixpkgs release to ${RELEASE}"
+        git push --force-with-lease origin "$BRANCH"
+
+        {
+          echo "## Release upgrade to ${RELEASE}"
+          echo ""
+          echo "Bumped the following flake inputs to the \`${RELEASE}\` release branch:"
+          echo "- \`nixpkgs\` -> \`nixos-${RELEASE}\`"
+          echo "- \`nix-darwin\` -> \`nix-darwin-${RELEASE}\`"
+          echo "- \`home-manager\` -> \`release-${RELEASE}\`"
+          echo ""
+          echo "> A release upgrade changes almost every package version, so the table below is large."
+          echo ""
+          cat /tmp/diff.md
+        } > /tmp/pr-body.md
+
+        PR_NUMBER=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number')
+        if [ -n "$PR_NUMBER" ]; then
+          gh pr edit "$PR_NUMBER" --body-file /tmp/pr-body.md
+        else
+          gh pr create \
+            --base "${{ github.ref_name }}" \
+            --head "$BRANCH" \
+            --title "chore: upgrade nixpkgs release to ${RELEASE}" \
+            --label dependencies \
+            --body-file /tmp/pr-body.md \
+            --reviewer mataku
+        fi

@@ -30,19 +30,7 @@ jobs:
     - name: Capture package versions (before)
       env:
         USER: runner
-      run: |
-        nix eval --impure --system aarch64-darwin --json \
-          '.#darwinConfigurations.macos.config' \
-          --apply '
-            cfg:
-              let
-                user = builtins.getEnv "USER";
-                homePkgs = cfg.home-manager.users.${user}.home.packages or [];
-                sysPkgs = cfg.environment.systemPackages or [];
-              in
-                map (p: { name = p.pname or p.name or "unknown"; version = p.version or ""; })
-                    (homePkgs ++ sysPkgs)
-          ' > /tmp/packages-before.json
+      run: bash scripts/nix-capture-versions.sh /tmp/packages-before.json
 
     - name: Update flake.lock
       uses: DeterminateSystems/update-flake-lock@834c491b2ece4de0bbd00d85214bb5e83b4da5c6 # v28
@@ -76,80 +64,10 @@ jobs:
     - name: Capture package versions (after)
       env:
         USER: runner
-      run: |
-        nix eval --impure --system aarch64-darwin --json \
-          '.#darwinConfigurations.macos.config' \
-          --apply '
-            cfg:
-              let
-                user = builtins.getEnv "USER";
-                homePkgs = cfg.home-manager.users.${user}.home.packages or [];
-                sysPkgs = cfg.environment.systemPackages or [];
-              in
-                map (p: { name = p.pname or p.name or "unknown"; version = p.version or ""; })
-                    (homePkgs ++ sysPkgs)
-          ' > /tmp/packages-after.json
+      run: bash scripts/nix-capture-versions.sh /tmp/packages-after.json
 
     - name: Generate version diff
-      run: |
-        jq -s '
-          (.[0] | map({key: .name, value: .version}) | from_entries) as $before
-          | (.[1] | map({key: .name, value: .version}) | from_entries) as $after
-          | {
-              updated: [
-                ($before | keys_unsorted[]) as $k
-                | select($after[$k] != null and $before[$k] != $after[$k])
-                | {name: $k, before: $before[$k], after: $after[$k]}
-              ],
-              added: [
-                ($after | keys_unsorted[]) as $k
-                | select($before[$k] == null)
-                | {name: $k, version: $after[$k]}
-              ],
-              removed: [
-                ($before | keys_unsorted[]) as $k
-                | select($after[$k] == null)
-                | {name: $k, version: $before[$k]}
-              ]
-            }
-        ' /tmp/packages-before.json /tmp/packages-after.json > /tmp/diff.json
-
-        {
-          echo "## Package version changes"
-          echo ""
-
-          UPDATED_COUNT=$(jq '.updated | length' /tmp/diff.json)
-          ADDED_COUNT=$(jq '.added | length' /tmp/diff.json)
-          REMOVED_COUNT=$(jq '.removed | length' /tmp/diff.json)
-
-          if [ "$UPDATED_COUNT" = "0" ] && [ "$ADDED_COUNT" = "0" ] && [ "$REMOVED_COUNT" = "0" ]; then
-            echo "_No user-facing package version changes._"
-          else
-            if [ "$UPDATED_COUNT" != "0" ]; then
-              echo "### Updated ($UPDATED_COUNT)"
-              echo ""
-              echo "| Package | Before | After |"
-              echo "|---------|--------|-------|"
-              jq -r '.updated[] | "| `\(.name)` | \(.before) | \(.after) |"' /tmp/diff.json
-              echo ""
-            fi
-            if [ "$ADDED_COUNT" != "0" ]; then
-              echo "### Added ($ADDED_COUNT)"
-              echo ""
-              jq -r '.added[] | "- `\(.name)` \(.version)"' /tmp/diff.json
-              echo ""
-            fi
-            if [ "$REMOVED_COUNT" != "0" ]; then
-              echo "### Removed ($REMOVED_COUNT)"
-              echo ""
-              jq -r '.removed[] | "- `\(.name)` \(.version)"' /tmp/diff.json
-              echo ""
-            fi
-          fi
-        } > /tmp/diff.md
-
-        echo "--- Generated diff ---"
-        cat /tmp/diff.md
+      run: bash scripts/nix-version-diff.sh /tmp/packages-before.json /tmp/packages-after.json /tmp/diff.md
 
     - name: Post version diff comment
       env:
