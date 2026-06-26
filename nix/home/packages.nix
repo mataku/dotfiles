@@ -1,38 +1,43 @@
 { config, pkgs, pkgs-unstable, ... }:
 
+let
+  unstableNames = [
+    "neovim"
+    "fish"
+    "git"
+    "gh"
+    "ripgrep"
+    "lazygit"
+    "fzf"
+    "bat"
+    "fd"
+    "lsd"
+    "tmux"
+    "jq"
+    "octorus"
+  ];
+
+  unstablePackages = map (name: pkgs-unstable.${name}) unstableNames;
+in
 {
   # All packages migrated from Brewfile
   home.packages = (with pkgs; [
     # === CLI Tools ===
-    bat              # Better cat with syntax highlighting
-    fd               # Better find
-    fzf              # Fuzzy finder
-    ripgrep          # Better grep
-    lsd              # Better ls
     tree             # Directory tree view
 
     # === Text Processing ===
-    jq               # JSON processor
     yq-go            # YAML processor (yq)
     nkf              # Network Kanji Filter
     less             # Pager
 
     # === Git Tools ===
-    git              # Version control
-    gh               # GitHub CLI
     ghq              # Git repository manager
     hub              # Git wrapper for GitHub
     tig              # Text-mode interface for git
-    lazygit          # Terminal UI for git
 
     # === Terminal & Shell ===
-    tmux             # Terminal multiplexer
     zsh              # Z shell
-    fish             # Fish shell (default)
     reattach-to-user-namespace  # tmux macOS clipboard support
-
-    # === Editor ===
-    neovim           # Modern Vim
 
     # === GNU Tools (for macOS compatibility) ===
     coreutils        # GNU core utilities
@@ -77,7 +82,7 @@
     # === Code Tools ===
     universal-ctags  # Source code indexing
     sourceHighlight  # Source code syntax highlighter
-    nixfmt          # Nix code formatter
+    nixfmt           # Nix code formatter
 
     # === Libraries ===
     libsodium        # Cryptography library
@@ -86,10 +91,7 @@
 
     # === Additional Tools ===
     pinact           # Pin clipboard manager (check availability)
-  ]) ++ [
-    # Packages only available in nixpkgs-unstable
-    pkgs-unstable.octorus
-  ];
+  ]) ++ unstablePackages;
 
   # Note: The following are NOT included as they are replaced by Nix's declarative approach:
   # - font-cica (will be custom derivation)
