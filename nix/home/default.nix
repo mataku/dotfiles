@@ -49,6 +49,9 @@
     # Ghostty configuration
     "ghostty/config".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/ghostty/config";
 
+    # Herdr configuration
+    "herdr/config.toml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/herdr/config.toml";
+
     # Lazygit configuration (XDG-compliant)
     "lazygit/config.yml".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/github.com/mataku/dotfiles/lazygit/config.yml";
 

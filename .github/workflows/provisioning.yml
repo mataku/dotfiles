@@ -48,7 +48,7 @@ jobs:
 
     - name: Verify key packages are installed
       run: |
-        ls "$HOME/.nix-profile/bin" | grep -E "^(bat|fzf|rg|git|zsh|fish|tmux|nvim)$"
+        ls "$HOME/.nix-profile/bin" | grep -E "^(bat|fzf|rg|git|zsh|fish|tmux|nvim|herdr)$"
 
     - name: Verify dotfiles are symlinked
       run: |
@@ -64,6 +64,7 @@ jobs:
         test -f ~/.claude/settings.json || exit 1
         test -f ~/.claude/hooks/permission-notify.sh || exit 1
         test -f ~/.claude/hooks/idle-notify.sh || exit 1
+        test -f ~/.config/herdr/config.toml || exit 1
 
     - name: Verify zsh initialization
       env:
@@ -88,6 +89,10 @@ jobs:
     - name: Verify nvim initialization
       run: |
         ~/.nix-profile/bin/nvim --headless "+qa" 2>&1
+
+    - name: Verify herdr initialization
+      run: |
+        ~/.nix-profile/bin/herdr --version
 
     - name: Install wezterm and Cica font for config verification
       env:

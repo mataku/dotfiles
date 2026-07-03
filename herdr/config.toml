@@ -1,0 +1,7 @@
+# Herdr configuration
+# Docs: https://herdr.dev/docs/configuration/
+# Full defaults: `herdr --default-config`
+
+[update]
+# Herdr is installed via Nix (nixpkgs-unstable), which owns updates.
+version_check = false

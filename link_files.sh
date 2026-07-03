@@ -40,3 +40,7 @@ ln -sf ~/src/github.com/mataku/dotfiles/claude/settings.json ~/.claude/settings.
 mkdir -p ~/.claude/hooks
 ln -sf ~/src/github.com/mataku/dotfiles/claude/hooks/permission-notify.sh ~/.claude/hooks/permission-notify.sh
 ln -sf ~/src/github.com/mataku/dotfiles/claude/hooks/idle-notify.sh ~/.claude/hooks/idle-notify.sh
+
+# Herdr configuration
+mkdir -p ~/.config/herdr
+ln -sf ~/src/github.com/mataku/dotfiles/herdr/config.toml ~/.config/herdr/config.toml
