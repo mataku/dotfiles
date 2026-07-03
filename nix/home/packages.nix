@@ -15,6 +15,7 @@ let
     "tmux"
     "jq"
     "octorus"
+    "herdr"
   ];
 
   unstablePackages = map (name: pkgs-unstable.${name}) unstableNames;
