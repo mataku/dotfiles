@@ -9,3 +9,8 @@ version_check = false
 [keys]
 # Match tmux prefix (C-q) for muscle-memory continuity.
 prefix = "ctrl+q"
+
+# Match tmux bind-key | split-window -h (vertical divider).
+# split_horizontal keeps the default (prefix+minus), which matches
+# tmux bind-key - split-window -v.
+split_vertical = "prefix+|"
