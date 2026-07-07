@@ -5,3 +5,7 @@
 [update]
 # Herdr is installed via Nix (nixpkgs-unstable), which owns updates.
 version_check = false
+
+[keys]
+# Match tmux prefix (C-q) for muscle-memory continuity.
+prefix = "ctrl+q"
