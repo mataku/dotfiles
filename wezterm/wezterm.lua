@@ -151,6 +151,15 @@ function prompt_pwd(current_dir)
   return result
 end
 
+function pane_cwd(pane_info)
+  return pane_info.current_working_dir and pane_info.current_working_dir.path
+end
+
+function is_herdr(pane_info)
+  local process_name = basename(pane_info.foreground_process_name or '')
+  return process_name == 'herdr'
+end
+
 local bell_panes = {}
 
 wezterm.on('bell', function(window, pane)
@@ -162,26 +171,34 @@ local dirless_title_processes = {
 }
 
 wezterm.on('format-window-title', function(tab, pane, tabs, panes, config)
-  if dirless_title_processes[basename(pane.foreground_process_name or '')] then
+  local cwd = pane_cwd(pane)
+  if is_herdr(pane) or cwd == nil then
     return ''
   end
-  return prompt_pwd(pane.current_working_dir.path)
+  return prompt_pwd(cwd)
 end)
 
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
   local active_pane = tab.active_pane
   local process_name = active_pane.foreground_process_name
+  local cwd = pane_cwd(active_pane)
   local title
-  if (process_name == '') then
-    title = basename(active_pane.current_working_dir.path)
+  if is_herdr(active_pane) or cwd == nil then
+    title = ''
+  elseif (process_name == '') then
+    title = basename(cwd)
   else
-    title = basename(active_pane.current_working_dir.path) .. ' ' .. '(' .. basename(process_name) .. ')'
+    title = basename(cwd) .. ' ' .. '(' .. basename(process_name) .. ')'
   end
   local pane_id = tostring(active_pane.pane_id)
   if tab.is_active then
     bell_panes[pane_id] = nil
   elseif bell_panes[pane_id] then
-    title = '● ' .. title
+    if title == '' then
+      title = '●'
+    else
+      title = '● ' .. title
+    end
   end
   return title
 end)
