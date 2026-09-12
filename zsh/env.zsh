@@ -10,6 +10,7 @@ export PATH="$HOME/Library/Android/sdk/tools:$PATH"
 export PATH="$HOME/.rustup/toolchains/stable-aarch64-apple-darwin/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/fvm/default/bin:$PATH"
+export PATH="$HOME/.bun/bin:$PATH"
 export GOPATH="$HOME/go"
 export EDITOR="nvim"
 export HOMEBREW_NO_AUTO_UPDATE=1

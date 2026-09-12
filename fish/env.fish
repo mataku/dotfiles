@@ -11,6 +11,7 @@ set -x PATH $HOME/.rustup/toolchains/stable-aarch64-apple-darwin/bin $PATH
 set -x PATH $HOME/.local/bin $PATH
 set -x PATH $HOME/fvm/default/bin $PATH
 set -x PATH $HOME.opencode/bin $PATH
+set -x PATH $HOME/.bun/bin $PATH
 set -x GOPATH $HOME/go
 set -x EDITOR "nvim"
 set fish_greeting ""
