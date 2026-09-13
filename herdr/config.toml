@@ -15,3 +15,9 @@ prefix = "ctrl+q"
 # split_horizontal keeps the default (prefix+minus), which matches
 # tmux bind-key - split-window -v.
 split_vertical = "prefix+|"
+
+[ui.sidebar.agents]
+row_gap = 1
+
+[ui.sidebar.spaces]
+row_gap = 1

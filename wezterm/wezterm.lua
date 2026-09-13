@@ -157,7 +157,14 @@ wezterm.on('bell', function(window, pane)
   bell_panes[tostring(pane:pane_id())] = true
 end)
 
+local dirless_title_processes = {
+  herdr = true,
+}
+
 wezterm.on('format-window-title', function(tab, pane, tabs, panes, config)
+  if dirless_title_processes[basename(pane.foreground_process_name or '')] then
+    return ''
+  end
   return prompt_pwd(pane.current_working_dir.path)
 end)
 
