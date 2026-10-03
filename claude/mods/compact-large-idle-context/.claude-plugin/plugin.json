@@ -1,0 +1,9 @@
+{
+  "name": "compact-large-idle-context",
+  "version": "0.1.0",
+  "description": "Compacts a large context once before the 1-hour prompt cache expires on an idle session",
+  "author": {
+    "name": "Takuma Homma"
+  },
+  "license": "MIT"
+}
