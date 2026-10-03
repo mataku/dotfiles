@@ -1,0 +1,9 @@
+{
+  "name": "prompt-hint-trim",
+  "version": "0.1.0",
+  "description": "Drops the shell count and the agents shortcut hint from the prompt footer",
+  "author": {
+    "name": "Takuma Homma"
+  },
+  "license": "MIT"
+}
