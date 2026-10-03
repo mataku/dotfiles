@@ -21,7 +21,19 @@
       automerge: true,
       platformAutomerge: true,
     },
+    {
+      matchDatasources: [
+        'custom.claude-code',
+      ],
+      minimumReleaseAge: null,
+    },
   ],
+  customDatasources: {
+    'claude-code': {
+      defaultRegistryUrlTemplate: 'https://downloads.claude.ai/claude-code-releases/latest',
+      format: 'plain',
+    },
+  },
   customManagers: [
     {
       customType: 'regex',
@@ -29,7 +41,7 @@
         '/^\\.github/workflows/[^/]+\\.ya?ml$/',
       ],
       matchStrings: [
-        '# renovate: datasource=(?<datasource>[a-z-]+) depName=(?<depName>\\S+)\\s+[A-Z_]+: (?<currentValue>\\S+)',
+        '# renovate: datasource=(?<datasource>[a-z.-]+) depName=(?<depName>\\S+)\\s+[A-Z_]+: (?<currentValue>\\S+)',
       ],
     },
   ],
