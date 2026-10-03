@@ -21,16 +21,6 @@ A Claude Code mod (function hooks) that compacts a large context once, shortly b
 
   The hit rate is `cache read / (cache read + cache write + uncached)` of the summarizer's own request, and is left out when the compaction reports no usage.
 
-## Install
-
-Load the folder as a plugin directory:
-
-```sh
-claude --plugin-dir ~/path/to/claude/mods/compact-large-idle-context
-```
-
-Or list it in `CLAUDE_CODE_PLUGIN_DIRS` in the `env` block of `~/.claude/settings.json`.
-
 ## Development
 
 ```sh
