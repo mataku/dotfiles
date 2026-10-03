@@ -1,0 +1,57 @@
+name: Claude Mods
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'claude/mods/**'
+      - '.github/workflows/claude-mods.yml'
+  push:
+    branches:
+      - develop
+    paths:
+      - 'claude/mods/**'
+      - '.github/workflows/claude-mods.yml'
+
+concurrency:
+  group: claude-mods-${{ github.head_ref || 'develop' }}
+  cancel-in-progress: true
+
+env:
+  CLAUDE_CODE_VERSION: 2.1.288
+  DISABLE_AUTOUPDATER: "1"
+
+jobs:
+  validate-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: "read"
+
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Install Claude Code
+      run: |
+        curl -fsSL https://claude.ai/install.sh | bash -s "$CLAUDE_CODE_VERSION"
+        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+    - name: Show Claude Code version
+      run: claude --version
+
+    - name: Validate and test mods
+      run: |
+        shopt -s nullglob
+        status=0
+        for manifest in claude/mods/*/.claude-plugin/plugin.json; do
+          mod=$(dirname "$(dirname "$manifest")")
+          echo "::group::validate $mod"
+          claude plugin validate "$mod" || status=1
+          echo "::endgroup::"
+          if compgen -G "$mod/tests/*.test.ts" > /dev/null; then
+            echo "::group::test $mod"
+            claude plugin test "$mod" || status=1
+            echo "::endgroup::"
+          fi
+        done
+        exit $status
