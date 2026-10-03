@@ -6,12 +6,12 @@ if test (uname -m) = 'arm64'
   set -x PATH /opt/homebrew/bin $PATH
 end
 # set -x JAVA_HOME (/usr/libexec/java_home -v 1.8)
-set -x PATH $HOME/Library/Android/sdk/tools $PATH
 set -x PATH $HOME/.rustup/toolchains/stable-aarch64-apple-darwin/bin $PATH
 set -x PATH $HOME/.local/bin $PATH
 set -x PATH $HOME/fvm/default/bin $PATH
 set -x PATH $HOME.opencode/bin $PATH
 set -x PATH $HOME/.bun/bin $PATH
+set -x PATH $HOME/.rd/bin $PATH
 set -x GOPATH $HOME/go
 set -x EDITOR "nvim"
 set fish_greeting ""

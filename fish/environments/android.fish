@@ -1,4 +1,3 @@
-set -x PATH $HOME/Library/Android/sdk/tools $PATH
 set -x PATH $HOME/Library/Android/sdk/platform-tools $PATH
 set -x PATH $HOME/Library/Android/sdk/tools/bin $PATH
 set -x PATH $HOME/Library/Android/sdk/emulator $PATH
