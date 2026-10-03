@@ -3,7 +3,8 @@ import type { AgentInfo, EngineInterface, Register } from 'claude-code'
 
 import type { Job } from '../types'
 
-const POLL_MS = 3000
+const ACTIVE_POLL_MS = 3000
+const IDLE_POLL_MS = 15 * 1000
 const TICK_MS = 60 * 1000
 const LINGER_MS = 5 * 60 * 1000
 const ENDED_STATUSES = ['completed', 'failed', 'killed']
@@ -127,6 +128,33 @@ const poll = async ($: EngineInterface) => {
   await update($, jobs, list => reconcile(list, agents, hidden, now))
 }
 
+const hasVisibleJobs = async ($: EngineInterface) => {
+  const [list, now] = await Promise.all([read($, jobs), $.clock.now()])
+  return prune(list, now).length > 0
+}
+
+const schedulePoll = ($: EngineInterface, delay: number) => {
+  $.clock.after(delay, () => void pollAndReschedule($))
+}
+
+const pollAndReschedule = async ($: EngineInterface) => {
+  let delay = IDLE_POLL_MS
+  try {
+    await poll($)
+    if (await hasVisibleJobs($)) delay = ACTIVE_POLL_MS
+  } catch {
+    delay = IDLE_POLL_MS
+  } finally {
+    schedulePoll($, delay)
+  }
+}
+
+const refreshTick = async ($: EngineInterface) => {
+  if (!(await hasVisibleJobs($))) return
+  const now = await $.clock.now()
+  await update($, tick, () => now)
+}
+
 const forgetForeground = async ($: EngineInterface, agents: AgentInfo[]) => {
   const ended = agents.filter(a => ENDED_STATUSES.includes(a.status)).map(a => a.id)
   const hidden = await read($, foreground)
@@ -158,8 +186,8 @@ const settleNotification = async ($: EngineInterface, text: string) => {
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
     const result = await next(e)
-    $.clock.every(POLL_MS, () => void poll($).catch(() => {}))
-    $.clock.every(TICK_MS, () => void $.clock.now().then(now => update($, tick, () => now)))
+    schedulePoll($, ACTIVE_POLL_MS)
+    $.clock.every(TICK_MS, () => void refreshTick($).catch(() => {}))
     return result
   })
 

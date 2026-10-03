@@ -15,15 +15,21 @@ const BAND: RenderPropsOf['AbovePrompt'] = {
   view: {},
 }
 
-type World = { agents: AgentInfo[]; nextAgentId: number }
+type Stub = { agents: AgentInfo[]; nextAgentId: number; listCalls: number; engineDraws: number }
 
-const stubEngine = (on: On): World => {
-  const world: World = { agents: [], nextAgentId: 1 }
+const stubEngine = (on: On): Stub => {
+  const stub: Stub = { agents: [], nextAgentId: 1, listCalls: 0, engineDraws: 0 }
   on('session.start', ($, e) => ({ cwd: e.cwd }))
-  on('agent.list', () => ({ value: world.agents }))
-  on('agent.spawn', () => ({ model: 'claude-opus-5-5', agentId: `a${world.nextAgentId++}` }))
+  on('agent.list', () => {
+    stub.listCalls++
+    return { value: stub.agents }
+  })
+  on('agent.spawn', () => ({ model: 'claude-opus-5-5', agentId: `a${stub.nextAgentId++}` }))
   on('prompt.submit', ($, e) => ({ text: e.text }))
-  on('ui.render', { component: 'AbovePrompt' }, ($, e) => $.ui.resolve(e).Box({ key: 'engine' }))
+  on('ui.render', { component: 'AbovePrompt' }, ($, e) => {
+    stub.engineDraws++
+    return $.ui.resolve(e).Box({ key: 'engine' })
+  })
   on('tool.call', ($, e) => {
     if (e.tool === 'Bash') {
       const isBackground = e.run_in_background === true
@@ -41,14 +47,14 @@ const stubEngine = (on: On): World => {
     }
     return { result: {} }
   })
-  return world
+  return stub
 }
 
 const start = async ($: Engine, on: On) => {
   const clock = mock.clock(on, { now: 10 * MINUTE })
-  const world = stubEngine(on)
+  const stub = stubEngine(on)
   await $.session.start({ cwd: '/repo', surface: 'terminal', isInteractive: true })
-  return { clock, world }
+  return { clock, stub }
 }
 
 const rowsOf = async ($: Engine, surface: (typeof SURFACES)[number], props = BAND) => {
@@ -91,8 +97,8 @@ test('shows a running background shell with its command and elapsed time', async
 })
 
 test('shows a running background subagent from agent.list with its type and description', async ($, on) => {
-  const { clock, world } = await start($, on)
-  world.agents = [{ id: 't1', description: 'search auth flow', type: 'Explore', status: 'running' }]
+  const { clock, stub } = await start($, on)
+  stub.agents = [{ id: 't1', description: 'search auth flow', type: 'Explore', status: 'running' }]
   await clock.advance(3 * SECOND)
   await clock.advance(MINUTE + 23 * SECOND)
 
@@ -104,7 +110,7 @@ test('shows a running background subagent from agent.list with its type and desc
 })
 
 test('a background spawn appears at once and a foreground one never does', async ($, on) => {
-  const { clock, world } = await start($, on)
+  const { clock, stub } = await start($, on)
   await $.agent.spawn({
     tool_use_id: 'tu1',
     prompt: 'update it',
@@ -125,7 +131,7 @@ test('a background spawn appears at once and a foreground one never does', async
     background: false,
     fork: false,
   } satisfies AgentSpawnInput)
-  world.agents = [
+  stub.agents = [
     { id: 'a1', description: 'update README', type: 'general-purpose', status: 'running' },
     { id: 'a2', description: 'foreground look', type: 'Explore', status: 'running' },
   ]
@@ -136,13 +142,13 @@ test('a background spawn appears at once and a foreground one never does', async
 })
 
 test('marks a completed subagent with ✓ and a failed one with a red ✗, both dim', async ($, on) => {
-  const { clock, world } = await start($, on)
-  world.agents = [
+  const { clock, stub } = await start($, on)
+  stub.agents = [
     { id: 'a1', description: 'update README', type: 'general-purpose', status: 'running' },
     { id: 'a2', description: 'flaky job', type: 'Explore', status: 'running' },
   ]
   await clock.advance(3 * SECOND)
-  world.agents = [
+  stub.agents = [
     { id: 'a1', description: 'update README', type: 'general-purpose', status: 'completed' },
     { id: 'a2', description: 'flaky job', type: 'Explore', status: 'failed' },
   ]
@@ -248,8 +254,8 @@ test('cuts the description to fit a narrow band and keeps the tail', async ($, o
 })
 
 test('counts a running subagent tool calls and names the latest tool', async ($, on) => {
-  const { clock, world } = await start($, on)
-  world.agents = [{ id: 'a1', description: 'search auth flow', type: 'Explore', status: 'running' }]
+  const { clock, stub } = await start($, on)
+  stub.agents = [{ id: 'a1', description: 'search auth flow', type: 'Explore', status: 'running' }]
   await clock.advance(3 * SECOND)
   for (const tool of ['Read', 'Read', 'Grep'] as const) {
     const input = { tool, agentId: 'a1', ...(tool === 'Grep' ? { pattern: 'auth' } : { file_path: '/repo/a.ts' }) }
@@ -261,15 +267,70 @@ test('counts a running subagent tool calls and names the latest tool', async ($,
 })
 
 test('keeps an agent with a status other than completed, failed or killed as running', async ($, on) => {
-  const { clock, world } = await start($, on)
-  world.agents = [{ id: 't1', description: 'review', type: 'teammate', status: 'running' }]
+  const { clock, stub } = await start($, on)
+  stub.agents = [{ id: 't1', description: 'review', type: 'teammate', status: 'running' }]
   await clock.advance(3 * SECOND)
-  world.agents = [{ id: 't1', description: 'review', type: 'teammate', status: 'idle' }]
+  stub.agents = [{ id: 't1', description: 'review', type: 'teammate', status: 'idle' }]
   await clock.advance(3 * SECOND)
 
   expect((await rowsOf($, 'terminal')).texts).toEqual(['⏵ teammate  review · 3s'])
 
-  world.agents = [{ id: 't1', description: 'review', type: 'teammate', status: 'killed' }]
+  stub.agents = [{ id: 't1', description: 'review', type: 'teammate', status: 'killed' }]
   await clock.advance(3 * SECOND)
   expect((await rowsOf($, 'terminal')).texts).toEqual(['✗ teammate  review · killed · just now'])
+})
+
+test('polls every 15 seconds while nothing is shown and every 3 seconds while a job is shown', async ($, on) => {
+  const { clock, stub } = await start($, on)
+
+  await clock.advance(3 * SECOND)
+  expect(stub.listCalls).toBe(1)
+
+  await clock.advance(14 * SECOND)
+  expect(stub.listCalls).toBe(1)
+
+  await clock.advance(SECOND)
+  expect(stub.listCalls).toBe(2)
+
+  stub.agents = [{ id: 'a1', description: 'search auth flow', type: 'Explore', status: 'running' }]
+  await clock.advance(15 * SECOND)
+  expect(stub.listCalls).toBe(3)
+
+  await clock.advance(3 * SECOND)
+  expect(stub.listCalls).toBe(4)
+  await clock.advance(3 * SECOND)
+  expect(stub.listCalls).toBe(5)
+})
+
+test('goes back to the idle interval once the last job is gone', async ($, on) => {
+  const { clock, stub } = await start($, on)
+  stub.agents = [{ id: 'a1', description: 'search auth flow', type: 'Explore', status: 'running' }]
+  await clock.advance(3 * SECOND)
+  stub.agents = [{ id: 'a1', description: 'search auth flow', type: 'Explore', status: 'completed' }]
+  await clock.advance(3 * SECOND)
+  await $.prompt.submit({ text: 'next', wait: false, origin: { kind: 'composer' } })
+
+  await clock.advance(3 * SECOND)
+  const calls = stub.listCalls
+  await clock.advance(14 * SECOND)
+  expect(stub.listCalls).toBe(calls)
+  await clock.advance(SECOND)
+  expect(stub.listCalls).toBe(calls + 1)
+})
+
+test('redraws each minute only while a job is shown', async ($, on) => {
+  const { clock, stub } = await start($, on)
+  const idle = await $.ui.mount({ plugin: 'background-jobs-band', surface: 'terminal', component: 'AbovePrompt', props: BAND })
+  const draws = stub.engineDraws
+  await clock.advance(3 * MINUTE)
+  await idle.find({ key: 'engine' })
+  expect(stub.engineDraws).toBe(draws)
+  await idle.unmount()
+
+  await $.tool.call({ tool: 'Bash', command: 'npm test', run_in_background: true })
+  const busy = await $.ui.mount({ plugin: 'background-jobs-band', surface: 'terminal', component: 'AbovePrompt', props: BAND })
+  expect((await busy.find({ type: 'Text' }))?.text).toBe('⏵ $ npm test · 0s')
+  await clock.advance(MINUTE)
+  expect((await busy.find({ type: 'Text' }))?.text).toBe('⏵ $ npm test · 1m00s')
+  await busy.unmount()
 })
