@@ -18,8 +18,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  # renovate: datasource=npm depName=@anthropic-ai/claude-code
   CLAUDE_CODE_VERSION: 2.1.288
-  DISABLE_AUTOUPDATER: "1"
 
 jobs:
   validate-and-test:
