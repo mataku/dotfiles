@@ -26,6 +26,9 @@
         'custom.claude-code',
       ],
       minimumReleaseAge: null,
+      schedule: [
+        '* 15-19 * * 1-5',
+      ],
       automerge: true,
       platformAutomerge: true,
     },
