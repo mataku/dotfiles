@@ -26,6 +26,8 @@
         'custom.claude-code',
       ],
       minimumReleaseAge: null,
+      automerge: true,
+      platformAutomerge: true,
     },
   ],
   customDatasources: {
