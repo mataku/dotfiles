@@ -68,9 +68,9 @@ threshold_color() {
 pace_color() {
   local used=$1 elapsed=$2
   local margin=$(( elapsed - used ))
-  if [ "$used" -ge 90 ] || [ "$margin" -lt -15 ]; then
+  if [ "$used" -ge 90 ] || [ "$margin" -lt -25 ]; then
     echo "$red"
-  elif [ "$margin" -lt 10 ] && [ "$used" -ge 10 ]; then
+  elif [ "$margin" -lt -10 ]; then
     echo "$yellow"
   else
     echo "$green"
@@ -99,7 +99,7 @@ context_meter() {
 }
 
 rate_limit_meter() {
-  local label=$1 used_raw=$2 resets_at=$3 window=$4 show_clock=$5
+  local label=$1 used_raw=$2 resets_at=$3 window=$4 show_clock=$5 color_fn=$6
   [ -z "$used_raw" ] && return
 
   local used elapsed=0 suffix=""
@@ -116,8 +116,8 @@ rate_limit_meter() {
     fi
   fi
 
-  render_meter "$label" "$used" "$(pace_color "$used" "$elapsed")" "$suffix"
+  render_meter "$label" "$used" "$($color_fn "$used" "$elapsed")" "$suffix"
 }
 
 # Print the status line
-echo "${model}${branch_segment}$(context_meter "$context_used")$(rate_limit_meter 5h "$five_hour_used" "$five_hour_resets" 18000 1)$(rate_limit_meter 7d "$seven_day_used" "$seven_day_resets" 604800 0)"
+echo "${model}${branch_segment}$(context_meter "$context_used")$(rate_limit_meter 5h "$five_hour_used" "$five_hour_resets" 18000 1 threshold_color)$(rate_limit_meter 7d "$seven_day_used" "$seven_day_resets" 604800 0 pace_color)"
