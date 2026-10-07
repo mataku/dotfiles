@@ -27,7 +27,7 @@
       ],
       minimumReleaseAge: null,
       schedule: [
-        '* 15-19 * * 1-5',
+        '* 15-19 * * 1',
       ],
       automerge: true,
       platformAutomerge: true,
