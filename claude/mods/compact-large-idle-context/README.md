@@ -21,6 +21,18 @@ A Claude Code mod (function hooks) that compacts a large context once, shortly b
 
   The hit rate is `cache read / (cache read + cache write + uncached)` of the summarizer's own request, and is left out when the compaction reports no usage.
 
+## herdr
+
+Inside a [herdr](https://herdr.dev) pane (`HERDR_ENV=1` with `HERDR_PANE_ID`), the compaction's spinner would read as finished work and play herdr's done sound in a background workspace. To keep it quiet, the mod:
+
+1. reports the pane `idle` as `herdr:claude` (with the session id) right before compacting, which overrides herdr's screen detection;
+2. after the compaction, polls `herdr agent explain --json` every 250 ms until the screen reads `idle`, waits 1 more second, and gives up waiting after 10 seconds;
+3. hands the pane back with `herdr pane release-agent`, then reports the session again with `herdr pane report-agent-session`, because the release also forgets the session herdr resumes after a restart.
+
+A turn starting while the pane is pinned hands it back at once. Every report carries a nanosecond `--seq` above the official hook's `time.time_ns()`, since herdr silently drops a report whose seq is not newer. `HERDR_BIN_PATH` is used when set, `herdr` from `PATH` otherwise. Failures of these commands go to the debug log only.
+
+This relies on herdr internals (checked against herdr 0.9.3) and may break with a herdr update.
+
 ## Development
 
 ```sh
