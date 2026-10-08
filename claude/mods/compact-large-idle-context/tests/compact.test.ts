@@ -33,6 +33,7 @@ const stubEngine = (on: On, overrides: Partial<Stub> = {}): Stub => {
     compact: () => ({ messages: MESSAGES, tokensBefore: 250_000, tokensAfter: 20_000, usage: USAGE }),
     ...overrides,
   }
+  mock.env(on, {})
   on('turn.start', ($, e) => ({ turnId: e.turnId }))
   on('turn.complete', ($, e) => ({ text: e.answer }))
   on('session.end', ($, e) => ({ sessionId: e.sessionId }))
