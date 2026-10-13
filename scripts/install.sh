@@ -14,6 +14,10 @@ info() {
   echo -e "${GREEN}[INFO]${NC} $1"
 }
 
+warn() {
+  echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
 error() {
   echo -e "${RED}[ERROR]${NC} $1"
 }
@@ -45,7 +49,8 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 info "Installing packages from Brewfile..."
 notify_sudo "brew bundle may ask for your password"
-brew bundle --file="$DOTFILES_DIR/Brewfile"
+bundle_failed=0
+brew bundle --file="$DOTFILES_DIR/Brewfile" || bundle_failed=1
 
 if [ ! -x "$HOME/.local/bin/mise" ]; then
   info "Installing mise..."
@@ -56,6 +61,10 @@ export PATH="$HOME/.local/bin:$PATH"
 mkdir -p "$HOME/Pictures/screenshots"
 
 info "Applying dotfiles and macOS defaults..."
+if [ -f "$HOME/.gitconfig" ] && [ ! -L "$HOME/.gitconfig" ]; then
+  mv "$HOME/.gitconfig" "$HOME/.gitconfig.pre-mise.$(date +%Y%m%d%H%M%S)"
+fi
+
 mise trust
 mise bootstrap --yes
 
@@ -85,3 +94,7 @@ echo ""
 echo -e "${CYAN}Claude Code uses the native installer; the Homebrew formula lags behind releases.${NC}"
 echo -e "${YELLOW}===================================================${NC}"
 echo ""
+if [ "$bundle_failed" -ne 0 ]; then
+  warn "brew bundle reported failures. Sign in to the App Store if mas entries failed, then re-run this script."
+  exit 1
+fi

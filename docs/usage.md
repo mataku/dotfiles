@@ -39,7 +39,7 @@ mise bootstrap macos defaults status
 mise bootstrap --yes
 ```
 
-`mise bootstrap` only changes what differs. Dock and Finder are restarted by the `post-defaults` hook; keyboard and trackpad changes need a logout.
+`mise bootstrap` only changes what differs, but the `post-defaults` hook restarts Dock, Finder, and SystemUIServer on every run. Keyboard and trackpad changes need a logout.
 
 ### Adding a dotfile
 
@@ -56,6 +56,8 @@ Find the domain and key with `defaults read <domain>` and the type with `default
 ```
 
 This is idempotent and is what CI runs. It installs Homebrew, applies the Brewfile, installs mise, runs `mise bootstrap`, and prints the manual-install list.
+
+Sign in to the Mac App Store before running it; the `mas` entries in `Brewfile` fail otherwise, and the script then applies the dotfiles anyway but exits with an error so you can re-run it after signing in.
 
 `setup.sh` is the curl entrypoint for a new machine. It runs `install.sh` and then the one-time sudo steps: mute the startup chime (`nvram StartupMute`), enable Touch ID for sudo (`/etc/pam.d/sudo_local`), and make fish the login shell.
 
