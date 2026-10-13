@@ -42,9 +42,9 @@ jobs:
         echo "HOMEBREW_BUNDLE_MAS_SKIP=$ids" >> "$GITHUB_ENV"
         echo "HOMEBREW_BUNDLE_NO_UPGRADE=1" >> "$GITHUB_ENV"
 
-    - name: Run installation script
+    - name: Run setup script
       run: |
-        bash ~/src/github.com/mataku/dotfiles/scripts/install.sh
+        bash ~/src/github.com/mataku/dotfiles/setup.sh
       env:
         HOMEBREW_NO_AUTO_UPDATE: "1"
         HOMEBREW_NO_INSTALL_CLEANUP: "1"
