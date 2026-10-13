@@ -1,2 +1,2 @@
 dump:
-	brew bundle dump -f --no-vscode
+	brew bundle dump -f --no-vscode --no-npm

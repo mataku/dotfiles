@@ -37,9 +37,6 @@ emacs.d/elpa/
 Brewfile.lock.json
 git/workconfig
 
-# Nix
-result
-
 tmux-client-*.log
 
 # Serena

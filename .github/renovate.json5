@@ -32,6 +32,16 @@
       automerge: true,
       platformAutomerge: true,
     },
+    {
+      matchDepNames: [
+        'jdx/mise',
+      ],
+      schedule: [
+        '* 15-19 * * 1',
+      ],
+      automerge: true,
+      platformAutomerge: true,
+    },
   ],
   customDatasources: {
     'claude-code': {
@@ -48,6 +58,16 @@
       matchStrings: [
         '# renovate: datasource=(?<datasource>[a-z.-]+) depName=(?<depName>\\S+)\\s+[A-Z_]+: (?<currentValue>\\S+)',
       ],
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^setup\\.sh$/',
+      ],
+      matchStrings: [
+        '# renovate: datasource=(?<datasource>[a-z.-]+) depName=(?<depName>\\S+)\\s+[A-Z_]+="\\$\\{[A-Z_]+:-(?<currentValue>[^}]+)\\}"',
+      ],
+      extractVersionTemplate: '^v(?<version>.+)$',
     },
   ],
   enabledManagers: [

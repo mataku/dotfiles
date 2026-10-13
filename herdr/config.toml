@@ -4,7 +4,7 @@ onboarding = false
 # Full defaults: `herdr --default-config`
 
 [update]
-# Herdr is installed via Nix (nixpkgs-unstable), which owns updates.
+# Herdr is installed via Homebrew, which owns updates.
 version_check = false
 
 [keys]

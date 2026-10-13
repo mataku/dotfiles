@@ -2,8 +2,10 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
-      "Bash(nix flake check:*)",
-      "Bash(nix build:*)"
+      "Bash(mise bootstrap dotfiles status:*)",
+      "Bash(mise bootstrap macos defaults status:*)",
+      "Bash(mise bootstrap status:*)",
+      "Bash(brew bundle check:*)"
     ]
   }
 }

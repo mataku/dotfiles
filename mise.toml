@@ -1,0 +1,74 @@
+min_version = "2026.9.5"
+
+[dotfiles]
+"~/.config/nvim/init.lua" = "nvim/init.lua"
+"~/.config/nvim/lua" = "nvim/lua"
+"~/.config/wezterm/wezterm.lua" = "wezterm/wezterm.lua"
+"~/.config/ghostty/config" = "ghostty/config"
+"~/.config/herdr/config.toml" = "herdr/config.toml"
+"~/Library/Application Support/lazygit/config.yml" = "lazygit/config.yml"
+"~/.config/tig/config" = "tig/tigrc"
+"~/.config/ripgrep/config" = "ripgrep/ripgreprc"
+"~/.config/git/commit_template" = "git/commit_template"
+"~/.config/zsh/.zshrc" = "zsh/.zshrc"
+"~/.config/zsh/alias.zsh" = "zsh/alias.zsh"
+"~/.config/zsh/env.zsh" = "zsh/env.zsh"
+"~/.config/zsh/prompt.zsh" = "zsh/prompt.zsh"
+"~/.config/zsh/functions.zsh" = "zsh/functions.zsh"
+"~/.config/zsh/environments/android.zsh" = "zsh/environments/android.zsh"
+"~/.config/zsh-abbr/user-abbreviations" = "zsh/zsh-abbr/user-abbreviations"
+"~/.zshenv" = "zsh/.zshenv"
+"~/.config/fish/config.fish" = "fish/config.fish"
+"~/.config/fish/alias.fish" = "fish/alias.fish"
+"~/.config/fish/env.fish" = "fish/env.fish"
+"~/.config/fish/environments/android.fish" = "fish/environments/android.fish"
+"~/.config/fish/functions" = "fish/functions"
+"~/.config/fish/fish_plugins" = "fish/fish_plugins"
+"~/.gitconfig" = "git/gitconfig"
+"~/.irbrc" = "ruby/irbrc"
+"~/.gemrc" = "ruby/gemrc"
+"~/.claude/hooks/permission-notify.sh" = "claude/hooks/permission-notify.sh"
+"~/.claude/hooks/idle-notify.sh" = "claude/hooks/idle-notify.sh"
+
+[bootstrap.macos.defaults."com.apple.dock"]
+autohide = false
+orientation = "left"
+"show-recents" = false
+tilesize = 38.0
+"show-process-indicators" = false
+
+[bootstrap.macos.defaults."com.apple.finder"]
+AppleShowAllFiles = false
+FXEnableExtensionChangeWarning = false
+ShowPathbar = true
+ShowStatusBar = true
+
+[bootstrap.macos.defaults.NSGlobalDomain]
+AppleShowAllExtensions = true
+InitialKeyRepeat = 15
+KeyRepeat = 2
+NSAutomaticCapitalizationEnabled = true
+NSAutomaticDashSubstitutionEnabled = false
+NSAutomaticPeriodSubstitutionEnabled = false
+NSAutomaticQuoteSubstitutionEnabled = false
+"com.apple.sound.beep.volume" = 0.0
+"com.apple.sound.beep.feedback" = 0
+AppleInterfaceStyle = "Dark"
+AppleInterfaceStyleSwitchesAutomatically = false
+
+[bootstrap.macos.defaults."com.apple.AppleMultitouchTrackpad"]
+Clicking = true
+TrackpadRightClick = true
+TrackpadThreeFingerDrag = false
+
+[bootstrap.macos.defaults."com.apple.driver.AppleBluetoothMultitouch.trackpad"]
+Clicking = true
+TrackpadRightClick = true
+TrackpadThreeFingerDrag = false
+
+[bootstrap.macos.defaults."com.apple.screencapture"]
+location = "~/Pictures/screenshots"
+type = "png"
+
+[bootstrap.hooks]
+post-defaults = "killall Dock Finder SystemUIServer || true"
