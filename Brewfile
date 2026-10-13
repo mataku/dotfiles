@@ -44,6 +44,8 @@ brew "gnu-sed"
 brew "gnupg"
 # GNU grep, egrep and fgrep
 brew "grep"
+# Agent multiplexer that lives in your terminal
+brew "herdr"
 # Add GitHub support to git on the command-line
 brew "hub"
 # Tools and libraries to manipulate images in select formats
