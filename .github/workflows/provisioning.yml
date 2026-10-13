@@ -36,74 +36,97 @@ jobs:
         mkdir -p ~/src/github.com/mataku
         mv dotfiles ~/src/github.com/mataku/
 
+    - name: Collect Mac App Store IDs to skip
+      run: |
+        ids=$(grep -oE 'id: [0-9]+' ~/src/github.com/mataku/dotfiles/Brewfile | awk '{print $2}' | xargs)
+        echo "HOMEBREW_BUNDLE_MAS_SKIP=$ids" >> "$GITHUB_ENV"
+
     - name: Run installation script
       run: |
         bash ~/src/github.com/mataku/dotfiles/scripts/install.sh
       env:
-        NIX_CONFIG: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-          max-jobs = auto
-          http-connections = 50
-          experimental-features = nix-command flakes
+        HOMEBREW_NO_AUTO_UPDATE: "1"
+        HOMEBREW_NO_INSTALL_CLEANUP: "1"
+        HOMEBREW_NO_ENV_HINTS: "1"
+
+    - name: Add mise to PATH
+      run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+    - name: Verify Brewfile is satisfied
+      env:
+        HOMEBREW_NO_AUTO_UPDATE: "1"
+        HOMEBREW_NO_ENV_HINTS: "1"
+      run: |
+        brew bundle check --file="$HOME/src/github.com/mataku/dotfiles/Brewfile" --verbose
+
+    - name: Verify dotfiles and macOS defaults are applied
+      run: |
+        cd "$HOME/src/github.com/mataku/dotfiles"
+        mise bootstrap dotfiles status --missing
+        mise bootstrap macos defaults status --missing
 
     - name: Verify key packages are installed
       run: |
-        ls "$HOME/.nix-profile/bin" | grep -E "^(bat|fzf|rg|git|zsh|fish|tmux|nvim|herdr)$"
+        for bin in bat fzf rg git zsh fish nvim herdr; do
+          test -x "/opt/homebrew/bin/$bin" || { echo "::error::$bin is missing"; exit 1; }
+        done
 
     - name: Verify dotfiles are symlinked
       run: |
-        # Check that dotfiles are properly symlinked via XDG
-        test -L ~/.config/nvim || test -d ~/.config/nvim || exit 1
-        test -f ~/.config/zsh/.zshrc || exit 1
-        test -f ~/.gitconfig || exit 1 # ~/.config/git/config
-        test -f ~/.config/tig/config || exit 1
-        test -f ~/.config/ripgrep/config || exit 1
-        test -f ~/.config/git/commit_template || exit 1
-        test -f ~/.config/zsh-abbr/user-abbreviations || exit 1
-        test -f ~/.config/fish/config.fish || exit 1
-        test -f ~/.claude/settings.json || exit 1
-        test -f ~/.claude/hooks/permission-notify.sh || exit 1
-        test -f ~/.claude/hooks/idle-notify.sh || exit 1
-        test -f ~/.config/herdr/config.toml || exit 1
+        test -L ~/.config/nvim/init.lua || exit 1
+        test -L ~/.config/nvim/lua || exit 1
+        test -L ~/.config/wezterm/wezterm.lua || exit 1
+        test -L ~/.config/ghostty/config || exit 1
+        test -L ~/.config/herdr/config.toml || exit 1
+        test -L "$HOME/Library/Application Support/lazygit/config.yml" || exit 1
+        test -L ~/.config/tig/config || exit 1
+        test -L ~/.config/ripgrep/config || exit 1
+        test -L ~/.config/git/commit_template || exit 1
+        test -L ~/.config/zsh/.zshrc || exit 1
+        test -L ~/.config/zsh-abbr/user-abbreviations || exit 1
+        test -L ~/.zshenv || exit 1
+        test -L ~/.config/fish/config.fish || exit 1
+        test -L ~/.config/fish/functions || exit 1
+        test -L ~/.gitconfig || exit 1
+        test -L ~/.irbrc || exit 1
+        test -L ~/.gemrc || exit 1
+        test -L ~/.claude/hooks/permission-notify.sh || exit 1
+        test -L ~/.claude/hooks/idle-notify.sh || exit 1
 
     - name: Verify zsh initialization
       env:
         TERM: xterm-256color
       run: |
-        ZDOTDIR="$HOME/.config/zsh" ~/.nix-profile/bin/zsh -ic 'exit' 2>&1
+        ZDOTDIR="$HOME/.config/zsh" /opt/homebrew/bin/zsh -ic 'exit' 2>&1
 
     - name: Verify fish initialization
       env:
         TERM: xterm-256color
       run: |
-        output=$(~/.nix-profile/bin/fish -c 'exit' 2>&1)
+        output=$(/opt/homebrew/bin/fish -c 'exit' 2>&1)
         if [ -n "$output" ]; then
           echo "$output"
           exit 1
         fi
 
-    - name: Verify tmux initialization
-      run: |
-        ~/.nix-profile/bin/tmux new-session -d -s test \; kill-session -t test
-
     - name: Verify nvim initialization
       run: |
-        ~/.nix-profile/bin/nvim --headless "+qa" 2>&1
+        /opt/homebrew/bin/nvim --headless "+qa" 2>&1
 
     - name: Verify herdr initialization
       run: |
-        ~/.nix-profile/bin/herdr --version
+        /opt/homebrew/bin/herdr --version
 
-    - name: Install wezterm and Cica font for config verification
+    - name: Install wezterm for config verification
       env:
         HOMEBREW_NO_AUTO_UPDATE: "1"
         HOMEBREW_NO_INSTALL_CLEANUP: "1"
         HOMEBREW_NO_INSTALL_UPGRADE: "1"
         HOMEBREW_NO_ENV_HINTS: "1"
-      run: brew install --cask wezterm font-cica
+      run: brew install --cask wezterm
 
     - name: Refresh font cache for wezterm verification
-      run: ~/.nix-profile/bin/fc-cache -vf
+      run: /opt/homebrew/bin/fc-cache -vf
 
     - name: Verify wezterm config
       run: |
