@@ -36,10 +36,11 @@ jobs:
         mkdir -p ~/src/github.com/mataku
         mv dotfiles ~/src/github.com/mataku/
 
-    - name: Collect Mac App Store IDs to skip
+    - name: Configure brew bundle for CI
       run: |
         ids=$(grep -oE 'id: [0-9]+' ~/src/github.com/mataku/dotfiles/Brewfile | awk '{print $2}' | xargs)
         echo "HOMEBREW_BUNDLE_MAS_SKIP=$ids" >> "$GITHUB_ENV"
+        echo "HOMEBREW_BUNDLE_NO_UPGRADE=1" >> "$GITHUB_ENV"
 
     - name: Run installation script
       run: |
