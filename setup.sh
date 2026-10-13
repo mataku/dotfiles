@@ -4,6 +4,8 @@ set -euo pipefail
 
 DOTFILES_REPO="https://github.com/mataku/dotfiles.git"
 DOTFILES_DIR="${HOME}/src/github.com/mataku/dotfiles"
+# renovate: datasource=github-releases depName=jdx/mise
+MISE_VERSION="${MISE_VERSION:-2026.10.9}"
 FISH_PATH="/opt/homebrew/bin/fish"
 PAM_SUDO_LOCAL="/etc/pam.d/sudo_local"
 
@@ -65,7 +67,7 @@ brew bundle --file="$DOTFILES_DIR/Brewfile" || bundle_failed=1
 
 if [ ! -x "$HOME/.local/bin/mise" ]; then
   info "Installing mise..."
-  curl -fsSL https://mise.run | sh
+  curl -fsSL https://mise.run | MISE_VERSION="$MISE_VERSION" sh
 fi
 export PATH="$HOME/.local/bin:$PATH"
 

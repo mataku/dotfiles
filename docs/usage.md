@@ -55,7 +55,7 @@ Find the domain and key with `defaults read <domain>` and the type with `default
 ./setup.sh
 ```
 
-This is the curl entrypoint for a new machine and is also what CI runs. It installs Xcode Command Line Tools, clones this repository, installs Homebrew, applies the Brewfile, installs mise, runs `mise bootstrap`, applies the one-time system settings (mute the startup chime with `nvram StartupMute`, enable Touch ID for sudo in `/etc/pam.d/sudo_local`, make fish the login shell), and prints the manual-install list. It is idempotent.
+This is the curl entrypoint for a new machine and is also what CI runs. It installs Xcode Command Line Tools, clones this repository, installs Homebrew, applies the Brewfile, installs the mise version pinned in `setup.sh` (Renovate bumps it weekly), runs `mise bootstrap`, applies the one-time system settings (mute the startup chime with `nvram StartupMute`, enable Touch ID for sudo in `/etc/pam.d/sudo_local`, make fish the login shell), and prints the manual-install list. It is idempotent.
 
 Sign in to the Mac App Store before running it; the `mas` entries in `Brewfile` fail otherwise, and the script then still applies the dotfiles and system settings but exits with an error so you can re-run it after signing in.
 
@@ -124,7 +124,7 @@ or let mise replace it (this deletes directory targets such as `~/.config/fish/f
 mise bootstrap dotfiles apply --force --yes
 ```
 
-Then run `mise bootstrap --yes` again. If mise is older than `min_version` in `mise.toml`, run `mise self-update` first.
+Then run `mise bootstrap --yes` again. If mise is older than `min_version` in `mise.toml`, run `mise self-update` first; the local mise is updated by hand, not by `setup.sh`.
 
 ## Uninstalling Nix
 
