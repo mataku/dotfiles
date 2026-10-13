@@ -12,7 +12,6 @@ PAM_SUDO_LOCAL="/etc/pam.d/sudo_local"
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
-CYAN='\033[1;36m'
 NC='\033[0m'
 
 info() {
@@ -127,8 +126,6 @@ echo -e "  • Slack"
 echo -e "  • azooKey (https://azookey.com/macOS)"
 echo -e "  • 1Password"
 echo -e "  • Claude Code (https://docs.claude.com/claude-code)${NC}"
-echo ""
-echo -e "${CYAN}Claude Code uses the native installer; the Homebrew formula lags behind releases.${NC}"
 echo -e "${YELLOW}===================================================${NC}"
 echo ""
 if [ "$bundle_failed" -ne 0 ]; then
