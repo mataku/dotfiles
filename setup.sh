@@ -84,19 +84,23 @@ notify_sudo "System setup needs your password"
 sudo -v
 
 if [ "$(nvram StartupMute 2>/dev/null | awk '{print $2}')" != "%01" ]; then
-  sudo nvram StartupMute=%01
+  sudo nvram StartupMute=%01 || warn "Could not set StartupMute in NVRAM"
 fi
 
 if ! sudo grep -qE '^auth[[:space:]]+sufficient[[:space:]]+pam_tid\.so' "$PAM_SUDO_LOCAL" 2>/dev/null; then
   echo "auth       sufficient     pam_tid.so" | sudo tee -a "$PAM_SUDO_LOCAL" >/dev/null
 fi
 
-if ! grep -qxF "$FISH_PATH" /etc/shells; then
-  echo "$FISH_PATH" | sudo tee -a /etc/shells >/dev/null
-fi
+if [ -x "$FISH_PATH" ]; then
+  if ! grep -qxF "$FISH_PATH" /etc/shells; then
+    echo "$FISH_PATH" | sudo tee -a /etc/shells >/dev/null
+  fi
 
-if [ "$(dscl . -read "$HOME" UserShell | awk '{print $2}')" != "$FISH_PATH" ]; then
-  sudo chsh -s "$FISH_PATH" "$USER"
+  if [ "$(dscl . -read "$HOME" UserShell | awk '{print $2}')" != "$FISH_PATH" ]; then
+    sudo chsh -s "$FISH_PATH" "$USER"
+  fi
+else
+  warn "$FISH_PATH is not installed; login shell left unchanged"
 fi
 
 echo ""
