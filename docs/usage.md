@@ -52,14 +52,14 @@ Find the domain and key with `defaults read <domain>` and the type with `default
 ## Full setup
 
 ```shell
-./scripts/install.sh
+./setup.sh
 ```
 
-This is idempotent and is what CI runs. It installs Homebrew, applies the Brewfile, installs mise, runs `mise bootstrap`, and prints the manual-install list.
+This is the curl entrypoint for a new machine and is also what CI runs. It installs Xcode Command Line Tools, clones this repository, installs Homebrew, applies the Brewfile, installs mise, runs `mise bootstrap`, applies the one-time system settings (mute the startup chime with `nvram StartupMute`, enable Touch ID for sudo in `/etc/pam.d/sudo_local`, make fish the login shell), and prints the manual-install list. It is idempotent.
 
-Sign in to the Mac App Store before running it; the `mas` entries in `Brewfile` fail otherwise, and the script then applies the dotfiles anyway but exits with an error so you can re-run it after signing in.
+Sign in to the Mac App Store before running it; the `mas` entries in `Brewfile` fail otherwise, and the script then still applies the dotfiles and system settings but exits with an error so you can re-run it after signing in.
 
-`setup.sh` is the curl entrypoint for a new machine. It runs `install.sh` and then the one-time sudo steps: mute the startup chime (`nvram StartupMute`), enable Touch ID for sudo (`/etc/pam.d/sudo_local`), and make fish the login shell.
+Day to day you rarely need it: run `mise bootstrap` after editing `mise.toml`, and `brew install` packages individually (then `make dump` to record them).
 
 ## Configuration Updates
 
@@ -81,7 +81,7 @@ Every config file is a symlink into this repository, so edit the file in the rep
 
 ## Manual Applications
 
-Installed by hand; `install.sh` prints this list at the end.
+Installed by hand; `setup.sh` prints this list at the end.
 
 - Vivaldi (https://vivaldi.com/)
 - Android Studio (https://developer.android.com/studio)
@@ -124,7 +124,7 @@ or let mise replace it (this deletes directory targets such as `~/.config/fish/f
 mise bootstrap dotfiles apply --force --yes
 ```
 
-Then run `./scripts/install.sh` again. If mise is older than `min_version` in `mise.toml`, run `mise self-update` first.
+Then run `mise bootstrap --yes` again. If mise is older than `min_version` in `mise.toml`, run `mise self-update` first.
 
 ## Uninstalling Nix
 
