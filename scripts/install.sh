@@ -38,6 +38,7 @@ info "Working in: $DOTFILES_DIR"
 if [ ! -x /opt/homebrew/bin/brew ]; then
   info "Installing Homebrew..."
   notify_sudo "The Homebrew installer may ask for your password"
+  sudo -v
   NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 eval "$(/opt/homebrew/bin/brew shellenv)"
