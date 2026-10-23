@@ -4,7 +4,6 @@
     'config:recommended',
   ],
   timezone: 'Asia/Tokyo',
-  rangeStrategy: 'replaced',
   rebaseWhen: 'conflicted',
   minimumReleaseAge: '7 days',
   packageRules: [
