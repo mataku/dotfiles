@@ -15,6 +15,8 @@ prefix = "ctrl+q"
 # split_horizontal keeps the default (prefix+minus), which matches
 # tmux bind-key - split-window -v.
 split_vertical = "prefix+|"
+close_tab = "prefix+x"
+close_pane = "prefix+shift+x"
 
 [ui.sidebar.agents]
 row_gap = 1
