@@ -7,5 +7,9 @@
       "Bash(mise bootstrap status:*)",
       "Bash(brew bundle check:*)"
     ]
+  },
+  "attribution": {
+    "commit": "Co-Authored-By: Claude Code <noreply@anthropic.com>",
+    "sessionUrl": false
   }
 }
