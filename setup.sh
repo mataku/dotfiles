@@ -5,7 +5,7 @@ set -euo pipefail
 DOTFILES_REPO="https://github.com/mataku/dotfiles.git"
 DOTFILES_DIR="${HOME}/src/github.com/mataku/dotfiles"
 # renovate: datasource=github-releases depName=jdx/mise
-MISE_VERSION="${MISE_VERSION:-2026.10.11}"
+MISE_VERSION="${MISE_VERSION:-2026.10.12}"
 FISH_PATH="/opt/homebrew/bin/fish"
 PAM_SUDO_LOCAL="/etc/pam.d/sudo_local"
 
