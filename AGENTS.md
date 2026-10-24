@@ -9,7 +9,7 @@ Dotfiles, Homebrew packages, and macOS defaults for a personal Apple Silicon Mac
 - `Brewfile` lists formulae, casks, and Mac App Store apps. After `brew install`, run `make dump` to regenerate it.
 - Day to day: `mise bootstrap` after editing `mise.toml`, `brew install` for packages. `setup.sh` is rarely re-run.
 - `.github/workflows/provisioning.yml` runs `setup.sh` unchanged on a macOS runner and asserts the result. Never add CI-only branches to `setup.sh`; CI-specific behavior lives in workflow environment variables only.
-- Each tool's config lives in its own directory (`fish/`, `zsh/`, `nvim/`, `wezterm/`, `ghostty/`, `herdr/`, `lazygit/`, `tig/`, `ripgrep/`, `git/`, `ruby/`, `claude/`). Edit the file there; the symlink makes it live.
+- Each tool's config lives in its own directory (`fish/`, `zsh/`, `nvim/`, `wezterm/`, `ghostty/`, `herdr/`, `lazygit/`, `tig/`, `ripgrep/`, `rtk/`, `git/`, `ruby/`, `claude/`). Edit the file there; the symlink makes it live.
 - Not managed here on purpose: `~/.claude/settings.json`, GUI applications, tmux (herdr replaced it).
 
 ## Communication Rules
