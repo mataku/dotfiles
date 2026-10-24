@@ -10,7 +10,6 @@ end
 alias ls 'lsd -a'
 alias bx 'bundle exec'
 alias dx 'docker exec'
-alias sudo 'sudo '
 alias bi 'bundle install -j4'
 alias gpush 'git push -u origin (git rev-parse --abbrev-ref HEAD)'
 alias gp 'git pull'
