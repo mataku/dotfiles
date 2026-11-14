@@ -1,0 +1,12 @@
+{
+  "zoom": 1.0,
+  "sounds": {
+    "enabled": true
+  },
+  "font": "Cica",
+  "font_size": 14.0,
+  "font_ligatures": false,
+  "minimum_contrast": 1.0,
+  "option_as_alt": "off",
+  "theme": "dotfiles"
+}
