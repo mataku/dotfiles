@@ -80,7 +80,7 @@ jobs:
         test -L ~/.config/ghostty/config || exit 1
         test -L ~/.config/herdr/config.toml || exit 1
         test -L ~/.config/herdr-app/settings.json || exit 1
-        test -L ~/.config/herdr-app/themes/dotfiles.json || exit 1
+        test -L ~/.config/herdr-app/themes/oceanic.json || exit 1
         test -L ~/.config/herdr-app/keys.json || exit 1
         test -L ~/.config/herdr-app/layouts/dotfiles.json || exit 1
         test -L ~/.config/herdr-app/mods/status-hints/main.js || exit 1
