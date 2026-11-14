@@ -26,7 +26,7 @@
       ],
       minimumReleaseAge: null,
       schedule: [
-        '* 15-19 * * 1',
+        '* 15-23 * * 1,5',
       ],
       automerge: true,
       platformAutomerge: true,
@@ -36,7 +36,7 @@
         'jdx/mise',
       ],
       schedule: [
-        '* 15-19 * * 1',
+        '* 15-23 * * 1,5',
       ],
       automerge: true,
       platformAutomerge: true,
