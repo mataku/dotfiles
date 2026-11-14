@@ -75,3 +75,4 @@ type = "png"
 
 [bootstrap.hooks]
 post-defaults = "killall Dock Finder SystemUIServer || true"
+post-dotfiles = "[ -e \"$HOME/.claude/CLAUDE.md\" ] || { mkdir -p \"$HOME/.claude\" && cp \"$HOME/src/github.com/mataku/dotfiles/claude/CLAUDE.md.tpl\" \"$HOME/.claude/CLAUDE.md\"; }"
