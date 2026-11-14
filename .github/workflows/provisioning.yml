@@ -130,6 +130,17 @@ jobs:
       run: |
         /opt/homebrew/bin/herdr --version
 
+    - name: Install herdr.app for config verification
+      run: curl -fsSL https://releases.herdr.dev/app/install.sh | sh
+
+    - name: Verify herdr.app config
+      run: |
+        cd ~/.config/herdr-app
+        for f in settings.json keys.json themes/oceanic.json layouts/personal.json mods/status-hints/mod.json; do
+          python3 -m json.tool "$f" >/dev/null || { echo "::error::herdr-app/$f is not valid JSON"; exit 1; }
+        done
+        ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/status-hints
+
     - name: Install wezterm for config verification
       env:
         HOMEBREW_NO_AUTO_UPDATE: "1"
