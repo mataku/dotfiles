@@ -81,6 +81,10 @@ jobs:
         test -L ~/.config/herdr/config.toml || exit 1
         test -L ~/.config/herdr-app/settings.json || exit 1
         test -L ~/.config/herdr-app/themes/dotfiles.json || exit 1
+        test -L ~/.config/herdr-app/keys.json || exit 1
+        test -L ~/.config/herdr-app/layouts/dotfiles.json || exit 1
+        test -L ~/.config/herdr-app/mods/status-hints/main.js || exit 1
+        test -L ~/.config/herdr-app/mods/status-hints/mod.json || exit 1
         test -L "$HOME/Library/Application Support/lazygit/config.yml" || exit 1
         test -L ~/.config/tig/config || exit 1
         test -L ~/.config/ripgrep/config || exit 1
