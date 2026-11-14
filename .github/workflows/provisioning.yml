@@ -82,7 +82,7 @@ jobs:
         test -L ~/.config/herdr-app/settings.json || exit 1
         test -L ~/.config/herdr-app/themes/oceanic.json || exit 1
         test -L ~/.config/herdr-app/keys.json || exit 1
-        test -L ~/.config/herdr-app/layouts/dotfiles.json || exit 1
+        test -L ~/.config/herdr-app/layouts/personal.json || exit 1
         test -L ~/.config/herdr-app/mods/status-hints/main.js || exit 1
         test -L ~/.config/herdr-app/mods/status-hints/mod.json || exit 1
         test -L "$HOME/Library/Application Support/lazygit/config.yml" || exit 1
