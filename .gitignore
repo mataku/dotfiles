@@ -41,3 +41,7 @@ tmux-client-*.log
 
 # Serena
 .serena/
+
+# herdr.app writes these next to every mod
+/herdr-app/mods/*/gpui-kit.d.ts
+/herdr-app/mods/*/jsconfig.json

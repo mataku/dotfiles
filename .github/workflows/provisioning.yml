@@ -85,6 +85,8 @@ jobs:
         test -L ~/.config/herdr-app/layouts/personal.json || exit 1
         test -L ~/.config/herdr-app/mods/status-hints/main.js || exit 1
         test -L ~/.config/herdr-app/mods/status-hints/mod.json || exit 1
+        test -L ~/.config/herdr-app/mods/timeline/main.js || exit 1
+        test -L ~/.config/herdr-app/mods/timeline/mod.json || exit 1
         test -L "$HOME/Library/Application Support/lazygit/config.yml" || exit 1
         test -L ~/.config/tig/config || exit 1
         test -L ~/.config/ripgrep/config || exit 1
@@ -136,10 +138,12 @@ jobs:
     - name: Verify herdr.app config
       run: |
         cd ~/.config/herdr-app
-        for f in settings.json keys.json themes/oceanic.json layouts/personal.json mods/status-hints/mod.json; do
+        for f in settings.json keys.json themes/oceanic.json layouts/personal.json mods/status-hints/mod.json mods/timeline/mod.json; do
           python3 -m json.tool "$f" >/dev/null || { echo "::error::herdr-app/$f is not valid JSON"; exit 1; }
         done
         ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/status-hints
+        ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/timeline
+        node --test ~/src/github.com/mataku/dotfiles/herdr-app/mods/timeline/main.test.js
 
     - name: Install wezterm for config verification
       env:

@@ -168,6 +168,19 @@
         }
       ],
       "resizable": false
+    },
+    {
+      "id": "timeline",
+      "type": "block",
+      "content": {
+        "mod": "timeline"
+      },
+      "size": {
+        "px": 0
+      },
+      "min": 0,
+      "max": 480,
+      "background": "chrome"
     }
   ],
   "background": "canvas",
