@@ -2,7 +2,7 @@ import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register, ToolSpec } from 'claude-code'
 
 import type { Plan } from '../types'
-import { PlanError, applyUpdate, describePane, formatTree, isFinished, parsePlan, summarize } from './plan'
+import { PlanError, applyUpdate, describePane, formatTree, isFinished, parsePlan, summarize, viewOf } from './plan'
 import type { PaneRow } from './plan'
 
 const PANE = 'task-timeline'
@@ -16,6 +16,10 @@ const KEEP_MS = 30 * 24 * 60 * 60 * 1000
 const DEFAULT_NUDGE_AFTER = 24
 const PERSON_ORIGINS = ['composer', 'bridge', 'sdk']
 const SESSION_LEFT = ['clear', 'resume']
+const EXPORT_DIR = '.local/state/agent-timeline'
+const EXPORT_VERSION = 1
+const EXPORT_AGENT = 'claude'
+const TERMINAL_ID = /^[A-Za-z0-9_-]{1,64}$/
 
 const WORKER_DENY = 'The main agent owns the plan. Report your progress, blockers and results to it instead.'
 const NO_PLAN_DENY = 'There is no plan yet. Record one with plan_set first.'
@@ -93,6 +97,35 @@ const storeKey = async ($: EngineInterface) => `${STORE_PREFIX}${await $.session
 
 const openPane = ($: EngineInterface) => $.ui.open({ id: PANE, title: PANE_TITLE, columns: PANE_COLUMNS }).catch(() => undefined)
 
+const exportTarget = async ($: EngineInterface) => {
+  const terminal = await $.env.get('HC_TERMINAL_ID')
+  const home = await $.env.get('HOME')
+  if (!terminal || !home || !TERMINAL_ID.test(terminal)) return undefined
+  return { terminal, path: `${home}/${EXPORT_DIR}/${terminal}.json` }
+}
+
+const publish = async ($: EngineInterface, plan: Plan | null) => {
+  const target = await exportTarget($)
+  if (target === undefined) return
+  if (plan === null && !(await $.fs.exists(target.path))) return
+  const body = {
+    version: EXPORT_VERSION,
+    terminal: target.terminal,
+    agent: EXPORT_AGENT,
+    updatedAt: await $.clock.now(),
+    plan: plan === null ? null : viewOf(plan),
+  }
+  await $.fs.write(target.path, JSON.stringify(body))
+}
+
+const publishQuietly = ($: EngineInterface, plan: Plan | null) => publish($, plan).catch(() => undefined)
+
+const openUnasked = async ($: EngineInterface) => {
+  if (await read($, isDismissed)) return
+  if ((await exportTarget($).catch(() => undefined)) !== undefined) return
+  await openPane($)
+}
+
 const closePane = ($: EngineInterface) => $.ui.close({ id: PANE }).catch(() => undefined)
 
 const persist = async ($: EngineInterface, plan: Plan) =>
@@ -101,12 +134,14 @@ const persist = async ($: EngineInterface, plan: Plan) =>
 const keep = async ($: EngineInterface, plan: Plan) => {
   await update($, planAtom, () => plan)
   await persist($, plan).catch(() => undefined)
+  await publishQuietly($, plan)
 }
 
 const forget = async ($: EngineInterface, options: { isStoredCopyKept: boolean }) => {
   await update($, planAtom, () => null)
   if (!options.isStoredCopyKept) await storeKey($).then(key => $.store.delete(key)).catch(() => undefined)
   await closePane($)
+  await publishQuietly($, null)
 }
 
 const storedPlan = (value: unknown): Plan | null => {
@@ -132,9 +167,10 @@ const restore = async ($: EngineInterface) => {
   await pruneStore($)
   const held = await read($, planAtom)
   const plan = held ?? storedPlan(await $.store.get(await storeKey($)))
+  await publishQuietly($, plan)
   if (plan === null) return
   if (held === null) await update($, planAtom, () => plan)
-  if (!(await read($, isDismissed))) await openPane($)
+  await openUnasked($)
 }
 
 const refusal = (error: unknown) => {
@@ -168,6 +204,7 @@ export const register: Register = (on, options) => {
 
   on('session.end', async ($, e, next) => {
     if (SESSION_LEFT.includes(e.reason)) await forget($, { isStoredCopyKept: true }).catch(() => undefined)
+    else await publishQuietly($, null)
     return next(e)
   })
 
@@ -178,7 +215,7 @@ export const register: Register = (on, options) => {
       await keep($, plan)
       idleCalls = 0
       await update($, isDismissed, () => false)
-      await openPane($)
+      await openUnasked($)
       return { result: `Plan saved.\n${formatTree(plan)}` }
     } catch (error) {
       return refusal(error)
@@ -193,7 +230,7 @@ export const register: Register = (on, options) => {
       const plan = applyUpdate(current, e)
       await keep($, plan)
       idleCalls = 0
-      if (!(await read($, isDismissed))) await openPane($)
+      await openUnasked($)
       const hasAdded = Array.isArray(e.add) && e.add.length > 0
       return { result: hasAdded ? `Plan updated.\n${formatTree(plan)}` : `Plan updated: ${summarize(plan)}` }
     } catch (error) {

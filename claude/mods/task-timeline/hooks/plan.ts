@@ -15,6 +15,10 @@ const UNSAFE_CHARS = /[\u0000-\u001f\u007f-\u009f\u200e\u200f\u202a-\u202e\u2066
 
 export class PlanError extends Error {}
 
+export type TaskView = { id: string; title: string; status: TaskStatus; share: number; note?: string; children: TaskView[] }
+
+export type PlanView = { title: string; percent: number; done: number; total: number; tasks: TaskView[] }
+
 export type PaneRow = { key: string; text: string; tone: 'title' | 'bar' | TaskStatus }
 
 const fail = (message: string): never => {
@@ -188,6 +192,22 @@ export const summarize = (plan: Plan) => {
   const tail = isFinished(plan) ? 'All tasks are done.' : active.length > 0 ? `In progress: ${active.join('; ')}` : 'Nothing is in progress.'
   return `${percentOf(plan)}% (${done}/${total}). ${tail}`
 }
+
+const viewsOf = (tasks: Task[], whole: number): TaskView[] => {
+  const total = tasks.reduce((sum, t) => sum + t.weight, 0)
+  return tasks.map(t => {
+    const share = (whole * t.weight) / total
+    const view = { id: t.id, title: t.title, status: statusOf(t), share, children: viewsOf(t.children, share) }
+    return t.note === undefined ? view : { ...view, note: t.note }
+  })
+}
+
+export const viewOf = (plan: Plan): PlanView => ({
+  title: plan.title,
+  percent: percentOf(plan),
+  ...leafCounts(plan.tasks),
+  tasks: viewsOf(plan.tasks, 1),
+})
 
 export const formatTree = (plan: Plan) => {
   const { done, total } = leafCounts(plan.tasks)

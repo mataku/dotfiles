@@ -27,12 +27,14 @@ A Claude Code mod (function hooks) that lets the agent keep a weighted task plan
 - `/timeline clear` drops the plan.
 - When the plan has unfinished tasks and the agent makes 24 tool calls without updating it, the mod adds a reminder after the next tool result. Set **Task update reminder** (`nudgeAfter`) to change the count; 0 turns the reminder off.
 - Subagents cannot call either tool: the main agent owns the plan and records what they report.
+- In a herdr-core terminal (`HC_TERMINAL_ID` is set) the plan is also written to a file for the herdr.app `timeline` mod (`herdr-app/mods/timeline` in this repository), which draws it in a panel on the right of the window. There the pane opens only when you run `/timeline`.
 
 ## Data
 
 - The plan lives in `$.state` for the session and is copied to `$.store` under the session id, so a restarted or resumed session with the same id gets its plan back. Stored plans older than 30 days are removed at session start.
 - Text from the agent is drawn in the terminal, so control characters and bidi overrides are replaced with spaces before a title, an id or a note is kept.
-- The mod reads and writes nothing outside `$.state` and `$.store`: no files, processes or network.
+- In a herdr-core terminal the mod writes `~/.local/state/agent-timeline/<terminal id>.json` on every change: `{ version, terminal, agent, updatedAt, plan }`, where `plan` holds the title, the percentage, the task counts and the tree with each task's status and its share of the whole, or `null` once the plan is gone or the session has ended. A terminal id that is not a plain name writes nothing.
+- Apart from that file the mod touches nothing outside `$.state` and `$.store`: no processes or network. It reads `HC_TERMINAL_ID` and `HOME`.
 
 ## Limitations
 
@@ -43,6 +45,7 @@ A Claude Code mod (function hooks) that lets the agent keep a weighted task plan
 - A pane opened by the agent's `plan_set` is placed from 144 terminal columns; in a narrower terminal it waits until you run `/timeline`.
 - The stored copy of a plan is plain JSON in the plugin store, kept for up to 30 days; do not put secrets in task titles or notes.
 - A failed write to the store is ignored: the plan stays for the session and is not restored after a restart.
+- The plan file is plain JSON and is never deleted, only emptied. A failed write is ignored. A session that is killed leaves its last plan in the file until the next session starts in that terminal.
 
 ## Development
 
