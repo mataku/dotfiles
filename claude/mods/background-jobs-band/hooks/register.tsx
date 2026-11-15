@@ -3,8 +3,8 @@ import type { AgentInfo, EngineInterface, Register } from 'claude-code'
 
 import type { Job } from '../types'
 
-const ACTIVE_POLL_MS = 3000
-const IDLE_POLL_MS = 15 * 1000
+const POLL_MS = 3000
+const FOREGROUND_LIMIT = 200
 const TICK_MS = 60 * 1000
 const LINGER_MS = 5 * 60 * 1000
 const ENDED_STATUSES = ['completed', 'failed', 'killed']
@@ -14,7 +14,15 @@ const jobs = atom({ plugin: 'background-jobs-band', key: 'jobs' } as const, [] a
 const foreground = atom({ plugin: 'background-jobs-band', key: 'foreground' } as const, [] as string[])
 const tick = atom({ plugin: 'background-jobs-band', key: 'tick' } as const, 0)
 
+type PendingCalls = { count: number; lastTool: string }
+
+let pollRun = 0
+let isPolling = false
+const pendingCalls = new Map<string, PendingCalls>()
+
 const isRunning = (job: Job) => job.endedAt === undefined
+
+const isRunningAgent = (job: Job) => job.kind === 'agent' && isRunning(job)
 
 const oneLine = (text: string) => text.replace(/\s+/g, ' ').trim()
 
@@ -93,8 +101,10 @@ const order = (list: Job[]) => [
   ...list.filter(j => !isRunning(j)).sort((a, b) => (b.endedAt ?? 0) - (a.endedAt ?? 0)),
 ]
 
-const addJob = ($: EngineInterface, job: Job) =>
-  update($, jobs, list => (list.some(j => j.id === job.id) ? list : [...list, job]))
+const addJob = async ($: EngineInterface, job: Job) => {
+  await update($, jobs, list => (list.some(j => j.id === job.id) ? list : [...list, job]))
+  if (job.kind === 'agent') startPolling($)
+}
 
 const finishJob = ($: EngineInterface, matches: (job: Job) => boolean, endedAt: number, outcome: Job['outcome'], detail?: string) =>
   update($, jobs, list => list.map(j => (isRunning(j) && matches(j) ? { ...j, endedAt, outcome, detail } : j)))
@@ -128,31 +138,58 @@ const poll = async ($: EngineInterface) => {
   await update($, jobs, list => reconcile(list, agents, hidden, now))
 }
 
-const hasVisibleJobs = async ($: EngineInterface) => {
-  const [list, now] = await Promise.all([read($, jobs), $.clock.now()])
-  return prune(list, now).length > 0
+const hasRunningAgent = async ($: EngineInterface) => (await read($, jobs)).some(isRunningAgent)
+
+const flushCalls = async ($: EngineInterface) => {
+  if (pendingCalls.size === 0) return
+  const calls = new Map(pendingCalls)
+  pendingCalls.clear()
+  const counted = (job: Job) => (isRunning(job) ? calls.get(job.id) : undefined)
+  if (!(await read($, jobs)).some(counted)) return
+  await update($, jobs, list =>
+    list.map(job => {
+      const added = counted(job)
+      return added ? { ...job, toolCalls: job.toolCalls + added.count, lastTool: added.lastTool } : job
+    }),
+  )
 }
 
-const schedulePoll = ($: EngineInterface, delay: number) => {
-  $.clock.after(delay, () => void pollAndReschedule($))
+const schedulePoll = ($: EngineInterface, run: number) => {
+  $.clock.after(POLL_MS, () => void pollWhileAgentsRun($, run))
 }
 
-const pollAndReschedule = async ($: EngineInterface) => {
-  let delay = IDLE_POLL_MS
+function startPolling($: EngineInterface) {
+  if (isPolling) return
+  isPolling = true
+  schedulePoll($, pollRun)
+}
+
+const pollWhileAgentsRun = async ($: EngineInterface, run: number) => {
+  if (run !== pollRun) return
+  let isAgentRunning = true
   try {
     await poll($)
-    if (await hasVisibleJobs($)) delay = ACTIVE_POLL_MS
+    await flushCalls($)
+    isAgentRunning = await hasRunningAgent($)
   } catch {
-    delay = IDLE_POLL_MS
-  } finally {
-    schedulePoll($, delay)
+    isAgentRunning = true
   }
+  if (run !== pollRun) return
+  if (isAgentRunning) return schedulePoll($, run)
+  isPolling = false
+  pendingCalls.clear()
+}
+
+const catchUp = async ($: EngineInterface) => {
+  await poll($)
+  if (await hasRunningAgent($)) startPolling($)
 }
 
 const refreshTick = async ($: EngineInterface) => {
-  if (!(await hasVisibleJobs($))) return
-  const now = await $.clock.now()
-  await update($, tick, () => now)
+  const [list, now] = await Promise.all([read($, jobs), $.clock.now()])
+  const kept = prune(list, now)
+  if (kept.length < list.length) return update($, jobs, current => prune(current, now))
+  if (kept.length > 0) await update($, tick, () => now)
 }
 
 const forgetForeground = async ($: EngineInterface, agents: AgentInfo[]) => {
@@ -185,8 +222,11 @@ const settleNotification = async ($: EngineInterface, text: string) => {
 
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
+    pollRun++
+    isPolling = false
+    pendingCalls.clear()
     const result = await next(e)
-    schedulePoll($, ACTIVE_POLL_MS)
+    await catchUp($).catch(() => {})
     $.clock.every(TICK_MS, () => void refreshTick($).catch(() => {}))
     return result
   })
@@ -197,7 +237,7 @@ export const register: Register = on => {
     if (result.deny !== undefined || result.agentId === undefined) return result
     const agentId = result.agentId
     if (!e.background) {
-      await update($, foreground, ids => [...ids, agentId])
+      await update($, foreground, ids => [...ids, agentId].slice(-FOREGROUND_LIMIT))
       return result
     }
     await addJob($, {
@@ -231,9 +271,10 @@ export const register: Register = on => {
   })
 
   on('tool.call', { tool: 'Bash' }, async ($, e, next) => {
+    if (e.agentId !== undefined) return next(e)
     const startedAt = await $.clock.now()
     const result = await next(e)
-    if (e.tool !== 'Bash' || e.agentId !== undefined || result.deny !== undefined || result.isError) return result
+    if (e.tool !== 'Bash' || result.deny !== undefined || result.isError) return result
     const taskId = result.result.backgroundTaskId
     if (!taskId) return result
     await addJob($, {
@@ -257,11 +298,10 @@ export const register: Register = on => {
     return result
   })
 
-  on('tool.call', async ($, e, next) => {
-    const agentId = e.agentId
-    if (agentId !== undefined && (await read($, jobs)).some(j => j.id === agentId && isRunning(j))) {
-      const tool = String(e.tool)
-      await update($, jobs, list => list.map(j => (j.id === agentId && isRunning(j) ? { ...j, toolCalls: j.toolCalls + 1, lastTool: tool } : j)))
+  on('tool.call', ($, e, next) => {
+    if (e.agentId !== undefined && isPolling) {
+      const count = (pendingCalls.get(e.agentId)?.count ?? 0) + 1
+      pendingCalls.set(e.agentId, { count, lastTool: String(e.tool) })
     }
     return next(e)
   })
