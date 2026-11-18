@@ -1,37 +1,29 @@
 # compact-large-idle-context
 
-A Claude Code mod (function hooks) that compacts a large context once, shortly before the 1-hour prompt cache expires on an idle session, so coming back to a long session does not pay for re-caching the whole conversation.
+A Claude Code mod (function hooks) that reports Claude Code's built-in idle compaction: when the engine compacts a long conversation shortly before the 1-hour prompt cache expires, the mod writes one line with the size of the context and the cache hit rate of the summarizer's request.
+
+The mod does not compact anything itself. It depends on the built-in idle compaction being on (`"idleCompaction"` in settings.json, on by default), which compacts a context of at least 200,000 tokens at 90% of the cache lifetime and hides the compaction from terminals that read the Program Status Protocol (OSC 7501), such as herdr.app.
 
 ## Behavior
 
-- When a main-conversation turn ends normally (`reason: 'answer'`), a compaction is reserved for 50 minutes later. Subagent turns, interrupted turns, refusals and turns ended by an error do not reserve.
-- There is only ever one reservation. Every normally completed turn restarts the 50 minutes.
-- The reservation is cancelled when a new turn starts, when a manual or automatic compaction of the main conversation happens, or when the session ends (including `/clear`).
-- When the timer fires, the compaction runs only if all of the following hold; otherwise nothing happens and nothing is retried:
-  - At least 50 and less than 58 minutes of wall-clock time have passed since the turn ended. A timer delayed further (for example by the Mac sleeping) may already have missed the cache.
-  - The session is the same one that made the reservation.
-  - The context is at least 200,000 tokens.
-  - No turn started while these checks ran.
-- The compaction runs once. It does not reserve another one by itself, and a failed or vetoed compaction is not retried.
-- Reservations, cancellations and skips go to the debug log only (`claude --debug`). The only line shown in the conversation is written when the compaction runs, for example:
+- Every compaction passes through unchanged: the mod never vetoes, rewrites or retries one, and an error from the compaction reaches the caller as before.
+- A compaction counts as the idle one when all of the following hold:
+  - its trigger is `auto` and it compacts the main conversation, not a subagent's;
+  - no main-conversation turn is running;
+  - at least 30 minutes have passed since a main-conversation turn last started or ended. Threshold compactions happen during a turn or within seconds of its end, and the built-in idle compaction fires about 54 minutes after the last request.
+- For that compaction, once it succeeds, the mod writes one line in the conversation, for example:
 
   ```
   Compacted idle context of 250,000 tokens; summary cache hit 90.0% (read 180,000 / write 19,000 / uncached 1,000)
   ```
 
-  The hit rate is `cache read / (cache read + cache write + uncached)` of the summarizer's own request, and is left out when the compaction reports no usage.
+  The hit rate is `cache read / (cache read + cache write + uncached)` of the summarizer's own request, and is left out when the compaction reports no usage. A skipped compaction writes nothing.
+- Every main-conversation compaction also leaves a debug line (`claude --debug`) with its trigger, whether a turn is running and the time since the last turn.
 
-## herdr
+## Limitations
 
-Inside a [herdr](https://herdr.dev) pane (`HERDR_ENV=1` with `HERDR_PANE_ID`), the compaction's spinner would read as finished work and play herdr's done sound in a background workspace. To keep it quiet, the mod:
-
-1. reports the pane `idle` as `herdr:claude` (with the session id) right before compacting, which overrides herdr's screen detection;
-2. after the compaction, polls `herdr agent explain --json` every 250 ms until the screen reads `idle`, waits 1 more second, and gives up waiting after 10 seconds;
-3. hands the pane back with `herdr pane release-agent`, then reports the session again with `herdr pane report-agent-session`, because the release also forgets the session herdr resumes after a restart.
-
-A turn starting while the pane is pinned hands it back at once. Every report carries a nanosecond `--seq` above the official hook's `time.time_ns()`, since herdr silently drops a report whose seq is not newer. `HERDR_BIN_PATH` is used when set, `herdr` from `PATH` otherwise. Failures of these commands go to the debug log only.
-
-This relies on herdr internals (checked against herdr 0.9.3) and may break with a herdr update.
+- That the built-in idle compaction reaches plugin hooks as `auto` with `usage` and `tokensBefore` in its result was read from Claude Code 2.1.327, not from documentation, and may change with an update. The debug line shows what arrives.
+- An `auto` compaction more than 30 minutes after the last turn that is not the idle one would be reported as idle.
 
 ## Development
 
