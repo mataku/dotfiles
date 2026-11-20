@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-import { PlanError, applyUpdate, describePane, formatTree, isFinished, leafCounts, parsePlan, progressOf, viewOf } from '../hooks/plan'
+import { PlanError, applyUpdate, describePane, formatTree, isFinished, leafCounts, parsePlan, parseStoredPlan, progressOf, viewOf } from '../hooks/plan'
 
 const sample = () =>
   parsePlan({
@@ -188,4 +188,10 @@ test('the view carries rolled-up statuses and each task share of the whole', asy
     ['2.2', 'in_progress', 0.25],
   ])
   expect(view.tasks[2]?.note).toBe('needs a token')
+})
+
+test('a stored plan comes back with the statuses of its subtasks', async () => {
+  const plan = applyUpdate(sample(), { updates: [{ id: '2.2', note: 'half drawn' }] })
+  expect(parseStoredPlan(JSON.parse(JSON.stringify(plan)))).toEqual(plan)
+  expect(progressOf(parseStoredPlan(JSON.parse(JSON.stringify(plan))).tasks)).toBe(0.5)
 })

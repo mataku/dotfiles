@@ -111,6 +111,17 @@ export const parsePlan = (input: unknown): Plan => {
   return checked({ title, tasks })
 }
 
+const withoutParentStatus = (raw: unknown): unknown => {
+  if (!isRecord(raw) || !Array.isArray(raw.children) || raw.children.length === 0) return raw
+  const { status: _derived, ...rest } = raw
+  return { ...rest, children: raw.children.map(withoutParentStatus) }
+}
+
+export const parseStoredPlan = (input: unknown): Plan => {
+  if (!isRecord(input) || !Array.isArray(input.tasks)) return parsePlan(input)
+  return parsePlan({ ...input, tasks: input.tasks.map(withoutParentStatus) })
+}
+
 const depthOf = (tasks: Task[], id: string, depth = 1): number | undefined => {
   for (const task of tasks) {
     if (task.id === id) return depth

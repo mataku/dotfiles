@@ -2,7 +2,7 @@ import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register, ToolSpec } from 'claude-code'
 
 import type { Plan } from '../types'
-import { PlanError, applyUpdate, describePane, formatTree, isFinished, parsePlan, summarize, viewOf } from './plan'
+import { PlanError, applyUpdate, describePane, formatTree, isFinished, parsePlan, parseStoredPlan, summarize, viewOf } from './plan'
 import type { PaneRow } from './plan'
 
 const PANE = 'task-timeline'
@@ -146,7 +146,7 @@ const forget = async ($: EngineInterface, options: { isStoredCopyKept: boolean }
 
 const storedPlan = (value: unknown): Plan | null => {
   try {
-    return parsePlan((value as { plan?: unknown } | undefined)?.plan)
+    return parseStoredPlan((value as { plan?: unknown } | undefined)?.plan)
   } catch {
     return null
   }
