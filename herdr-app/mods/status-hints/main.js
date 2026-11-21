@@ -4,6 +4,8 @@ import { spaces, agents, theme, run, window, keys, focused, nextCommand, notify 
 
 const JUMP_COMMAND = "jump-attention";
 const JUMP_ACTION = `status-hints.${JUMP_COMMAND}`;
+const MARKDOWN_MOD = "markdown-preview";
+const MARKDOWN_ACTION = `mod.open:${MARKDOWN_MOD}`;
 const URGENCY = { blocked: 2, done: 1 };
 
 export function pickAttention(list, current) {
@@ -61,6 +63,7 @@ export default class StatusHints extends View {
     const nextSpaceKey = this.bound("space.next");
     const jumpKey = this.bound(JUMP_ACTION);
     const paletteKey = this.bound("app.palette");
+    const markdownKey = this.bound(MARKDOWN_ACTION);
     return h_flex().size_full().px(14).gap(16).items_center().bg(t.chrome).border_t(1).border_color(t.border).text_size(11.8).text_color(t.muted)
       .child(label(space?.machine ? "server" : "monitor", space?.machine ?? "This computer"))
       .when(Boolean(space?.branch), (el) => el.child(label("branch", space.branch)))
@@ -70,6 +73,7 @@ export default class StatusHints extends View {
       .when(Boolean(prevSpaceKey), (el) => el.child(this.hint("prev-space", `${prevSpaceKey}  prev space`, () => run("space.prev"))))
       .when(Boolean(nextSpaceKey), (el) => el.child(this.hint("next-space", `${nextSpaceKey}  next space`, () => run("space.next"))))
       .when(Boolean(jumpKey), (el) => el.child(this.hint("attention", `${jumpKey}  waiting agent`, () => jumpToAttention())))
+      .when(Boolean(markdownKey), (el) => el.child(this.hint("markdown", `${markdownKey}  md`, () => run("mod.open", { name: MARKDOWN_MOD }))))
       .child(this.hint("palette", paletteKey ? `${paletteKey}  commands` : "commands", () => run("app.palette")));
   }
 }
