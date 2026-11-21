@@ -88,6 +88,19 @@
               "window_drag": true
             },
             {
+              "id": "inbox-toggle",
+              "type": "block",
+              "content": {
+                "mod": "inbox",
+                "props": {
+                  "button": true
+                }
+              },
+              "size": {
+                "px": 70
+              }
+            },
+            {
               "id": "simulators-toggle",
               "type": "block",
               "content": {
@@ -167,6 +180,19 @@
               ],
               "size": {
                 "px": 368
+              },
+              "min": 280,
+              "max": 900,
+              "hidden": true
+            },
+            {
+              "id": "inbox-panel",
+              "type": "block",
+              "content": {
+                "mod": "inbox"
+              },
+              "size": {
+                "px": 360
               },
               "min": 280,
               "max": 900,
