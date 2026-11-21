@@ -4,6 +4,12 @@ Configuration and mods for the Herdr desktop app. `mise bootstrap` links the fil
 
 ## Mods
 
+### containers
+
+Docker containers in a popup, grouped by Compose project, with CPU, memory and ports, and a button to start or stop each. `cmd-shift-c` opens it; it reads `docker` every 30 seconds while it is open and never while it is closed.
+
+![containers](./misc/containers.png)
+
 ### inbox
 
 Unread GitHub notifications in a side panel. Off by default; the switch is in the panel.
@@ -15,10 +21,6 @@ Unread GitHub notifications in a side panel. Off by default; the switch is in th
 A local Markdown file rendered in a pane. `cmd-shift-m` picks the file.
 
 ![markdown](./misc/markdown.png)
-
-### containers
-
-Docker containers in a popup, grouped by Compose project, with CPU, memory and ports, and a button to start or stop each. `cmd-shift-c` opens it; it reads `docker` every 30 seconds while it is open and never while it is closed.
 
 ### simulators
 
