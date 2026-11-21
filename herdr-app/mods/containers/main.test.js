@@ -128,9 +128,11 @@ test("actionOf stops an active container and starts a stopped one", () => {
   assert.deepEqual(actionOf(worker), { label: "Start", busy: "Starting", args: ["start", "bbb222"] });
 });
 
-test("failureOf tells a missing docker from a timeout", () => {
-  assert.equal(failureOf({ rejected: new Error("No such file or directory (os error 2)") }), "docker was not found in PATH");
-  assert.equal(failureOf({ rejected: new Error("exec timed out after 15000 ms") }), "docker did not answer in time");
+test("failureOf tells a missing docker from a timeout and shows any other rejection as it is", () => {
+  assert.equal(failureOf({ rejected: new Error("`herdr.exec`: cannot run docker: No such file or directory (os error 2)") }), "docker was not found in PATH");
+  assert.equal(failureOf({ rejected: new Error("`herdr.exec`: docker took longer than 15 s and was stopped") }), "docker did not answer in time");
+  assert.equal(failureOf({ rejected: new Error("`herdr.exec`: cannot run docker: Permission denied (os error 13)") }), "`herdr.exec`: cannot run docker: Permission denied (os error 13)");
+  assert.equal(failureOf({ rejected: "" }), "docker could not be run");
 });
 
 test("failureOf tells a stopped daemon from another error", () => {

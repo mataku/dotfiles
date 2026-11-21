@@ -12,7 +12,8 @@ const PROJECT_LABEL = /(?:^|,)com\.docker\.compose\.project=([^,]*)/;
 const PUBLISHED_PORT = /^(?:.*:)?([\d-]+)->([\d-]+)\/(\w+)$/;
 const EXPOSED_PORT = /^([\d-]+)\/(\w+)$/;
 const DAEMON_DOWN = /daemon running|failed to connect to the docker API|cannot connect to the docker daemon/i;
-const TIMED_OUT = /tim(ed|e) ?out/i;
+const TIMED_OUT = /took longer than/i;
+const NOT_FOUND = /no such file or directory/i;
 const CONTROL_CHARACTERS = /[\u0000-\u001f\u007f-\u009f]+/g;
 const STANDALONE = "standalone";
 
@@ -128,7 +129,12 @@ export const actionOf = (container) =>
   container.active ? { label: "Stop", busy: "Stopping", args: ["stop", container.id] } : { label: "Start", busy: "Starting", args: ["start", container.id] };
 
 export function failureOf({ rejected, result }) {
-  if (rejected !== undefined) return TIMED_OUT.test(String(rejected?.message ?? rejected)) ? "docker did not answer in time" : "docker was not found in PATH";
+  if (rejected !== undefined) {
+    const message = clean(String(rejected?.message ?? rejected));
+    if (NOT_FOUND.test(message)) return "docker was not found in PATH";
+    if (TIMED_OUT.test(message)) return "docker did not answer in time";
+    return message || "docker could not be run";
+  }
   if (result.code === 0) return null;
   if (DAEMON_DOWN.test(result.stderr)) return "Docker is not running";
   return clean(result.stderr.split("\n")[0]) || `docker exited with code ${result.code}`;

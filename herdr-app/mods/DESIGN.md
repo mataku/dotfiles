@@ -8,7 +8,7 @@ Shared parts for the mods in this folder. Herdr loads a module only from inside 
 - Icons are referenced by path from the app home. Reuse `mods/simulators/icons/play.svg`, `stop.svg` and `reload.svg` for start, stop and reload before adding a new file.
 - Prefix every element id with the mod name (`containers-row-<key>`).
 - A list keeps one cursor on an item, and group headings are never selected.
-- Keys mean the same in every list: `up` / `down` move the cursor, `enter` runs the main action of the row, `r` reloads, `escape` closes an overlay. A panel receives them as mod commands through `nextCommand()`; an overlay focuses its own handle and reads them in `on_key_down`.
+- Keys mean the same in every list: `up` / `down` move the cursor, `enter` runs the main action of the row, `r` reloads, `escape` closes an overlay. An overlay focuses its own handle and reads them in `on_key_down`.
 - An action that takes time shows the busy label and spinner on its row and hides the row's buttons until it ends.
 - Text sizes: 12.5 for titles and row names, 11.5 for secondary text.
 
@@ -104,3 +104,5 @@ A row with columns puts the busy label in its status column and the spinner alon
 div().p(10).text_size(12).text_color(t.dim).child(emptyText)
 div().px(14).py(6).flex_none().text_size(11.5).text_color(t.blocked).truncate().child(errorText)
 ```
+
+The empty text stands inside the list body. In a popup, where an empty list is not drawn, it stands in the list's place with `.px(14).py(10).flex_none()`, in line with the header.
