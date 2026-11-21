@@ -35,10 +35,3 @@ The task plan of the agents in the shown space, with their progress.
 ### status-hints
 
 A cheat sheet at the bottom of the window for the keys I use most: previous and next space, jump to the waiting agent, open a Markdown file, open the containers popup, and the command palette.
-
-## Working on a mod
-
-- Read [`mods/DESIGN.md`](./mods/DESIGN.md) first: the mods cannot share code, so the parts they have in common are written down there.
-- After editing a mod, run `touch -h ~/.config/herdr-app/mods/<name>/main.js`: Herdr watches the link, not the file it points to.
-- Test with `node --test herdr-app/mods/*/*.test.js` and load-check with `herdr-app check ~/.config/herdr-app/mods/<name>`.
-- A new mod needs its links in `mise.toml` and its assertions in `.github/workflows/provisioning.yml`.
