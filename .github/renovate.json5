@@ -41,6 +41,17 @@
       automerge: true,
       platformAutomerge: true,
     },
+    {
+      // serve-sim ships prebuilt binaries that drive the iOS Simulator through private frameworks: every update is read and tried by hand.
+      matchManagers: [
+        'npm',
+      ],
+      matchPackageNames: [
+        'serve-sim',
+      ],
+      automerge: false,
+      platformAutomerge: false,
+    },
   ],
   customDatasources: {
     'claude-code': {
@@ -72,5 +83,6 @@
   enabledManagers: [
     'github-actions',
     'custom.regex',
+    'npm',
   ],
 }

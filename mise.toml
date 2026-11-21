@@ -14,6 +14,10 @@ min_version = "2026.9.5"
 "~/.config/herdr-app/mods/status-hints/mod.json" = "herdr-app/mods/status-hints/mod.json"
 "~/.config/herdr-app/mods/timeline/main.js" = "herdr-app/mods/timeline/main.js"
 "~/.config/herdr-app/mods/timeline/mod.json" = "herdr-app/mods/timeline/mod.json"
+"~/.config/herdr-app/mods/simulators/main.js" = "herdr-app/mods/simulators/main.js"
+"~/.config/herdr-app/mods/simulators/mod.json" = "herdr-app/mods/simulators/mod.json"
+"~/.config/herdr-app/mods/simulators/viewer" = "herdr-app/mods/simulators/viewer"
+"~/.config/herdr-app/mods/simulators/icons" = "herdr-app/mods/simulators/icons"
 "~/Library/Application Support/lazygit/config.yml" = "lazygit/config.yml"
 "~/Library/Application Support/rtk/config.toml" = "rtk/config.toml"
 "~/.config/tig/config" = "tig/tigrc"
@@ -78,6 +82,11 @@ TrackpadThreeFingerDrag = false
 [bootstrap.macos.defaults."com.apple.screencapture"]
 location = "~/Pictures/screenshots"
 type = "png"
+
+[tasks.bootstrap]
+description = "Install the simulators mod viewer's npm packages exactly as its lockfile names them"
+dir = "{{config_root}}/herdr-app/mods/simulators/viewer"
+run = '"$HOME/.nodenv/shims/npm" ci --ignore-scripts --no-audit --no-fund'
 
 [bootstrap.hooks]
 post-defaults = "killall Dock Finder SystemUIServer || true"
