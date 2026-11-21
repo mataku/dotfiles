@@ -49,6 +49,15 @@ export function mergeResults(previous, results, now) {
   return { items: [...kept, ...fresh], errors, fetchedAt: now };
 }
 
+// Why this exists: a load replaces only the sources that answered, so the items of a source taken out of SOURCES would otherwise stay forever.
+export function forSources(state, ids) {
+  return {
+    items: state.items.filter((item) => ids.includes(item.source)),
+    errors: Object.fromEntries(Object.entries(state.errors).filter(([source]) => ids.includes(source))),
+    fetchedAt: state.fetchedAt,
+  };
+}
+
 export function readState(value) {
   const stored = isRecord(value) ? value : {};
   const items = Array.isArray(stored.items) ? stored.items.map((entry) => (isRecord(entry) ? toItem(entry.source, entry) : null)).filter(Boolean) : [];
@@ -178,9 +187,41 @@ export const isEnabled = (value) => value === true;
 
 export const enabledAfter = (command, enabled) => (command === "on" ? true : command === "off" ? false : enabled);
 
+const WIDE = /[\u1100-\u115F\u2E80-\uA4CF\uAC00-\uD7A3\uF900-\uFAFF\uFE30-\uFE4F\uFF00-\uFF60\uFFE0-\uFFE6]|\p{Extended_Pictographic}/u;
+const DOTS = "...";
+const TITLE_LINES = 2;
+const TITLE_LINE_HEIGHT = 18;
+const RELOAD_ICON = "mods/inbox/reload.svg";
+const UNIT_WIDTH = 6.6;
+const ROW_FIXED_WIDTH = 116;
+const WRAP_SLACK = 0.92;
+const MIN_TITLE_UNITS = 20;
+const DEFAULT_PANEL_WIDTH = 360;
+
+const unitsOf = (char) => (WIDE.test(char) ? 2 : 1);
+
+// Why the text is cut by counting: the UI can stop text at one line but not at two, and it has no way to measure text. A wide character is taken as two narrow ones.
+export function clampText(text, budget) {
+  const chars = [...text];
+  if (chars.reduce((sum, char) => sum + unitsOf(char), 0) <= budget) return text;
+  let used = 0;
+  let kept = "";
+  for (const char of chars) {
+    used += unitsOf(char);
+    if (used > budget - DOTS.length) break;
+    kept += char;
+  }
+  return `${kept.trimEnd()}${DOTS}`;
+}
+
+// Why the slack: lines break between words, so a line rarely fills to its last character.
+export const titleBudget = (panelWidth) =>
+  Math.max(MIN_TITLE_UNITS, Math.floor(((panelWidth - ROW_FIXED_WIDTH) / UNIT_WIDTH) * TITLE_LINES * WRAP_SLACK));
+
 const PANEL = "inbox-panel";
 const ENABLED_KEY = "inbox.enabled";
 const ICON = "mods/inbox/inbox.svg";
+const CHECK_ICON = "mods/inbox/check.svg";
 const STATE_KEY = "inbox.state";
 const DONE_KEY = "inbox.done";
 const OFFLINE_KEY = "inbox.offline";
@@ -212,7 +253,8 @@ async function refresh() {
   const results = await loadWhenOnline(SOURCES, { exec });
   if ((results === null) !== (shared(OFFLINE_KEY) === true)) setShared(OFFLINE_KEY, results === null);
   if (results === null) return;
-  const state = mergeResults(readState(shared(STATE_KEY)), results, Date.now());
+  const known = forSources(readState(shared(STATE_KEY)), SOURCES.map((source) => source.id));
+  const state = mergeResults(known, results, Date.now());
   setShared(STATE_KEY, state);
   // Why only after every source loaded: a failed load keeps its old items, and pruning against a partial list would bring finished items back on the next success.
   if (!results.every((result) => Array.isArray(result.items))) return;
@@ -226,6 +268,7 @@ export default class Inbox extends View {
     this.role = props()?.button ? "button" : "list";
     this.loading = false;
     this.copied = null;
+    this.width = DEFAULT_PANEL_WIDTH;
     // Why undefined and not null: the Dock badge outlives a reload of this mod, so the first render must set it even when nothing is waiting.
     this.badge = undefined;
     // Why the button polls: a copy starts only once it has been shown, and the panel's copy stays hidden until someone opens it.
@@ -305,23 +348,28 @@ export default class Inbox extends View {
   renderRow(t, item, now) {
     const key = keyOf(item);
     const isCopied = this.copied === key;
-    return v_flex().id(`inbox-row-${key}`).px(8).py(6).gap(2).rounded(6)
+    return h_flex().id(`inbox-row-${key}`).px(8).py(6).gap(10).items_center().rounded(6)
       .hover((style) => style.bg(t.hover))
       .on_click((_event, cx) => this.copy(item, cx))
-      .child(h_flex().gap(6).items_center().text_size(11.5)
-        .child(div().flex_none().text_color(t.accent).child(item.reason || labelOf(item.source)))
-        .child(div().flex_1().min_w(0).truncate().text_color(t.muted).child(item.context))
-        .child(div().flex_none().text_color(isCopied ? t.done : t.dim).child(isCopied ? "Copied" : ageOf(item.updatedAt, now)))
-        .child(div().id(`inbox-done-${key}`).flex_none().px(5).rounded(4).text_color(t.muted)
-          .hover((style) => style.bg(t.selected).text_color(t.foreground))
-          .on_mouse_down("left", stopPress)
-          .on_click((_event, cx) => {
-            cx.stop_propagation();
-            this.markDone(item);
-            cx.notify();
-          })
-          .child("Done")))
-      .child(div().text_color(t.foreground).child(item.title));
+      .child(v_flex().flex_1().min_w(0).gap(2)
+        .child(h_flex().gap(6).items_center().text_size(11.5)
+          .child(div().flex_none().text_color(t.accent).child(item.reason || labelOf(item.source)))
+          .child(div().flex_1().min_w(0).truncate().text_color(t.muted).child(item.context)))
+        .child(div().max_h(TITLE_LINES * TITLE_LINE_HEIGHT).overflow_hidden().line_height(`${TITLE_LINE_HEIGHT}px`).text_color(t.foreground)
+          .child(clampText(item.title, titleBudget(this.width)))))
+      .child(h_flex().w(44).flex_none().justify_end().text_size(11.5).text_color(isCopied ? t.done : t.dim)
+        .child(isCopied ? "Copied" : ageOf(item.updatedAt, now)))
+      .child(div().id(`inbox-done-${key}`).size(24).flex_none().flex().items_center().justify_center().rounded(5)
+        .border(1).border_color(t.border).text_color(t.muted)
+        .hover((style) => style.bg(t.selected).text_color(t.foreground))
+        .tooltip("Done")
+        .on_mouse_down("left", stopPress)
+        .on_click((_event, cx) => {
+          cx.stop_propagation();
+          this.markDone(item);
+          cx.notify();
+        })
+        .child(svg(CHECK_ICON).size(12)));
   }
 
   renderSwitch(t, isOn) {
@@ -351,15 +399,20 @@ export default class Inbox extends View {
     const errors = Object.entries(state.errors);
     const status = this.loading ? "Updating…" : shared(OFFLINE_KEY) === true ? "Offline" : state.fetchedAt ? `Updated ${clockOf(state.fetchedAt)}` : "Not loaded yet";
     const empty = div().p(10).text_color(t.dim).child(state.fetchedAt ? "Nothing waiting" : "Waiting for the first update…");
-    return v_flex().size_full().bg(t.chrome).text_size(12.5).text_color(t.foreground)
+    return v_flex().id("inbox-list").size_full().bg(t.chrome).text_size(12.5).text_color(t.foreground)
+      .on_size_change((size, cx) => {
+        this.width = size.width;
+        cx.notify();
+      })
       .child(h_flex().h(36).px(14).gap(8).flex_none().items_center().border_b(1).border_color(t.border)
         .child(div().font_semibold().child("Inbox"))
         .child(div().flex_1().text_color(t.muted).child(items.length > 0 ? String(items.length) : ""))
         .child(div().flex_none().text_size(11.5).text_color(t.dim).child(status))
-        .child(div().id("inbox-reload").flex_none().px(6).py(2).rounded(5).text_size(11.5).text_color(t.muted)
+        .child(div().id("inbox-reload").size(24).flex_none().flex().items_center().justify_center().rounded(5).text_color(t.muted)
           .hover((style) => style.bg(t.hover).text_color(t.foreground))
+          .tooltip("Reload")
           .on_click((_event, cx) => this.reload(cx))
-          .child("Reload"))
+          .child(this.loading ? svg(RELOAD_ICON).size(14).spin(900) : svg(RELOAD_ICON).size(14)))
         .child(this.renderSwitch(t, true)))
       .children(errors.map(([source, message]) =>
         div().px(14).py(6).flex_none().text_size(11.5).text_color(t.blocked).truncate().child(`${labelOf(source)}: ${message}`)))

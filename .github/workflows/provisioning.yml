@@ -95,6 +95,8 @@ jobs:
         test -L ~/.config/herdr-app/mods/inbox/main.js || exit 1
         test -L ~/.config/herdr-app/mods/inbox/mod.json || exit 1
         test -L ~/.config/herdr-app/mods/inbox/inbox.svg || exit 1
+        test -L ~/.config/herdr-app/mods/inbox/check.svg || exit 1
+        test -L ~/.config/herdr-app/mods/inbox/reload.svg || exit 1
         test -L "$HOME/Library/Application Support/lazygit/config.yml" || exit 1
         test -L ~/.config/tig/config || exit 1
         test -L ~/.config/ripgrep/config || exit 1
