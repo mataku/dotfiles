@@ -152,10 +152,33 @@ export function loadAll(sources, host) {
   );
 }
 
+const SCUTIL = "/usr/sbin/scutil";
+const NETWORK_TIMEOUT_MS = 5000;
+const REACH = /^\s*REACH : flags \S+ \((Not )?Reachable/gm;
+
+const reachOf = (text) => [...text.matchAll(REACH)].map((match) => match[1] === undefined);
+
+export const isReachable = (text) => reachOf(text).some(Boolean);
+
+// Why a failed or unreadable check counts as online: only macOS has scutil, and a wrong "offline" would stop the inbox for good while a wrong "online" costs one failed load.
+export async function isOnline({ exec }) {
+  try {
+    const result = await exec(SCUTIL, ["--nwi"], { timeout: NETWORK_TIMEOUT_MS });
+    return result.code !== 0 || reachOf(result.stdout).length === 0 || isReachable(result.stdout);
+  } catch {
+    return true;
+  }
+}
+
+export async function loadWhenOnline(sources, host) {
+  return (await isOnline(host)) ? loadAll(sources, host) : null;
+}
+
 const PANEL = "inbox-panel";
 const ICON = "mods/inbox/inbox.svg";
 const STATE_KEY = "inbox.state";
 const DONE_KEY = "inbox.done";
+const OFFLINE_KEY = "inbox.offline";
 const POLL_MS = 5 * 60 * 1000;
 const COPIED_MS = 1500;
 
@@ -180,7 +203,9 @@ const clockOf = (at) => `${twoDigits(new Date(at).getHours())}:${twoDigits(new D
 const stopPress = (_event, cx) => cx.stop_propagation();
 
 async function refresh() {
-  const results = await loadAll(SOURCES, { exec });
+  const results = await loadWhenOnline(SOURCES, { exec });
+  if ((results === null) !== (shared(OFFLINE_KEY) === true)) setShared(OFFLINE_KEY, results === null);
+  if (results === null) return;
   const state = mergeResults(readState(shared(STATE_KEY)), results, Date.now());
   setShared(STATE_KEY, state);
   // Why only after every source loaded: a failed load keeps its old items, and pruning against a partial list would bring finished items back on the next success.
@@ -286,7 +311,7 @@ export default class Inbox extends View {
     const items = pending(state.items, readDone(shared(DONE_KEY)));
     const now = Date.now();
     const errors = Object.entries(state.errors);
-    const status = this.loading ? "Updating…" : state.fetchedAt ? `Updated ${clockOf(state.fetchedAt)}` : "Not loaded yet";
+    const status = this.loading ? "Updating…" : shared(OFFLINE_KEY) === true ? "Offline" : state.fetchedAt ? `Updated ${clockOf(state.fetchedAt)}` : "Not loaded yet";
     const empty = div().p(10).text_color(t.dim).child(state.fetchedAt ? "Nothing waiting" : "Waiting for the first update…");
     return v_flex().size_full().bg(t.chrome).text_size(12.5).text_color(t.foreground)
       .child(h_flex().h(36).px(14).gap(8).flex_none().items_center().border_b(1).border_color(t.border)

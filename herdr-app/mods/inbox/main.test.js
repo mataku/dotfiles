@@ -15,7 +15,7 @@ register(`data:text/javascript,${encodeURIComponent(
      stubs[specifier] ? { url: stubs[specifier], shortCircuit: true } : next(specifier, context);`,
 )}`);
 
-const { SOURCES, ageOf, htmlUrlOf, keyOf, loadAll, mergeResults, parseNotifications, pending, pruneDone, readDone, readState, toItem } = await import("./main.js");
+const { SOURCES, ageOf, htmlUrlOf, isOnline, isReachable, keyOf, loadAll, loadWhenOnline, mergeResults, parseNotifications, pending, pruneDone, readDone, readState, toItem } = await import("./main.js");
 const github = SOURCES.find((source) => source.id === "github");
 
 const fields = (over = {}) => ({
@@ -246,4 +246,76 @@ test("registers sources with the parts the inbox calls", () => {
     assert.equal(typeof source.load, "function");
     assert.equal(typeof source.parse, "function");
   }
+});
+
+const NETWORK_UP = `Network information
+
+IPv4 network interface information
+     en0 : flags      : 0x5 (IPv4,DNS)
+           address    : 192.0.2.10
+           reach      : 0x00000002 (Reachable)
+
+   REACH : flags 0x00000002 (Reachable)
+
+IPv6 network interface information
+   No IPv6 states found
+
+
+   REACH : flags 0x00000000 (Not Reachable)
+
+Network interfaces: en0
+`;
+const NETWORK_DOWN = `Network information
+
+IPv4 network interface information
+   No IPv4 states found
+
+
+   REACH : flags 0x00000000 (Not Reachable)
+
+IPv6 network interface information
+   No IPv6 states found
+
+
+   REACH : flags 0x00000000 (Not Reachable)
+
+Network interfaces:
+`;
+const scutil = (stdout, code = 0) => async () => ({ code, stdout, stderr: "" });
+
+test("reads the network as reachable when either address family is", () => {
+  assert.equal(isReachable(NETWORK_UP), true);
+  assert.equal(isReachable(NETWORK_UP.replace("IPv4", "IPv6")), true);
+});
+
+test("reads the network as unreachable when no address family is", () => {
+  assert.equal(isReachable(NETWORK_DOWN), false);
+});
+
+test("asks the system whether the network is up", async () => {
+  const calls = [];
+  const exec = async (command, args) => {
+    calls.push([command, args]);
+    return { code: 0, stdout: NETWORK_UP, stderr: "" };
+  };
+  assert.equal(await isOnline({ exec }), true);
+  assert.deepEqual(calls, [["/usr/sbin/scutil", ["--nwi"]]]);
+  assert.equal(await isOnline({ exec: scutil(NETWORK_DOWN) }), false);
+});
+
+test("assumes the network is up when it cannot be asked", async () => {
+  assert.equal(await isOnline({ exec: async () => { throw new Error("no such program"); } }), true);
+  assert.equal(await isOnline({ exec: scutil("", 1) }), true);
+  assert.equal(await isOnline({ exec: scutil("something unexpected") }), true);
+});
+
+test("loads no source while the network is down", async () => {
+  let loads = 0;
+  const counted = { ...working, load: async () => { loads += 1; return "raw"; } };
+  assert.equal(await loadWhenOnline([counted], { exec: scutil(NETWORK_DOWN) }), null);
+  assert.equal(loads, 0);
+});
+
+test("loads the sources while the network is up", async () => {
+  assert.deepEqual(await loadWhenOnline([working], { exec: scutil(NETWORK_UP) }), [{ source: "notes", items: [note] }]);
 });
