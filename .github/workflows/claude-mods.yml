@@ -19,7 +19,7 @@ concurrency:
 
 env:
   # renovate: datasource=custom.claude-code depName=claude-code
-  CLAUDE_CODE_VERSION: 2.1.329
+  CLAUDE_CODE_VERSION: 2.1.330
 
 jobs:
   validate-and-test:
