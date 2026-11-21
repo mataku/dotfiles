@@ -117,3 +117,6 @@ export function unturn(quarterTurns, x, y) {
     default: return { x, y };
   }
 }
+
+// Why not the Latin-1 used for control sequences: that keeps only each character's low byte, which turns "…" into "&".
+export const statusBytes = (clear, text) => Buffer.from(`${clear}${text}`, "utf8");

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { fitScreen, initialPointer, kittyClear, kittyDelete, kittyFrame, locate, nextImage, resolvePointer, trackGesture, unturn } from "./viewer/screen.js";
+import { fitScreen, initialPointer, kittyClear, kittyDelete, kittyFrame, locate, nextImage, resolvePointer, statusBytes, trackGesture, unturn } from "./viewer/screen.js";
 
 const GRID = { cols: 53, rows: 46, cellWidth: 14, cellHeight: 29 };
 const IPHONE = { width: 1206, height: 2622 };
@@ -147,4 +147,9 @@ test("maps a point on a display shown turned clockwise back onto the unturned sc
   assert.deepEqual(near(unturn(2, 0.2, 0.7)), [0.8, 0.3]);
   assert.deepEqual(near(unturn(3, 0.2, 0.7)), [0.3, 0.2]);
   assert.deepEqual(near(unturn(5, 0.2, 0.7)), [0.7, 0.8]);
+});
+
+test("encodes status text as UTF-8, so an ellipsis does not come out as its low byte", () => {
+  assert.deepEqual([...statusBytes("\x1b[2J", "Starting…")], [0x1b, 0x5b, 0x32, 0x4a, ...Buffer.from("Starting"), 0xe2, 0x80, 0xa6]);
+  assert.equal(statusBytes("", "起動中").toString("utf8"), "起動中");
 });

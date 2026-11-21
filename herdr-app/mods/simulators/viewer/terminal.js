@@ -2,7 +2,7 @@ import fs from "node:fs";
 import tty from "node:tty";
 
 import { createInputParser } from "./input.js";
-import { kittyClear } from "./screen.js";
+import { kittyClear, statusBytes } from "./screen.js";
 
 const ALTERNATE_SCREEN = 1049;
 const CURSOR = 25;
@@ -61,7 +61,7 @@ export function openTerminal(path, onEvent) {
   }
 
   const clearText = () => write(CLEAR);
-  const showStatus = (text) => write(`${CLEAR}${text}`);
+  const showStatus = (text) => write(statusBytes(CLEAR, text));
 
   // Why synchronous: it also runs from signal handlers, right before the process exits.
   function close() {
