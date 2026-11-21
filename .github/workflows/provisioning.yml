@@ -117,9 +117,6 @@ jobs:
         HOMEBREW_NO_ENV_HINTS: "1"
       run: brew install --cask wezterm
 
-    - name: Refresh font cache for wezterm verification
-      run: /opt/homebrew/bin/fc-cache -vf
-
     - name: Verify wezterm config
       run: bash ~/src/github.com/mataku/dotfiles/scripts/ci/verify-wezterm.sh
 
