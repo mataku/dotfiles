@@ -100,6 +100,13 @@ export function visiblePlans(spaces, panes, plans) {
   );
 }
 
+// A request is forgotten once the layout matches it: an edit of the layout file resets the width to the file's 0, and a remembered request would never be sent again.
+export function nextFit(isShown, isNeeded, pending) {
+  if (isShown === isNeeded) return { pending: null, resize: false };
+  if (pending === isNeeded) return { pending, resize: false };
+  return { pending: isNeeded, resize: true };
+}
+
 const BLOCK = "timeline";
 const WIDTH = 300;
 const REFRESH_MS = 10000;
@@ -170,10 +177,10 @@ export default class Timeline extends View {
   }
 
   fit(isNeeded) {
-    const shown = (find(layout(), this.block)?.size?.px ?? 0) > 0;
-    if (shown === isNeeded || this.fitted === isNeeded) return;
-    this.fitted = isNeeded;
-    run("layout.resize", { id: this.block, px: isNeeded ? this.width : 0 });
+    const isShown = (find(layout(), this.block)?.size?.px ?? 0) > 0;
+    const { pending, resize } = nextFit(isShown, isNeeded, this.pendingFit ?? null);
+    this.pendingFit = pending;
+    if (resize) run("layout.resize", { id: this.block, px: isNeeded ? this.width : 0 });
   }
 
   bar(t, plan, height) {

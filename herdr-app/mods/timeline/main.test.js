@@ -16,7 +16,7 @@ register(`data:text/javascript,${encodeURIComponent(
      stubs[specifier] ? { url: stubs[specifier], shortCircuit: true } : next(specifier, context);`,
 )}`);
 
-const { fileOf, isCurrent, leavesOf, parseExport, rowsOf, visiblePlans } = await import("./main.js");
+const { fileOf, isCurrent, leavesOf, nextFit, parseExport, rowsOf, visiblePlans } = await import("./main.js");
 
 const plan = {
   title: "Ship timeline",
@@ -116,4 +116,21 @@ test("a file written before its terminal started belongs to an earlier one", () 
   assert.equal(isCurrent(entry, { created_ms: 6 }), false);
   assert.equal(isCurrent(entry, { created_ms: 5 }), true);
   assert.equal(isCurrent(entry, undefined), true);
+});
+
+test("asks for the panel's width once, then waits for the layout to follow", () => {
+  assert.deepEqual(nextFit(false, true, null), { pending: true, resize: true });
+  assert.deepEqual(nextFit(false, true, true), { pending: true, resize: false });
+  assert.deepEqual(nextFit(true, true, true), { pending: null, resize: false });
+});
+
+test("asks again when the layout takes the panel's width away after it had settled", () => {
+  const opened = nextFit(false, true, null);
+  const settled = nextFit(true, true, opened.pending);
+  assert.deepEqual(nextFit(false, true, settled.pending), { pending: true, resize: true });
+});
+
+test("asks to close the panel when there is no plan left to show", () => {
+  assert.deepEqual(nextFit(true, false, null), { pending: false, resize: true });
+  assert.deepEqual(nextFit(false, false, false), { pending: null, resize: false });
 });
