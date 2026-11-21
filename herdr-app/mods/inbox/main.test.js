@@ -3,7 +3,7 @@ import { register } from "node:module";
 import { test } from "node:test";
 
 const HOST_MODULES = {
-  "gpui-kit": ["View", "div"],
+  "gpui-kit": ["View", "div", "svg"],
   "gpui-base": ["h_flex", "v_flex"],
   herdr: ["checking", "exec", "layout", "props", "run", "setBadge", "setShared", "shared", "theme"],
 };

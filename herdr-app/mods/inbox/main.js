@@ -1,4 +1,4 @@
-import { View, div } from "gpui-kit";
+import { View, div, svg } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
 import { checking, exec, layout, props, run, setBadge, setShared, shared, theme } from "herdr";
 
@@ -153,6 +153,7 @@ export function loadAll(sources, host) {
 }
 
 const PANEL = "inbox-panel";
+const ICON = "mods/inbox/inbox.svg";
 const STATE_KEY = "inbox.state";
 const DONE_KEY = "inbox.done";
 const POLL_MS = 5 * 60 * 1000;
@@ -249,10 +250,11 @@ export default class Inbox extends View {
     const selected = isPanelOpen();
     const tone = selected || count > 0 ? t.foreground : t.muted;
     return h_flex().size_full().pr(4).items_center().justify_end().bg(t.chrome).border_b(1).border_color(t.border)
-      .child(h_flex().id("inbox-toggle").h(26).px(8).gap(6).flex_none().items_center().rounded(6)
+      .child(h_flex().id("inbox-toggle").h(26).px(8).gap(5).flex_none().items_center().rounded(6)
         .text_size(12).bg(selected ? t.selected : t.chrome).text_color(tone)
         .hover((style) => style.bg(t.hover)).on_mouse_down("left", stopPress)
         .on_click(() => this.togglePanel())
+        .child(svg(ICON).size(14))
         .child("Inbox")
         .when(count > 0, (el) => el.child(div().size(6).flex_none().rounded(3).bg(t.accent))));
   }
