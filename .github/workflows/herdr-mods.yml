@@ -12,12 +12,14 @@ on:
     paths:
       - 'herdr-app/mods/**'
       - '.github/workflows/herdr-mods.yml'
-  schedule:
-    - cron: '00 13 1 * *'
 
 concurrency:
   group: herdr-mods-${{ github.head_ref || 'develop' }}
   cancel-in-progress: true
+
+env:
+  # renovate: datasource=github-tags depName=herdrdev/herdr-app
+  HERDR_APP_VERSION: 0.1.16
 
 jobs:
   test:
@@ -32,6 +34,31 @@ jobs:
     - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
         node-version: latest
+
+    - name: Install herdr.app
+      run: |
+        base="https://releases.herdr.dev/app/$HERDR_APP_VERSION"
+        curl -fsSL "$base/manifest.json" -o "$RUNNER_TEMP/manifest.json"
+        curl -fsSL "$base/herdr-app-macos-aarch64.tar.gz" -o "$RUNNER_TEMP/herdr-app.tar.gz"
+        sha=$(python3 -c 'import json, sys; print(json.load(open(sys.argv[1]))["targets"]["macos-aarch64"]["sha256"])' "$RUNNER_TEMP/manifest.json")
+        echo "$sha  $RUNNER_TEMP/herdr-app.tar.gz" | shasum -a 256 -c -
+        tar -xzf "$RUNNER_TEMP/herdr-app.tar.gz" -C "$RUNNER_TEMP"
+        echo "HERDR_APP=$RUNNER_TEMP/Herdr.app/Contents/MacOS/Herdr" >> "$GITHUB_ENV"
+
+    - name: Show herdr.app version
+      run: |
+        "$HERDR_APP" --version
+
+    - name: Check mods
+      run: |
+        status=0
+        for manifest in herdr-app/mods/*/mod.json; do
+          mod=$(dirname "$manifest")
+          echo "::group::check $mod"
+          "$HERDR_APP" check "$mod" || status=1
+          echo "::endgroup::"
+        done
+        exit $status
 
     - name: Test mods
       run: node --test herdr-app/mods/*/*.test.js
