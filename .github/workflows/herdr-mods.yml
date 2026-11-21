@@ -21,8 +21,8 @@ concurrency:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
+    runs-on: xcode-27
+    timeout-minutes: 10
     permissions:
       contents: "read"
 
@@ -35,3 +35,6 @@ jobs:
 
     - name: Test mods
       run: node --test herdr-app/mods/*/*.test.js
+
+    - name: Compile the simulators viewer's scaler
+      run: xcrun swiftc -O -o "$RUNNER_TEMP/scaler" herdr-app/mods/simulators/viewer/scaler.swift
