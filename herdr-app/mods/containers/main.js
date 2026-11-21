@@ -20,6 +20,10 @@ const ICONS = { reload: "mods/simulators/icons/reload.svg", start: "mods/simulat
 const SPINNER = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 const SPINNER_MS = 90;
 const LIST_MAX_HEIGHT = 460;
+const GROUP_HEIGHT = 28;
+const ROW_HEIGHT = 30;
+const LIST_GAP = 1;
+const LIST_PADDING = 6;
 
 const clean = (value) => (typeof value === "string" ? value.replace(CONTROL_CHARACTERS, " ").trim() : "");
 
@@ -100,6 +104,13 @@ export function groupContainers(containers) {
 }
 
 export const rowsOf = (groups) => groups.flatMap((group) => [{ group }, ...group.containers.map((container) => ({ container }))]);
+
+// Why the height is worked out here: a popup is as tall as what it holds, and a scrolling list with no height of its own pushed the key hints below the popup's edge.
+export function listHeightOf(rows, max) {
+  if (rows.length === 0) return 0;
+  const content = rows.reduce((sum, row) => sum + (row.group ? GROUP_HEIGHT : ROW_HEIGHT), 0);
+  return Math.min(max, content + (rows.length - 1) * LIST_GAP + LIST_PADDING * 2);
+}
 
 export function stepCursor(ids, cursor, step) {
   if (ids.length === 0) return null;
@@ -247,21 +258,19 @@ export default class Containers extends View {
     const error = this.errors.get(container.id);
     const action = actionOf(container);
     const column = (width, text) => div().w(width).flex_none().truncate().text_size(11.5).text_color(t.muted).child(text ?? "");
-    return h_flex().id(`containers-row-${container.id}`).h(30).pl(24).pr(8).gap(8).flex_none().items_center().rounded(6)
+    return h_flex().id(`containers-row-${container.id}`).h(ROW_HEIGHT).pl(24).pr(8).gap(8).flex_none().items_center().rounded(6)
       .bg(container.id === this.cursor ? t.selected : t.popover).hover((style) => style.bg(t.hover))
       .on_click((_event, cx) => { this.cursor = container.id; cx.notify(); })
       .child(div().size(7).flex_none().rounded(3.5).bg(container.active ? t.working : t.border))
       .child(div().flex_1().min_w(0).truncate().text_size(12.5).text_color(container.active ? t.foreground : t.muted).child(container.name))
-      .when(Boolean(error), (row) => row.child(div().w(540).flex_none().truncate().text_size(11.5).text_color(t.blocked).child(error)))
+      .when(Boolean(error), (row) => row.child(div().w(618).flex_none().truncate().text_size(11.5).text_color(t.blocked).child(error)))
       .when(!error, (row) => row
-        .child(column(170, container.image))
-        .child(column(150, container.status))
+        .child(column(150, container.image))
+        .child(column(190, busy ? `${busy}…` : container.status))
         .child(column(52, container.cpu).text_right())
         .child(column(64, container.memory).text_right())
-        .child(column(80, container.ports)))
-      .when(Boolean(busy), (row) => row
-        .child(div().text_size(11.5).text_color(t.dim).child(busy))
-        .child(div().w(12).text_size(12).text_color(t.dim).frames(SPINNER, SPINNER_MS)))
+        .child(column(130, container.ports)))
+      .when(Boolean(busy), (row) => row.child(div().size(24).flex_none().flex().items_center().justify_center().text_size(12).text_color(t.dim).frames(SPINNER, SPINNER_MS)))
       .when(!busy, (row) => row.child(div().id(`containers-act-${container.id}`).size(24).flex_none().flex().items_center().justify_center().rounded(5)
         .border(1).border_color(t.border).text_color(t.muted)
         .hover((style) => style.bg(t.hover).text_color(t.foreground))
@@ -273,7 +282,7 @@ export default class Containers extends View {
 
   renderGroup(group, t) {
     const running = group.containers.filter((container) => container.active).length;
-    return h_flex().id(`containers-group-${group.key}`).h(28).px(8).gap(6).flex_none().items_center().rounded(6)
+    return h_flex().id(`containers-group-${group.key}`).h(GROUP_HEIGHT).px(8).gap(6).flex_none().items_center().rounded(6)
       .text_size(11.5).text_color(t.dim)
       .child(div().flex_1().min_w(0).truncate().font_semibold().child(group.title))
       .child(div().flex_none().child(running > 0 ? `${running} running · ${group.containers.length}` : String(group.containers.length)));
@@ -283,9 +292,8 @@ export default class Containers extends View {
     const t = theme();
     const rows = this.rows();
     const status = this.failure !== null ? "" : this.loadedAt === null ? "Loading…" : `${summaryOf(this.containers)} · Updated ${clockOf(this.loadedAt)}`;
-    const empty = div().p(10).text_size(12).text_color(t.dim).child(this.loadedAt === null ? "Looking for containers…" : "No containers");
-    const list = rows.length === 0 ? [empty] : rows.map((row) => (row.container ? this.renderRow(row.container, t) : this.renderGroup(row.group, t)));
-    return v_flex().id("containers-root").track_focus(this.handle).size_full().bg(t.popover).text_color(t.foreground)
+    const list = this.failure !== null ? [] : rows;
+    return v_flex().id("containers-root").track_focus(this.handle).w_full().min_h(0).bg(t.popover).text_color(t.foreground)
       .on_key_down((event, cx) => {
         if (event.key === "escape") this.dismiss();
         else if (event.key === "down") this.move(1, cx);
@@ -304,7 +312,9 @@ export default class Containers extends View {
           .on_click(() => this.requestReload())
           .child(this.loading ? svg(ICONS.reload).size(14).spin(900) : svg(ICONS.reload).size(14))))
       .when(this.failure !== null, (root) => root.child(div().px(14).py(6).flex_none().text_size(11.5).text_color(t.blocked).truncate().child(this.failure)))
-      .child(v_flex().id("containers-scroll").max_h(LIST_MAX_HEIGHT).flex_none().p(6).gap(1).overflow_y_scrollbar().track_scroll(this.scroll).children(this.failure !== null ? [] : list))
+      .when(this.failure === null && list.length === 0, (root) => root.child(div().px(14).py(10).flex_none().text_size(12).text_color(t.dim).child(this.loadedAt === null ? "Looking for containers…" : "No containers")))
+      .when(list.length > 0, (root) => root.child(v_flex().id("containers-scroll").h(listHeightOf(list, LIST_MAX_HEIGHT)).flex_none().p(LIST_PADDING).gap(LIST_GAP).overflow_y_scrollbar().track_scroll(this.scroll)
+        .children(list.map((row) => (row.container ? this.renderRow(row.container, t) : this.renderGroup(row.group, t))))))
       .child(h_flex().h(28).px(14).gap(16).flex_none().items_center().border_t(1).border_color(t.border).text_size(11.5).text_color(t.dim)
         .child("↑↓  select").child("⏎  start / stop").child("r  refresh").child("esc  close"));
   }

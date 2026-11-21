@@ -15,7 +15,7 @@ register(`data:text/javascript,${encodeURIComponent(
      stubs[specifier] ? { url: stubs[specifier], shortCircuit: true } : next(specifier, context);`,
 )}`);
 
-const { actionOf, clockOf, failureOf, formatPorts, groupContainers, mergeStats, parseContainers, parseStats, rowsOf, stepCursor, summaryOf } = await import("./main.js");
+const { actionOf, clockOf, failureOf, formatPorts, groupContainers, listHeightOf, mergeStats, parseContainers, parseStats, rowsOf, stepCursor, summaryOf } = await import("./main.js");
 
 const line = (fields) => JSON.stringify(fields);
 const WEB = { ID: "aaa111", Names: "myapp-web-1", Image: "nginx:1.27", State: "running", Status: "Up 2 hours", Ports: "0.0.0.0:8080->80/tcp, :::8080->80/tcp", Labels: "com.docker.compose.project=myapp,com.docker.compose.service=web" };
@@ -144,4 +144,11 @@ test("failureOf tells a stopped daemon from another error", () => {
 
 test("clockOf prints the time of day", () => {
   assert.equal(clockOf(new Date(2026, 10, 22, 9, 5, 7).getTime()), "09:05:07");
+});
+
+test("listHeightOf adds up the rows, their gaps and the padding, up to a limit", () => {
+  const rows = rowsOf(groupContainers(parseContainers([line(WEB), line(WORKER), line(REDIS)].join("\n"))));
+  assert.equal(listHeightOf(rows, 460), 28 + 30 + 30 + 28 + 30 + 4 + 12);
+  assert.equal(listHeightOf(rows, 100), 100);
+  assert.equal(listHeightOf([], 460), 0);
 });

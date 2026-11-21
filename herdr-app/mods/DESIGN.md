@@ -41,6 +41,8 @@ div().id(`${mod}-reload`).size(24).flex_none().flex().items_center().justify_cen
 v_flex().id(`${mod}-scroll`).flex_1().min_h(0).p(6).gap(1).overflow_y_scrollbar().children(rows)
 ```
 
+That is for a panel, which has a height. A popup is as tall as what it holds, so there the list takes an explicit height in place of `flex_1().min_h(0)`: `.h(height).flex_none()`, with the height added up from the rows and capped. Without it, whatever stands below the list is pushed out of the popup.
+
 ## Group heading
 
 ```js
@@ -93,6 +95,8 @@ row
   .child(div().text_size(11.5).text_color(t.dim).child(busyLabel))
   .child(div().w(12).text_size(12).text_color(t.dim).frames(SPINNER, SPINNER_MS))
 ```
+
+A row with columns puts the busy label in its status column and the spinner alone in the button's 24px slot (`div().size(24).flex_none().flex().items_center().justify_center()`), so the columns do not move.
 
 ## Empty and error text
 
