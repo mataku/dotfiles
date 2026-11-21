@@ -17,6 +17,7 @@
     "cmd-j": "status-hints.jump-attention",
     "cmd-n": "space.new",
     "cmd-p": "mod.open:picker",
+    "cmd-shift-m": "mod.open:markdown-preview",
     "cmd-shift-p": "app.palette",
     "cmd-,": "app.settings",
     "cmd-d": "pane.split:right",

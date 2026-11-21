@@ -15,7 +15,7 @@ register(`data:text/javascript,${encodeURIComponent(
      stubs[specifier] ? { url: stubs[specifier], shortCircuit: true } : next(specifier, context);`,
 )}`);
 
-const { SOURCES, ageOf, enabledAfter, htmlUrlOf, isEnabled, isOnline, isReachable, keyOf, loadAll, loadWhenOnline, mergeResults, parseNotifications, pending, pruneDone, readDone, readState, toItem } = await import("./main.js");
+const { SOURCES, ageOf, clampText, enabledAfter, forSources, htmlUrlOf, titleBudget, isEnabled, isOnline, isReachable, keyOf, loadAll, loadWhenOnline, mergeResults, parseNotifications, pending, pruneDone, readDone, readState, toItem } = await import("./main.js");
 const github = SOURCES.find((source) => source.id === "github");
 
 const fields = (over = {}) => ({
@@ -334,4 +334,41 @@ test("turns on and off by command and ignores other commands", () => {
   assert.equal(enabledAfter("off", true), false);
   assert.equal(enabledAfter("focus", true), true);
   assert.equal(enabledAfter("focus", false), false);
+});
+
+test("keeps a title that fits as it is", () => {
+  assert.equal(clampText("Fix the login crash", 40), "Fix the login crash");
+  assert.equal(clampText("exactly ten", 11), "exactly ten");
+});
+
+test("cuts a title that is too long and ends it with three dots", () => {
+  const cut = clampText("a".repeat(100), 20);
+  assert.equal(cut, `${"a".repeat(17)}...`);
+});
+
+test("does not leave a space before the dots", () => {
+  assert.equal(clampText("one two three four five", 11), "one two...");
+});
+
+test("counts a wide character as two", () => {
+  assert.equal(clampText("あ".repeat(10), 20), "あ".repeat(10));
+  assert.equal(clampText("あ".repeat(11), 20), `${"あ".repeat(8)}...`);
+  assert.equal(clampText("ab😀cd", 6), "ab😀cd");
+});
+
+test("gives a wider panel room for a longer title", () => {
+  assert.ok(titleBudget(600) > titleBudget(360));
+  assert.ok(titleBudget(360) > 40);
+});
+
+test("keeps some room for the title in a very narrow panel", () => {
+  assert.equal(titleBudget(0), titleBudget(50));
+  assert.ok(titleBudget(0) >= 20);
+});
+
+test("forgets items and errors of a source that is no longer registered", () => {
+  const kept = item({ id: "1" });
+  const gone = toItem("retired", { id: "a", title: "Old" });
+  const state = { items: [kept, gone], errors: { github: "boom", retired: "old" }, fetchedAt: 9 };
+  assert.deepEqual(forSources(state, ["github"]), { items: [kept], errors: { github: "boom" }, fetchedAt: 9 });
 });
