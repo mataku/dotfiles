@@ -99,6 +99,8 @@ jobs:
         test -L ~/.config/herdr-app/mods/inbox/reload.svg || exit 1
         test -L ~/.config/herdr-app/mods/markdown-preview/main.js || exit 1
         test -L ~/.config/herdr-app/mods/markdown-preview/mod.json || exit 1
+        test -L ~/.config/herdr-app/mods/containers/main.js || exit 1
+        test -L ~/.config/herdr-app/mods/containers/mod.json || exit 1
         test -L "$HOME/Library/Application Support/lazygit/config.yml" || exit 1
         test -L ~/.config/tig/config || exit 1
         test -L ~/.config/ripgrep/config || exit 1
@@ -150,7 +152,7 @@ jobs:
     - name: Verify herdr.app config
       run: |
         cd ~/.config/herdr-app
-        for f in settings.json keys.json themes/oceanic.json layouts/personal.json mods/status-hints/mod.json mods/timeline/mod.json mods/simulators/mod.json mods/inbox/mod.json mods/markdown-preview/mod.json; do
+        for f in settings.json keys.json themes/oceanic.json layouts/personal.json mods/status-hints/mod.json mods/timeline/mod.json mods/simulators/mod.json mods/inbox/mod.json mods/markdown-preview/mod.json mods/containers/mod.json; do
           python3 -m json.tool "$f" >/dev/null || { echo "::error::herdr-app/$f is not valid JSON"; exit 1; }
         done
         ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/status-hints
@@ -158,6 +160,7 @@ jobs:
         ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/simulators
         ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/inbox
         ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/markdown-preview
+        ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/containers
         test -f ~/src/github.com/mataku/dotfiles/herdr-app/mods/simulators/viewer/node_modules/serve-sim/package.json || { echo "::error::the bootstrap task did not install serve-sim"; exit 1; }
         ~/.nodenv/shims/node --test ~/src/github.com/mataku/dotfiles/herdr-app/mods/*/*.test.js
 

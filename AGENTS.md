@@ -11,6 +11,7 @@ Dotfiles, Homebrew packages, and macOS defaults for a personal Apple Silicon Mac
 - Agents run `mise bootstrap --dry-run` first and run `mise bootstrap` only when the dry run succeeds and lists nothing but the intended changes. If the dry run fails or lists anything else, stop and report it; never pass `--force-dotfiles`.
 - `.github/workflows/provisioning.yml` runs `setup.sh` unchanged on a macOS runner and asserts the result. Never add CI-only branches to `setup.sh`; CI-specific behavior lives in workflow environment variables only.
 - Each tool's config lives in its own directory (`fish/`, `zsh/`, `nvim/`, `wezterm/`, `ghostty/`, `herdr/`, `herdr-app/`, `lazygit/`, `tig/`, `ripgrep/`, `rtk/`, `git/`, `ruby/`, `claude/`). Edit the file there; the symlink makes it live.
+- Before creating or changing a mod under `herdr-app/mods/`, read `herdr-app/mods/DESIGN.md` and write the parts it lists exactly as shown. To change a part, change `DESIGN.md` and every mod that uses it in the same commit.
 - Not managed here on purpose: `~/.claude/settings.json`, GUI applications, tmux (herdr replaced it).
 
 ## Communication Rules
