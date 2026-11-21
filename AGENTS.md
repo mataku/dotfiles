@@ -4,10 +4,11 @@ Dotfiles, Homebrew packages, and macOS defaults for a personal Apple Silicon Mac
 
 ## Repository
 
-- `setup.sh` is the single entrypoint, for a fresh Mac (`curl ... | bash`) and for CI alike. It installs Homebrew, applies `Brewfile`, installs mise, runs `mise bootstrap`, applies one-time system settings with sudo, and prints the GUI apps to install by hand.
+- `setup.sh` is the single entrypoint, for a fresh Mac (`curl ... | bash`) and for CI alike. It installs Homebrew, applies `Brewfile`, installs the newest Node.js release that node-build lists with nodenv (made the global version only when none is set), installs mise, runs `mise bootstrap`, applies one-time system settings with sudo, and prints the GUI apps to install by hand.
 - `mise.toml` at the repository root declares `[dotfiles]` symlinks (targets under `~`, sources in this repository) and `[bootstrap.macos.defaults]`. It is a project config, so run `mise bootstrap` from this directory. It declares no `[tools]`; language runtimes stay on nodenv, rbenv, and rustup.
 - `Brewfile` lists formulae, casks, and Mac App Store apps. After `brew install`, run `make dump` to regenerate it.
 - Day to day: `mise bootstrap` after editing `mise.toml`, `brew install` for packages. `setup.sh` is rarely re-run.
+- Agents run `mise bootstrap --dry-run` first and run `mise bootstrap` only when the dry run succeeds and lists nothing but the intended changes. If the dry run fails or lists anything else, stop and report it; never pass `--force-dotfiles`.
 - `.github/workflows/provisioning.yml` runs `setup.sh` unchanged on a macOS runner and asserts the result. Never add CI-only branches to `setup.sh`; CI-specific behavior lives in workflow environment variables only.
 - Each tool's config lives in its own directory (`fish/`, `zsh/`, `nvim/`, `wezterm/`, `ghostty/`, `herdr/`, `herdr-app/`, `lazygit/`, `tig/`, `ripgrep/`, `rtk/`, `git/`, `ruby/`, `claude/`). Edit the file there; the symlink makes it live.
 - Not managed here on purpose: `~/.claude/settings.json`, GUI applications, tmux (herdr replaced it).
