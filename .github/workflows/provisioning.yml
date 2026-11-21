@@ -149,6 +149,7 @@ jobs:
         ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/status-hints
         ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/timeline
         ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/simulators
+        test -f ~/src/github.com/mataku/dotfiles/herdr-app/mods/simulators/viewer/node_modules/serve-sim/package.json || { echo "::error::the bootstrap task did not install serve-sim"; exit 1; }
         ~/.nodenv/shims/node --test ~/src/github.com/mataku/dotfiles/herdr-app/mods/*/*.test.js
 
     - name: Install wezterm for config verification

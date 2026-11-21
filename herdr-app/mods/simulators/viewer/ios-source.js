@@ -13,6 +13,7 @@ import {
   configUrl,
   createMjpegReader,
   displayPlace,
+  installedServer,
   keyMessages,
   nextOrientation,
   parseConfig,
@@ -31,6 +32,8 @@ const LOOPBACK = "127.0.0.1";
 const CACHE_DIR = path.join(os.homedir(), ".cache", "herdr-simulators");
 const SERVER_STATE_DIR = path.join(os.tmpdir(), "serve-sim");
 const SCALER_SOURCE = fileURLToPath(new URL("./scaler.swift", import.meta.url));
+const MANIFEST = fileURLToPath(new URL("./package.json", import.meta.url));
+const SERVER_PACKAGE = fileURLToPath(new URL("./node_modules/serve-sim/", import.meta.url));
 const SCALER_PREFIX = "scaler-";
 const SCALER_RESPONSE_HEADER_LENGTH = 8;
 const COMPILE_TIMEOUT_MS = 180_000;
@@ -139,9 +142,19 @@ function readServerState(udid) {
   }
 }
 
+const readOrNull = (file) => {
+  try {
+    return fs.readFileSync(file, "utf8");
+  } catch {
+    return null;
+  }
+};
+
 async function startServer(udid, onExit) {
+  const { script, problem } = installedServer(readOrNull(MANIFEST), readOrNull(path.join(SERVER_PACKAGE, "package.json")));
+  if (problem) throw new Error(problem);
   const port = await freePort();
-  const child = spawn("npx", serverArguments(udid, port), {
+  const child = spawn(process.execPath, [path.join(SERVER_PACKAGE, script), ...serverArguments(udid, port)], {
     cwd: os.tmpdir(),
     env: { ...process.env, SERVE_SIM_DISABLE_DEVICE_HUB_KEYBOARD: "1" },
     stdio: ["ignore", "inherit", "inherit"],
@@ -150,18 +163,9 @@ async function startServer(udid, onExit) {
   child.on("error", () => { exited = true; });
   child.on("exit", () => { exited = true; onExit(); });
 
-  // Why also by pid: npx is only a launcher, and a signal sent to it reaches the server only if npx is still there to pass it on.
   const stop = () => {
-    const state = readServerState(udid);
-    if (state?.port === port) {
-      try {
-        process.kill(state.pid, "SIGTERM");
-      } catch {
-        // Already gone.
-      }
-      // Why remove it here: a server that dies with the terminal's hang-up never gets to remove its own state file.
-      fs.rmSync(serverStateFile(udid), { force: true });
-    }
+    // Why remove it here: a server that dies with the terminal's hang-up never gets to remove its own state file.
+    if (readServerState(udid)?.port === port) fs.rmSync(serverStateFile(udid), { force: true });
     child.kill("SIGTERM");
   };
 

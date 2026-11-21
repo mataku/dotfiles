@@ -1,7 +1,8 @@
 import { isUdid } from "./ids.js";
 import { unturn } from "./screen.js";
 
-const SERVE_SIM_PACKAGE = "serve-sim@0.1.49";
+const SERVE_SIM = "serve-sim";
+const INSTALL_HINT = "run `mise bootstrap --only task` in the dotfiles repository";
 const LOOPBACK = "127.0.0.1";
 const MIN_PORT = 1024;
 const MAX_PORT = 65535;
@@ -45,9 +46,31 @@ const SHIFTED_SYMBOL_USAGES = [45, 46, 47, 48, 49, 51, 52, 53, 54, 55, 56];
 const isPort = (value) => Number.isInteger(value) && value >= MIN_PORT && value <= MAX_PORT;
 const message = (tag, body) => Buffer.concat([Buffer.from([tag]), Buffer.from(JSON.stringify(body), "utf8")]);
 
+const parsed = (text) => {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+};
+
+const isInsidePackage = (script) => typeof script === "string" && script !== "" && !script.startsWith("/") && !script.split("/").includes("..");
+
+// Why the versions are compared: the lockfile is what was reviewed, and an install left over from before an update would run unnoticed.
+export function installedServer(manifestText, installedText) {
+  const wanted = parsed(manifestText)?.dependencies?.[SERVE_SIM];
+  if (typeof wanted !== "string") return { problem: `${SERVE_SIM} is not named in the viewer's package.json` };
+  if (installedText === null) return { problem: `${SERVE_SIM} is not installed; ${INSTALL_HINT}` };
+  const installed = parsed(installedText);
+  if (installed?.version !== wanted) return { problem: `${SERVE_SIM} ${installed?.version ?? "of an unknown version"} is installed, ${wanted} is wanted; ${INSTALL_HINT}` };
+  const script = installed.bin?.[SERVE_SIM];
+  if (!isInsidePackage(script)) return { problem: `the installed ${SERVE_SIM} names no script of its own; ${INSTALL_HINT}` };
+  return { script };
+}
+
 export function serverArguments(udid, port) {
   if (!isUdid(udid) || !isPort(port)) return null;
-  return ["--yes", SERVE_SIM_PACKAGE, udid, "--port", String(port), "--host", LOOPBACK, "--exit-on-simulator-shutdown"];
+  return [udid, "--port", String(port), "--host", LOOPBACK, "--exit-on-simulator-shutdown"];
 }
 
 export const streamUrl = (port, udid) => `http://${LOOPBACK}:${port}/helper/${udid}/stream.mjpeg`;

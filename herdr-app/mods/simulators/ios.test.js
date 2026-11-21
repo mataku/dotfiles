@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
+  installedServer,
   buttonMessage,
   configUrl,
   createMjpegReader,
@@ -23,8 +24,35 @@ import {
 const UDID = "71E66660-C8B7-447B-AF87-531431BF3F50";
 const bodyOf = (message) => JSON.parse(message.subarray(1).toString("utf8"));
 
-test("starts the pinned serve-sim for one simulator on a loopback port", () => {
-  assert.deepEqual(serverArguments(UDID, 3190), ["--yes", "serve-sim@0.1.49", UDID, "--port", "3190", "--host", "127.0.0.1", "--exit-on-simulator-shutdown"]);
+const MANIFEST = JSON.stringify({ private: true, type: "module", dependencies: { "serve-sim": "0.1.49" } });
+const INSTALLED = JSON.stringify({ name: "serve-sim", version: "0.1.49", bin: { "serve-sim": "dist/serve-sim.js" } });
+
+test("runs the installed serve-sim's own script, never a download", () => {
+  assert.deepEqual(installedServer(MANIFEST, INSTALLED), { script: "dist/serve-sim.js" });
+});
+
+test("says how to install serve-sim when it is missing", () => {
+  const { script, problem } = installedServer(MANIFEST, null);
+  assert.equal(script, undefined);
+  assert.match(problem, /serve-sim is not installed/);
+  assert.match(problem, /mise bootstrap --only task/);
+});
+
+test("refuses a serve-sim other than the version the lockfile names", () => {
+  const newer = JSON.stringify({ name: "serve-sim", version: "0.1.50", bin: { "serve-sim": "dist/serve-sim.js" } });
+  assert.match(installedServer(MANIFEST, newer).problem, /serve-sim 0\.1\.50 is installed, 0\.1\.49 is wanted/);
+});
+
+test("refuses an install whose script is missing or points outside the package", () => {
+  const outside = JSON.stringify({ name: "serve-sim", version: "0.1.49", bin: { "serve-sim": "../../evil.js" } });
+  const absolute = JSON.stringify({ name: "serve-sim", version: "0.1.49", bin: { "serve-sim": "/tmp/evil.js" } });
+  const none = JSON.stringify({ name: "serve-sim", version: "0.1.49" });
+  for (const text of [outside, absolute, none, "not json"]) assert.match(installedServer(MANIFEST, text).problem, /serve-sim/);
+  assert.match(installedServer("not json", INSTALLED).problem, /serve-sim/);
+});
+
+test("starts serve-sim for one simulator on a loopback port", () => {
+  assert.deepEqual(serverArguments(UDID, 3190), [UDID, "--port", "3190", "--host", "127.0.0.1", "--exit-on-simulator-shutdown"]);
   assert.equal(serverArguments("--help", 3190), null);
   assert.equal(serverArguments(UDID, 80), null);
   assert.equal(serverArguments(UDID, "3190; x"), null);
