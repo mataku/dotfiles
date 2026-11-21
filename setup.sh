@@ -64,6 +64,20 @@ notify_sudo "brew bundle may ask for your password"
 bundle_failed=0
 brew bundle --file="$DOTFILES_DIR/Brewfile" || bundle_failed=1
 
+if command -v nodenv >/dev/null 2>&1; then
+  node_version="$(nodenv install --list 2>/dev/null | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1 || true)"
+  if [ -z "$node_version" ]; then
+    warn "nodenv listed no Node.js release to install"
+  elif nodenv install --skip-existing "$node_version"; then
+    info "Node.js $node_version is installed with nodenv"
+    [ -f "$HOME/.nodenv/version" ] || nodenv global "$node_version"
+  else
+    warn "nodenv could not install Node.js $node_version"
+  fi
+else
+  warn "nodenv is not installed; Node.js left unchanged"
+fi
+
 if [ ! -x "$HOME/.local/bin/mise" ]; then
   info "Installing mise..."
   curl -fsSL https://mise.run | MISE_VERSION="$MISE_VERSION" sh

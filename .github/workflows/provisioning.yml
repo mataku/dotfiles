@@ -71,6 +71,7 @@ jobs:
         for bin in bat fzf rg git zsh fish nvim herdr; do
           test -x "/opt/homebrew/bin/$bin" || { echo "::error::$bin is missing"; exit 1; }
         done
+        ~/.nodenv/shims/node --version || { echo "::error::nodenv has no Node.js"; exit 1; }
 
     - name: Verify dotfiles are symlinked
       run: |
@@ -87,6 +88,10 @@ jobs:
         test -L ~/.config/herdr-app/mods/status-hints/mod.json || exit 1
         test -L ~/.config/herdr-app/mods/timeline/main.js || exit 1
         test -L ~/.config/herdr-app/mods/timeline/mod.json || exit 1
+        test -L ~/.config/herdr-app/mods/simulators/main.js || exit 1
+        test -L ~/.config/herdr-app/mods/simulators/mod.json || exit 1
+        test -L ~/.config/herdr-app/mods/simulators/viewer || exit 1
+        test -L ~/.config/herdr-app/mods/simulators/icons || exit 1
         test -L "$HOME/Library/Application Support/lazygit/config.yml" || exit 1
         test -L ~/.config/tig/config || exit 1
         test -L ~/.config/ripgrep/config || exit 1
@@ -138,12 +143,13 @@ jobs:
     - name: Verify herdr.app config
       run: |
         cd ~/.config/herdr-app
-        for f in settings.json keys.json themes/oceanic.json layouts/personal.json mods/status-hints/mod.json mods/timeline/mod.json; do
+        for f in settings.json keys.json themes/oceanic.json layouts/personal.json mods/status-hints/mod.json mods/timeline/mod.json mods/simulators/mod.json; do
           python3 -m json.tool "$f" >/dev/null || { echo "::error::herdr-app/$f is not valid JSON"; exit 1; }
         done
         ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/status-hints
         ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/timeline
-        node --test ~/src/github.com/mataku/dotfiles/herdr-app/mods/timeline/main.test.js
+        ~/.local/bin/herdr-app check ~/.config/herdr-app/mods/simulators
+        ~/.nodenv/shims/node --test ~/src/github.com/mataku/dotfiles/herdr-app/mods/*/*.test.js
 
     - name: Install wezterm for config verification
       env:
