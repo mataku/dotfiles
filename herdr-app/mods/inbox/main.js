@@ -1,6 +1,6 @@
 import { View, div, svg } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
-import { checking, exec, layout, props, run, setBadge, setShared, shared, theme } from "herdr";
+import { checking, exec, layout, nextCommand, props, run, setBadge, setShared, shared, theme } from "herdr";
 
 const MAX_TEXT = 300;
 const WEB_URL = /^https?:\/\/[^\s]+$/;
@@ -174,7 +174,12 @@ export async function loadWhenOnline(sources, host) {
   return (await isOnline(host)) ? loadAll(sources, host) : null;
 }
 
+export const isEnabled = (value) => value === true;
+
+export const enabledAfter = (command, enabled) => (command === "on" ? true : command === "off" ? false : enabled);
+
 const PANEL = "inbox-panel";
+const ENABLED_KEY = "inbox.enabled";
 const ICON = "mods/inbox/inbox.svg";
 const STATE_KEY = "inbox.state";
 const DONE_KEY = "inbox.done";
@@ -196,6 +201,7 @@ const isPanelOpen = () => {
   return panel !== null && !panel.hidden;
 };
 
+const enabled = () => isEnabled(shared(ENABLED_KEY));
 const waiting = () => pending(readState(shared(STATE_KEY)).items, readDone(shared(DONE_KEY)));
 const labelOf = (source) => SOURCES.find((entry) => entry.id === source)?.label ?? source;
 const twoDigits = (value) => String(value).padStart(2, "0");
@@ -226,10 +232,22 @@ export default class Inbox extends View {
     if (this.role !== "button" || checking()) return;
     this.reload(cx);
     cx.timer.every(POLL_MS, (cx) => this.reload(cx));
+    cx.spawn(async (cx) => {
+      for (;;) {
+        this.switchTo(enabledAfter(await nextCommand(), enabled()), cx);
+        cx.notify();
+      }
+    });
+  }
+
+  switchTo(isOn, cx) {
+    if (isOn === enabled()) return;
+    setShared(ENABLED_KEY, isOn);
+    if (isOn) this.reload(cx);
   }
 
   reload(cx) {
-    if (this.loading) return;
+    if (this.loading || !enabled()) return;
     this.loading = true;
     cx.spawn(async (cx) => {
       try {
@@ -270,7 +288,7 @@ export default class Inbox extends View {
   }
 
   renderButton(t) {
-    const count = waiting().length;
+    const count = enabled() ? waiting().length : 0;
     this.showCount(count);
     const selected = isPanelOpen();
     const tone = selected || count > 0 ? t.foreground : t.muted;
@@ -306,7 +324,27 @@ export default class Inbox extends View {
       .child(div().text_color(t.foreground).child(item.title));
   }
 
+  renderSwitch(t, isOn) {
+    return h_flex().id("inbox-switch").w(28).h(16).p(2).flex_none().items_center().rounded(8)
+      .bg(isOn ? t.accent : t.border)
+      .when(isOn, (el) => el.justify_end())
+      .on_click((_event, cx) => {
+        this.switchTo(!isOn, cx);
+        cx.notify();
+      })
+      .child(div().size(12).rounded(6).bg(isOn ? t.accent_foreground : t.muted));
+  }
+
+  renderOff(t) {
+    return v_flex().size_full().bg(t.chrome).text_size(12.5).text_color(t.foreground)
+      .child(h_flex().h(36).px(14).gap(8).flex_none().items_center().border_b(1).border_color(t.border)
+        .child(div().flex_1().font_semibold().child("Inbox"))
+        .child(this.renderSwitch(t, false)))
+      .child(div().p(14).text_color(t.dim).child("Off. Nothing is loaded until it is turned on."));
+  }
+
   renderList(t) {
+    if (!enabled()) return this.renderOff(t);
     const state = readState(shared(STATE_KEY));
     const items = pending(state.items, readDone(shared(DONE_KEY)));
     const now = Date.now();
@@ -321,7 +359,8 @@ export default class Inbox extends View {
         .child(div().id("inbox-reload").flex_none().px(6).py(2).rounded(5).text_size(11.5).text_color(t.muted)
           .hover((style) => style.bg(t.hover).text_color(t.foreground))
           .on_click((_event, cx) => this.reload(cx))
-          .child("Reload")))
+          .child("Reload"))
+        .child(this.renderSwitch(t, true)))
       .children(errors.map(([source, message]) =>
         div().px(14).py(6).flex_none().text_size(11.5).text_color(t.blocked).truncate().child(`${labelOf(source)}: ${message}`)))
       .child(v_flex().id("inbox-scroll").flex_1().min_h(0).p(6).gap(1).overflow_y_scrollbar()

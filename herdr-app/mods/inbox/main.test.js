@@ -5,7 +5,7 @@ import { test } from "node:test";
 const HOST_MODULES = {
   "gpui-kit": ["View", "div", "svg"],
   "gpui-base": ["h_flex", "v_flex"],
-  herdr: ["checking", "exec", "layout", "props", "run", "setBadge", "setShared", "shared", "theme"],
+  herdr: ["checking", "exec", "layout", "props", "run", "nextCommand", "setBadge", "setShared", "shared", "theme"],
 };
 const stubOf = (names) => `data:text/javascript,${encodeURIComponent(names.map((name) => `export const ${name} = class {};`).join(""))}`;
 const stubs = Object.fromEntries(Object.entries(HOST_MODULES).map(([name, names]) => [name, stubOf(names)]));
@@ -15,7 +15,7 @@ register(`data:text/javascript,${encodeURIComponent(
      stubs[specifier] ? { url: stubs[specifier], shortCircuit: true } : next(specifier, context);`,
 )}`);
 
-const { SOURCES, ageOf, htmlUrlOf, isOnline, isReachable, keyOf, loadAll, loadWhenOnline, mergeResults, parseNotifications, pending, pruneDone, readDone, readState, toItem } = await import("./main.js");
+const { SOURCES, ageOf, enabledAfter, htmlUrlOf, isEnabled, isOnline, isReachable, keyOf, loadAll, loadWhenOnline, mergeResults, parseNotifications, pending, pruneDone, readDone, readState, toItem } = await import("./main.js");
 const github = SOURCES.find((source) => source.id === "github");
 
 const fields = (over = {}) => ({
@@ -318,4 +318,20 @@ test("loads no source while the network is down", async () => {
 
 test("loads the sources while the network is up", async () => {
   assert.deepEqual(await loadWhenOnline([working], { exec: scutil(NETWORK_UP) }), [{ source: "notes", items: [note] }]);
+});
+
+test("is off until it has been turned on", () => {
+  assert.equal(isEnabled(undefined), false);
+  assert.equal(isEnabled(null), false);
+  assert.equal(isEnabled("true"), false);
+  assert.equal(isEnabled(false), false);
+  assert.equal(isEnabled(true), true);
+});
+
+test("turns on and off by command and ignores other commands", () => {
+  assert.equal(enabledAfter("on", false), true);
+  assert.equal(enabledAfter("on", true), true);
+  assert.equal(enabledAfter("off", true), false);
+  assert.equal(enabledAfter("focus", true), true);
+  assert.equal(enabledAfter("focus", false), false);
 });
