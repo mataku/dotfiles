@@ -1,6 +1,6 @@
 # herdr-core
 
-Roles and launch templates for the agents that `hc`, the CLI of herdr-core, starts in its terminals. `mise bootstrap` links both directories into `~/.config/herdr-core/`, and the `design-build-review` skill runs a change through the four roles.
+Roles and launch templates for the agents that `hc`, the CLI of herdr-core, starts in its terminals. `mise bootstrap` links both directories into `~/.config/herdr-core/`, and the `architect-build-review` skill runs a change through the four roles.
 
 ## Layout
 
@@ -26,7 +26,7 @@ A role and the way to start it are kept in separate files, so that more than one
 
 - **A role file is shared by every model that plays the role.** It is plain Markdown without frontmatter and says nothing about which model or CLI runs it. The rules of the role are written there, for every model at once instead of once per model.
 - **A template holds only the launch command and a line pointing at the role file.** Its frontmatter has `name`, `description`, and `command`, which picks the CLI, the model and the effort. The `description` is the summary that `hc templates` shows: it names the model and repeats a few rules of the role in short, so it follows the role file when one of them changes. The template's body is the one line below. Giving a role another model is an edit to `command` and to the model its `description` names.
-- **A further model on another CLI gets no template.** The `design-build-review` skill lists such an extra reviewer as a label and a command, and starts that command with a pointer to the same role file.
+- **A further model on another CLI gets no template.** The `architect-build-review` skill lists such an extra reviewer as a label and a command, and starts that command with a pointer to the same role file.
 
 The body of `templates/<role>.md`:
 
@@ -55,14 +55,14 @@ The repository's [`mise.toml`](../mise.toml) has one `[dotfiles]` entry per dire
 - Each entry links a whole directory: a file added to `roles/` or `templates/` needs no new entry.
 - Only these two directories are linked. `~/.config/herdr-core/` itself is an ordinary directory, and this README is not linked.
 
-## The design-build-review skill
+## The architect-build-review skill
 
-[`claude/skills/design-build-review/SKILL.md`](../claude/skills/design-build-review/SKILL.md) is a Claude Code skill. Its folder is linked to `~/.claude/skills/design-build-review` by its own `[dotfiles]` entry. The session that runs it, inside a herdr-core terminal, is the coordinator: it starts the agents of each stage with `hc`, reads what each one wrote, and decides the next step. It does not design, implement or review the change itself.
+[`claude/skills/architect-build-review/SKILL.md`](../claude/skills/architect-build-review/SKILL.md) is a Claude Code skill. Its folder is linked to `~/.claude/skills/architect-build-review` by its own `[dotfiles]` entry. The session that runs it, inside a herdr-core terminal, is the coordinator: it starts the agents of each stage with `hc`, reads what each one wrote, and decides the next step. It does not design, implement or review the change itself.
 
 | Stage | Who works |
 | --- | --- |
-| 1. Design | `architect` |
-| 2. Design review | `architecture-reviewer`, and each extra reviewer in that role |
+| 1. Architecture | `architect` |
+| 2. Architecture review | `architecture-reviewer`, and each extra reviewer in that role |
 | 3. The user's review | The user: the coordinator shows the design and waits for approval |
 | 4. Implementation | `implementer` |
 | 5. Code review | `code-reviewer`, and each extra reviewer in that role |

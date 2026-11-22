@@ -54,7 +54,7 @@ min_version = "2026.9.5"
 "~/.claude/hooks/permission-notify.sh" = "claude/hooks/permission-notify.sh"
 "~/.claude/hooks/idle-notify.sh" = "claude/hooks/idle-notify.sh"
 "~/.claude/orca.md" = "claude/orca.md"
-"~/.claude/skills/design-build-review" = "claude/skills/design-build-review"
+"~/.claude/skills/architect-build-review" = "claude/skills/architect-build-review"
 
 [bootstrap.macos.defaults."com.apple.dock"]
 autohide = false

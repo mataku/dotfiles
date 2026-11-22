@@ -1,9 +1,9 @@
 ---
-name: design-build-review
-description: Run a change through separate agents in order, design (architect), design review (architecture-reviewer), the user's approval, implementation (implementer), code review (code-reviewer), with this session coordinating over `hc`. Use when the user invokes /design-build-review, or asks to take a task "from design", "through architect", "設計から", "architect から回して", "設計・実装・レビューで進めて". Not for a change small enough to make directly, and not outside a herdr-core terminal.
+name: architect-build-review
+description: Run a change through separate agents in order, design (architect), design review (architecture-reviewer), the user's approval, implementation (implementer), code review (code-reviewer), with this session coordinating over `hc`. Use when the user invokes /architect-build-review, or asks to take a task "from design", "through architect", "設計から", "architect から回して", "設計・実装・レビューで進めて". Not for a change small enough to make directly, and not outside a herdr-core terminal.
 ---
 
-# Design, build, review
+# Architect, build, review
 
 You are the coordinator. You start one agent per stage with `hc`, read what each one produced, and decide the next step. You do not design, implement or review the change yourself.
 
@@ -26,7 +26,7 @@ A run is light when the user asks for one, or when all of these hold: at most th
 
 ## Files
 
-The work folder is `~/.local/state/design-build-review/<repository name>/<slug>/`. It has to outlast this session and a restart, because the wait in stage 3 can take days. Every file of a run has a fixed name:
+The work folder is `~/.local/state/architect-build-review/<repository name>/<slug>/`. It has to outlast this session and a restart, because the wait in stage 3 can take days. Every file of a run has a fixed name:
 
 | File | Written by | Holds |
 | --- | --- | --- |
@@ -36,13 +36,13 @@ The work folder is `~/.local/state/design-build-review/<repository name>/<slug>/
 | `architecture-v<n>.md` | you | A copy of the design each time you show it to the user, and each time an approval takes effect. |
 | `baseline.txt` | you | `git rev-parse HEAD` and `git status --porcelain` from before stage 4, and the paths excluded from the run. |
 | `implementation.md` | implementer | What it changed, each verification command it ran and the result, what it left undone. |
-| `<review>-report-<label>.md` | reviewer | A review. `<review>` is `design-1` for stage 2 and `code-1` for stage 5; a later review of the same kind is `design-2`, `code-2`. `<label>` is `main` for the template's reviewer, whatever model its template starts, and the label of an extra reviewer. |
+| `<review>-report-<label>.md` | reviewer | A review. `<review>` is `arch-1` for stage 2 and `code-1` for stage 5; a later review of the same kind is `arch-2`, `code-2`. `<label>` is `main` for the template's reviewer, whatever model its template starts, and the label of an extra reviewer. |
 | `<review>-findings-r<n>.md` | you | The findings of round `n` that go to the author, numbered, and the ones you dropped. |
 | `<review>-fixes-r<n>.md` | author | Its answer to each finding of round `n`. |
 | `<review>-check-<label>-r<n>.md` | reviewer | Its check of the answers of round `n`. |
 
 - A file is never overwritten by a later round, and an earlier round's file is not a later round's result.
-- An extra reviewer's CLI may let it write only inside the repository and the temporary folder. Its files go to `/tmp/design-build-review/<repository name>/<slug>/` under the same names; make sure that folder is empty before stage 1, and copy each completed file into the work folder before you use it.
+- An extra reviewer's CLI may let it write only inside the repository and the temporary folder. Its files go to `/tmp/architect-build-review/<repository name>/<slug>/` under the same names; make sure that folder is empty before stage 1, and copy each completed file into the work folder before you use it.
 - Nothing removes a work folder by itself, and you do not remove one unasked. If the repository's folder holds runs last changed more than 14 days ago, name them to the user once, in your first report.
 
 When you are asked to continue a run, or your context no longer holds its details, read `state.md` and the files beside it before anything else, and check with `hc ls` which of its agents are alive. If the work folder is missing, tell the user and ask whether to start over from the design.
@@ -112,13 +112,13 @@ Stage 2 and stage 5 each run a review this way, and so does every later review o
 
 ## Stages
 
-### 1. Design
+### 1. Architecture
 
 Start `architect` with `task.md`. It writes `architecture.md` and reviews its own design before reporting. When it reports, check that the file has `## Files`, `## Verification` and, last, `## Self-review`; send the architect back for what is missing.
 
-### 2. Design review
+### 2. Architecture review
 
-Skipped in a light run. Run review `design-1` with `architecture-reviewer` on `architecture.md`, judged against `task.md`. It is a second reader: the architect's self-review does not replace it. The author is the architect.
+Skipped in a light run. Run review `arch-1` with `architecture-reviewer` on `architecture.md`, judged against `task.md`. It is a second reader: the architect's self-review does not replace it. The author is the architect.
 
 ### 3. The user's review
 
@@ -163,7 +163,7 @@ After stage 2, whoever raises it (the user, the implementer, a code reviewer), t
 
 1. Send the point to the architect and wait for the changed `architecture.md`.
 2. Take the changed sections from a comparison with the latest `architecture-v<n>.md`, not from the architect's summary.
-3. Run a review on those sections, `design-2` and so on, as under Reviews.
+3. Run a review on those sections, `arch-2` and so on, as under Reviews.
 4. Show the user the changed sections as in stage 3 and wait. This holds however small the change: text the user has not seen is not approved.
 5. After the approval, the implementer goes on from the new design. What it changes for it is reviewed as `code-2` and so on, limited to that change.
 
