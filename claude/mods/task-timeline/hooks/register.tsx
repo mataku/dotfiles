@@ -97,8 +97,11 @@ const storeKey = async ($: EngineInterface) => `${STORE_PREFIX}${await $.session
 
 const openPane = ($: EngineInterface) => $.ui.open({ id: PANE, title: PANE_TITLE, columns: PANE_COLUMNS }).catch(() => undefined)
 
+// An Orca chat has no terminal, and ORCA_AGENT_SESSION_ID is not the id Orca gives a plugin for it: `agents.list` names the chat by this session's id.
+const orcaChatId = async ($: EngineInterface) => ((await $.env.get('ORCA_AGENT_SESSION_ID')) ? $.session.id() : undefined)
+
 const exportTarget = async ($: EngineInterface) => {
-  const terminal = await $.env.get('HC_TERMINAL_ID')
+  const terminal = (await $.env.get('HC_TERMINAL_ID')) || (await $.env.get('ORCA_TERMINAL_HANDLE')) || (await orcaChatId($))
   const home = await $.env.get('HOME')
   if (!terminal || !home || !TERMINAL_ID.test(terminal)) return undefined
   return { terminal, path: `${home}/${EXPORT_DIR}/${terminal}.json` }
@@ -122,7 +125,8 @@ const publishQuietly = ($: EngineInterface, plan: Plan | null) => publish($, pla
 
 const openUnasked = async ($: EngineInterface) => {
   if (await read($, isDismissed)) return
-  if ((await exportTarget($).catch(() => undefined)) !== undefined) return
+  // Only herdr.app shows the plan by itself; an Orca panel opens by hand, so the pane must not wait for it.
+  if (await $.env.get('HC_TERMINAL_ID').catch(() => undefined)) return
   await openPane($)
 }
 
