@@ -6,6 +6,8 @@ min_version = "2026.9.5"
 "~/.config/wezterm/wezterm.lua" = "wezterm/wezterm.lua"
 "~/.config/ghostty/config" = "ghostty/config"
 "~/.config/herdr/config.toml" = "herdr/config.toml"
+"~/.config/herdr-core/templates" = "herdr-core/templates"
+"~/.config/herdr-core/roles" = "herdr-core/roles"
 "~/.config/herdr-app/settings.json" = "herdr-app/settings.json"
 "~/.config/herdr-app/themes/oceanic.json" = "herdr-app/themes/oceanic.json"
 "~/.config/herdr-app/keys.json" = "herdr-app/keys.json"
@@ -52,6 +54,7 @@ min_version = "2026.9.5"
 "~/.claude/hooks/permission-notify.sh" = "claude/hooks/permission-notify.sh"
 "~/.claude/hooks/idle-notify.sh" = "claude/hooks/idle-notify.sh"
 "~/.claude/orca.md" = "claude/orca.md"
+"~/.claude/skills/design-build-review" = "claude/skills/design-build-review"
 
 [bootstrap.macos.defaults."com.apple.dock"]
 autohide = false
