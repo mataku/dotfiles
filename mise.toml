@@ -55,6 +55,7 @@ min_version = "2026.9.5"
 "~/.claude/hooks/idle-notify.sh" = "claude/hooks/idle-notify.sh"
 "~/.claude/orca.md" = "claude/orca.md"
 "~/.claude/skills/architect-build-review" = "claude/skills/architect-build-review"
+"~/.claude/skills/writing-for-mataku" = "claude/skills/writing-for-mataku"
 
 [bootstrap.macos.defaults."com.apple.dock"]
 autohide = false

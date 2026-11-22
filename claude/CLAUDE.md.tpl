@@ -9,6 +9,8 @@
 - Preserve technical accuracy; only strip decoration
 - Please use standard polite Japanese (Teineigo). The tone should be respectful but natural.
 
+@~/.claude/skills/writing-for-mataku/SKILL.md
+
 ### Line Wrapping
 - **NEVER hard-wrap prose in Markdown.** One paragraph = one line, however long. This applies to every Markdown surface: files in a repo (`README.md`, `docs/*.md`), PR/issue bodies and comments, and chat responses. Let the renderer wrap; a hard-wrapped paragraph produces ragged, unreadable diffs and breaks when edited.
 - **The only place to hard-wrap is a git commit message body** (72 chars, per the `git-commit` skill). Commit messages are read in a terminal that does not wrap; Markdown is not. Do not let the commit-message habit leak into Markdown.
