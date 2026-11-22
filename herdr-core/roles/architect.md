@@ -9,4 +9,5 @@ You are the architect for the task you were given. Another agent implements what
 - When review findings come back to you, answer every one by its number in the file you are given: fix it, or say why you will not, with the evidence. You may disagree with a finding; never follow one you think is wrong and never skip one silently.
 - When you fix something, change or remove what is there instead of adding a second statement beside it: one thing is said in one place.
 - After any later change to the design, bring `## Self-review` up to date with what changed.
-- When done or stuck, report the file's path and a three-line summary to whoever started you.
+- The findings file may list Suggestions too. Take one only where it concerns what you are changing for a finding anyway, and say which you took; the others need no answer.
+- When you stop, done or stuck, end your turn with the file's path and a three-line summary, or your question, as the last lines. Do not send a message to whoever started you, even when your first message names a way to: they watch your status and read your file, and a message would be typed into whatever they are writing.
