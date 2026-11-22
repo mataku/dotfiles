@@ -308,6 +308,38 @@ test('in a herdr-core terminal the plan goes to a file named after the terminal,
   expect(stub.opened).toEqual([PANE_ID])
 })
 
+test('in an Orca terminal the plan goes to a file named after the terminal handle, and the pane still opens', async ($, on) => {
+  const handle = 'term_47050787-2737-4933-87b8-6809f3fade54'
+  const stub = await start($, on, {}, { HOME: '/home/me', ORCA_TERMINAL_HANDLE: handle })
+  await setPlan($)
+  expect(stub.opened).toEqual([PANE_ID])
+  const file = `/home/me/.local/state/agent-timeline/${handle}.json`
+  expect([...stub.files.keys()]).toEqual([file])
+  expect(JSON.parse(stub.files.get(file) ?? 'null').terminal).toBe(handle)
+})
+
+test('a herdr-core terminal id wins over an Orca terminal handle', async ($, on) => {
+  const stub = await start($, on, {}, { ...HERDR_ENV, ORCA_TERMINAL_HANDLE: 'term_a' })
+  await setPlan($)
+  expect([...stub.files.keys()]).toEqual([EXPORT_FILE])
+  expect(stub.opened).toEqual([])
+})
+
+test('in an Orca chat the plan goes to a file named after the session id, and the pane still opens', async ($, on) => {
+  const stub = await start($, on, {}, { HOME: '/home/me', ORCA_AGENT_SESSION_ID: 'orca-1' })
+  await setPlan($)
+  expect(stub.opened).toEqual([PANE_ID])
+  const file = '/home/me/.local/state/agent-timeline/s1.json'
+  expect([...stub.files.keys()]).toEqual([file])
+  expect(JSON.parse(stub.files.get(file) ?? 'null').terminal).toBe('s1')
+})
+
+test('an Orca terminal handle wins over the session id', async ($, on) => {
+  const stub = await start($, on, {}, { HOME: '/home/me', ORCA_AGENT_SESSION_ID: 'orca-1', ORCA_TERMINAL_HANDLE: 'term_a' })
+  await setPlan($)
+  expect([...stub.files.keys()]).toEqual(['/home/me/.local/state/agent-timeline/term_a.json'])
+})
+
 test('the file says there is no plan once the plan is dropped or the session ends', async ($, on) => {
   const stub = await start($, on, {}, HERDR_ENV)
   await setPlan($)
