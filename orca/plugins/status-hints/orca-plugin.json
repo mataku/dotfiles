@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/stablyai/orca/main/docs/schemas/plugins/orca-plugin.v2.schema.json",
+  "manifestVersion": 2,
+  "execution": "declarative",
+  "id": "status-hints",
+  "name": "Status Hints",
+  "version": "0.1.0",
+  "description": "A cheat sheet in the status bar for the keys I use most: open a Markdown file, open the mobile emulator, and the command palette.",
+  "engines": { "orca": ">=1.4.248" },
+  "contributes": {
+    "statusBarItems": [
+      { "id": "markdown", "text": "⌘⇧O  md", "tooltip": "Open markdown tab" },
+      { "id": "simulator", "text": "⌘⌥⇧E  simulator", "tooltip": "New mobile emulator tab" },
+      { "id": "palette", "text": "⌘K  commands", "tooltip": "Command palette" }
+    ]
+  }
+}
