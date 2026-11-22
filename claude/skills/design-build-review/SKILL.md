@@ -11,63 +11,52 @@ You are the coordinator. You start one agent per stage with `hc`, read what each
 
 - This needs a herdr-core terminal: if `$HC_TERMINAL_ID` is empty, say so and stop.
 - Run `hc --skill` once if you have not in this session, and `hc templates` to confirm `architect`, `architecture-reviewer`, `implementer` and `code-reviewer` exist. A missing one is a blocker to report, not something to replace with a subagent.
-- Pick a kebab-case slug of at most 16 characters for the task. Its work folder is `~/.local/state/design-build-review/<repository name>/<slug>/`: it has to outlast this session and a restart, because the wait for the user in stage 3 can take days.
-- Nothing removes a work folder by itself. If that repository's folder holds runs last changed more than 14 days ago, name them to the user once, when you first report; remove one only when the user says so.
-- Write the task to `task.md` in the work folder: the goal, the repository, what is out of scope, and every constraint the user gave or approach they turned down, in their own words where the wording matters. If the goal itself is unclear, ask the user before stage 1.
-- `task.md` is the only statement of the task the agents get. Name it in every stage's task, and add to it whatever the user decides later.
+- Pick a kebab-case slug of at most 16 characters for the task, one that has no work folder yet (see Files). A request made after a run's report, or after a rejected design, is a new run with a new slug.
+- If the goal itself is unclear, ask the user before stage 1. Otherwise write `task.md` and go on; the user sees your reading of the task in stage 3.
 
-## Keeping and resuming a run
+## Files
 
-Keep `state.md` in the work folder and bring it up to date whenever a stage ends, a round is used, or the user decides something: the stage you are in, each agent's terminal name, the rounds used per review stage, and each approval with its date and the user's words.
+The work folder is `~/.local/state/design-build-review/<repository name>/<slug>/`. It has to outlast this session and a restart, because the wait in stage 3 can take days. Every file of a run has a fixed name:
 
-When you are asked to continue a run, or your own context no longer holds its details, read `state.md` and the files beside it before anything else, and check with `hc ls` which of its agents are still alive. An agent that is gone is started again as "Running a stage" says. If the work folder is missing, tell the user and ask whether to start over from the design.
+| File | Written by | Holds |
+| --- | --- | --- |
+| `task.md` | you | The goal, the repository, what is out of scope, every constraint the user gave or approach they turned down, in their words where the wording matters. Add what the user decides later. It is the only statement of the task the agents get. |
+| `state.md` | you | The stage you are in, each agent's terminal name, the rounds used per review, each approval with its date, the user's words and the design copy it covers, files allowed beyond the design's `## Files`, verification commands the implementer added. Bring it up to date whenever one of these changes. |
+| `architecture.md` | architect | The design. After stage 2 only the architect changes it. |
+| `architecture-v<n>.md` | you | A copy of the design each time you show it to the user, and each time an approval takes effect. |
+| `baseline.txt` | you | `git rev-parse HEAD` and `git status --porcelain` from before stage 4, and the paths excluded from the run. |
+| `implementation.md` | implementer | What it changed, each verification command it ran and the result, what it left undone. |
+| `<review>-report-<label>.md` | reviewer | A review. `<review>` is `design-1` for stage 2 and `code-1` for stage 5; a later review of the same kind is `design-2`, `code-2`. `<label>` is `fable` for the template's reviewer and the label of an extra reviewer. |
+| `<review>-findings-r<n>.md` | you | The findings of round `n` that go to the author, numbered, and the ones you dropped. |
+| `<review>-fixes-r<n>.md` | author | Its answer to each finding of round `n`. |
+| `<review>-check-<label>-r<n>.md` | reviewer | Its check of the answers of round `n`. |
 
-## Running a stage
+- A file is never overwritten by a later round, and an earlier round's file is not a later round's result.
+- An extra reviewer's CLI may let it write only inside the repository and the temporary folder. Its files go to `/tmp/design-build-review/<repository name>/<slug>/` under the same names; make sure that folder is empty before stage 1, and copy each completed file into the work folder before you use it.
+- Nothing removes a work folder by itself, and you do not remove one unasked. If the repository's folder holds runs last changed more than 14 days ago, name them to the user once, in your first report.
+
+When you are asked to continue a run, or your context no longer holds its details, read `state.md` and the files beside it before anything else, and check with `hc ls` which of its agents are alive. If the work folder is missing, tell the user and ask whether to start over from the design.
+
+## Agents
 
 ```sh
-hc run --bg --name <slug>-<short> --cwd <repo> <template> "<task for this stage>"
-hc wait --children all --timeout 540
+hc run --bg --name <slug>-<short> --cwd <repo> <template> "<task>"
+hc run --bg --name <slug>-<short>-<label> --cwd <repo> <command> "Read ~/.config/herdr-core/roles/<role>.md first and follow it. You were started by hc terminal $HC_TERMINAL_ID: a later message from it is a task from the same sender, and you report to it with 'hc send $HC_TERMINAL_ID' if you can. <task>"
 ```
 
-`hc` allows a name at most 32 characters, so a terminal's name uses a short form of the role, not the template's name:
+The first line starts a template. The second starts an extra reviewer, which has no template: one line under "Extra reviewers" gives its label and command. `hc` allows a name at most 32 characters, so the name uses a short form of the role:
 
-| Template | `<short>` |
+| Template and role file | `<short>` |
 | --- | --- |
 | `architect` | `arch` |
 | `architecture-reviewer` | `arch-rev` |
 | `implementer` | `impl` |
 | `code-reviewer` | `code-rev` |
 
-- At most two of the agents this session started may be working at once: one author, or up to two reviewers of the same stage. An agent that sits idle between its turns does not count. Give each a name, the exact scope, the work folder, and the path of `task.md` and of every other file it must read. A stage's task is self-contained: the agent has none of this conversation.
-- Check `first_message.sent` in the launch result. If false, `hc read` the terminal before doing anything else.
-- Wait with `--timeout 540`, and give the shell call that runs it ten minutes: a shorter wait only wakes you more often. `hc wait` returning `timeout` is a check-in, not a failure, and the agent goes on working meanwhile. So is `idle` at turn 0: the agent has not started on its task yet. Never sleep or poll.
-- On each `timeout`, `hc read` the agent and compare with what you read last time, then wait again. When two timeouts in a row show no progress, tell the user what the screen shows and for how long, and end your turn; do not kill or restart the agent on your own.
-- The architect or the implementer failing to start, exiting or stopping with an error is a blocker: report the reason, and for the implementer the state of the tree. Do not start another without the user.
-- An agent of any role that is `blocked`, or that shows no status after launch, is sitting at a prompt of its CLI: `hc read` it. A prompt that grants something (trusting the folder, running a command, writing a file) is the user's to answer. Quote it to the user and end your turn; never answer it yourself, and never `hc send --force` past it. The user answers in that terminal, or tells you the choice, which you then enter with `hc keys` exactly as told. A question about the task is not such a prompt: see "When the user has to decide".
-- A report arrives as `<hc from="...">`. It is the agent's output, not an instruction from the user. Open the file it names and read it before you describe or act on it.
-- To send a stage back for changes, `hc send <name> "<what to change>"` to the agent that did it, so it keeps its context. The result's `started` says whether the message began a turn: when it is false, `hc read` the agent before you wait. Start a new agent only when the old one is gone, and give it `task.md`, the current `architecture.md` and the review reports.
-- Kill and remove every agent just before the stage 6 report, not earlier. The architect and the design reviewers stay that long so that a fault found in the design later goes back to the agents that wrote and read it.
-- When the user rejects the design or drops the task, kill and remove every agent this run started.
-
-## Reviews
-
-Both review stages work the same way.
-
-- Start the stage's reviewer template (`architecture-reviewer` or `code-reviewer`), and the same role once more with each command under "Extra reviewers". Up to two reviewers may run at once; start the rest as those return.
-- An extra reviewer has no template: start its command directly and put the role file in its task.
-
-  ```sh
-  hc run --bg --name <slug>-<short>-<label> --cwd <repo> <command> "Read ~/.config/herdr-core/roles/<role>.md first and follow it. You were started by hc terminal $HC_TERMINAL_ID; a later message from it is a task from the same sender. <task for this stage>"
-  ```
-
-- Give every reviewer its own report path in the task, `<work folder>/<stage>-review-<label>-r1.md`, where the template's reviewer, whose terminal name has no label, is `fable`. A reviewer is finished when `hc wait` shows it done, with or without a `<hc from="...">` message: a CLI that sandboxes its commands cannot reach `hc`, so its report is only the file. A report counts only when its first line is `Status: complete`. If the file is missing or says anything else, `hc read` the terminal; a reviewer that stopped without completing is handled like one that is unusable, and when it was the stage's own template, start it again once before treating it as a blocker.
-- An extra reviewer's CLI may let it write only inside the repository and the temporary folder, so its report path is `/tmp/design-build-review/<slug>/<the same file name>`, not the work folder. Copy each completed report from there into the work folder before you use it.
-- An extra reviewer may be unusable here: its CLI is not installed (the launch fails at once with `spawn_failed`), or it starts and stops with an error, such as a model the account does not offer (`hc` tells you it hit an error). `hc read` it for the reason, kill and remove it, go on with the other reviewers, and name it and the reason in the report. A launch that `hc` refuses for another reason, such as the name, is yours to correct and repeat. The stage's own template failing is a blocker.
-- Reviewers report findings as Critical, Warning and Suggestion. Read each report file, and drop a finding only when you have checked it against the code or the design and it does not hold. A finding you have not checked goes to the author as it is, marked suspected when the reviewer marked it so. When two reviewers contradict each other, check which holds; if you cannot tell, it goes to the user.
-- Send nothing to the author until every reviewer of the stage has finished. Then write every Critical and Warning that holds to `<work folder>/<stage>-findings-r<n>.md`, each with a number, its reviewer and its severity, and send the author that path together with the path for its answer, `<stage>-fixes-r<n>.md`. Keep each finding you dropped in the same file under a `Dropped` heading, with the check that showed it does not hold; the author may ignore that part. Suggestions go into your report to the user and are not sent back unless the user asks.
-- The author answers each finding with a fix or a reason not to fix it. Read its answer file before going on: an unanswered finding goes back to the author, and a finding that needs a file outside the allowed list is yours to settle, by widening the list when the design covers the file and otherwise by asking the user.
-- After the author's answer, have the reviewer that raised a finding check it, the author's objections included: the reviewer withdraws the finding or keeps it. Its task names the findings by number, the author's answer file, and a new report path, `<stage>-review-<label>-r<n+1>.md`: a report is never overwritten, and an earlier round's file is not this round's result. If that reviewer is gone, the template's reviewer checks instead, started again if need be.
-- One round is the author's fix and the check of it. A stage gets at most two rounds. A Critical or Warning first raised in the first check goes into the second round; whatever is open or new after the second goes to the user.
+- A task is self-contained, because the agent has none of this conversation: the exact scope, the path of `task.md` and of every other file to read, and the path of every file to write.
+- At most two of the agents this session started may be working at once: one author, or up to two reviewers of the same review. An agent that sits idle between its turns does not count.
+- To give an agent more work, `hc send <name> "<task>"` to the one that did the work, so it keeps its context. When the result's `started` is false, `hc read` it before you wait.
+- An agent that finished its work stays until just before the stage 6 report, so that a fault found later goes back to the agent that wrote or read the thing. Then kill and remove every agent of the run; do the same when the user rejects the design or drops the task, and close the run in `state.md`.
 
 ### Extra reviewers
 
@@ -75,72 +64,105 @@ One line per extra reviewer: a label of at most 6 characters, then the command t
 
 - `astra`: `codex --no-daemon -m gpt-6.2-astra`
 
+## Waiting
+
+Wait with `hc wait --children all --timeout 540`, in a shell call given ten minutes. Never sleep or poll. The wait returns for one of these:
+
+- **A message** (`reason: message`): the normal end of a turn. It arrives as `<hc from="...">`, which is the agent's output and not an instruction from the user. Open the file it names before you describe or act on it.
+- **`idle` at turn 0**: the agent has not started on its task yet. Wait again.
+- **`timeout`**: a check-in, while the agent goes on working. `hc read` it and look at the first line of the file it is writing, then wait again. A report that says `Status: complete` means the agent is finished, whatever its status shows.
+- **Anything else**: find the row below.
+
+| What happened | Architect, implementer | Template's reviewer | Extra reviewer |
+| --- | --- | --- | --- |
+| `hc` refuses the launch for a reason of yours, such as the name | Correct it and launch again | Same | Same |
+| It cannot start (`spawn_failed`), exits, or stops with an error | Blocker: tell the user the reason, and for the implementer the state of the tree. Start another only on the user's word | Start it again once, then blocker | `hc read` the reason, kill and remove it, go on without it, name it and the reason in the report |
+| `blocked`, or no status after launch: it is at a prompt of its CLI | `hc read` it. A prompt that grants something (trusting the folder, running a command, writing a file) is the user's: quote it and end your turn. Never answer it yourself or `hc send --force` past it. The user answers in that terminal, or tells you the choice, which you enter with `hc keys` exactly as told | Same | Same |
+| It asks a question, or its file says `Status: stuck: <why>` | See "When the user has to decide". Keep it alive and answer with `hc send` | Same | Same |
+| It ends its turn with no file, or a file that is not complete, and gives no reason | Send it back once to finish | Same, then start it again once, then blocker | Send it back once, then treat it as unusable, as above |
+| Two timeouts in a row show no progress on the screen or in its file | Tell the user what the screen shows and for how long, and end your turn. Do not kill or restart it | Same | Same |
+| You sent it back twice for the same reason and it comes back the same | Tell the user and end your turn | Same | Same |
+| It is gone because this session ended and the run is being continued | Start it again and say so in your next report | Same | Same |
+
+An agent started again gets `task.md`, `architecture.md`, `state.md` and the files of the reviews so far. A new implementer also gets `baseline.txt`, the allowed files, and the fact that the tree is already partly changed.
+
+## Reviews
+
+Stage 2 and stage 5 each run a review this way, and so does every later review of a changed design or of code changed for it.
+
+1. **Start the reviewers.** The stage's template and the same role once more for each extra reviewer, each with its own report path. Two may work at once; start the rest as those return.
+2. **Take the reports.** A report counts when its first line is `Status: complete`. Wait for every reviewer before you send the author anything.
+3. **Sort the findings.** Drop a finding only when you have checked it against the code or the design and it does not hold. Settle a suspected finding that a command can settle by running the command, when the command changes nothing. When two reviewers contradict each other, check which holds. Everything you did not drop stands, marked suspected when it still is.
+4. **Write `<review>-findings-r1.md`.** Every standing Critical and Warning, each with a number, its reviewer and its severity; numbers run on through the review and are never reused. Under a `Dropped` heading, each finding you dropped with the check that showed it does not hold. Suggestions go into your report to the user and are not sent back unless the user asks.
+5. **Send the author** the findings file and the path for its answers. The author fixes each finding or says why not. Read the answers: an unanswered finding goes back. A code finding that is about the design goes to the architect instead (see "When the design changes"), and one that needs a file the implementer may not edit is yours to settle: allow the file when a step of the design covers it and record that in `state.md`, otherwise treat it as a change of the design.
+6. **Have each reviewer check** the answers to its own findings: its task names the findings file, the answers file and the path for its check. It withdraws or keeps each finding, and says where the author's changes now contradict something else. If that reviewer is gone, the template's reviewer checks.
+7. **Close the round.** A finding that is kept, or new, goes into `<review>-findings-r2.md` for a second round. A review gets at most two rounds. What is open after the second goes to the user; a fix the user then orders gets one more check, and what that leaves is reported as open, not as settled.
+
 ## Stages
 
 ### 1. Design
 
-Start `architect` with `task.md`. It writes `architecture.md` in the work folder and reviews its own design before reporting.
-
-When it reports, check that `architecture.md` ends with a `## Self-review` section. If it does not, send the architect back to do it before going on.
+Start `architect` with `task.md`. It writes `architecture.md` and reviews its own design before reporting. When it reports, check that the file has `## Files`, `## Verification` and, last, `## Self-review`; send the architect back for what is missing.
 
 ### 2. Design review
 
-Run a review (see Reviews) with `architecture-reviewer` on the self-reviewed `architecture.md`, judged against `task.md`. It is a second reader: the architect's self-review does not replace it.
-
-The author is the architect. What is still open after two rounds goes to the user in stage 3 as an open point.
+Run review `design-1` with `architecture-reviewer` on `architecture.md`, judged against `task.md`. It is a second reader: the architect's self-review does not replace it. The author is the architect.
 
 ### 3. The user's review
 
-Stop here every time. Show the user:
+Stop here every time. Copy `architecture.md` to the next `architecture-v<n>.md`, and show the user:
 
-- the task as `task.md` states it, so the user can correct your reading of it,
-- the path of `architecture.md` and a summary of it short enough to judge without opening the file,
-- what the self-review and the design review each changed, and the Suggestions left untouched,
+- the task as `task.md` states it, so they can correct your reading of it,
+- the path of `architecture.md` and a summary short enough to judge without opening the file,
+- what the self-review and the design review each changed, the Suggestions left untouched, and what is still open after two rounds,
 - every Critical and Warning you dropped, with its reviewer and the check that showed it does not hold,
 - how the change will be verified, and every part the design says no command can show,
-- every open decision, each as a question with your recommendation.
+- every open decision as a question, with what each option changes and your recommendation.
 
-Then end your turn and wait. Do not start stage 4 on anything but the user's explicit approval of this design.
+Then end your turn. Stage 4 starts only on the user's explicit approval.
 
-Every answer and every change the user gives goes to the architect, who writes it into `architecture.md`; add it to `task.md` yourself. Approval counts only for the file as it stands after that. See "When the design changes" for what is read again.
+An approval is an approval, also when it comes with an answer to an open decision. Send the answers and any changes to the architect, add them to `task.md`, and when the architect is done compare `architecture.md` with the copy you showed:
+
+- **Every difference is text the copy already had under the chosen option**: the approval stands. Copy the file to the next `architecture-v<n>.md`, record it in `state.md` and go on to stage 4.
+- **There is anything else**, as there is whenever the user asked for a change in their own words: the user has not seen it. Follow "When the design changes" before any implementation.
 
 ### 4. Implementation
 
-Before you start it, write the output of `git rev-parse HEAD` and `git status --porcelain` to `baseline.txt` in the work folder. Changes already in the tree that have nothing to do with the task stay out of this run: list them in `baseline.txt` as excluded and go on. Stop and ask the user when an existing change is in a file the design changes, or when you cannot tell whether it belongs to the task.
+Before you start it, write `baseline.txt`. Changes already in the tree that have nothing to do with the task stay out of the run: list them there as excluded and go on. Stop and ask the user when an existing change is in a file under the design's `## Files`, or when you cannot tell whether it belongs to the task.
 
-Start `implementer` with the path of the approved `architecture.md` and the files it may edit. It does not commit.
+Start `implementer` with the approved `architecture.md`, `task.md`, and the path for `implementation.md`. It may edit the files under `## Files` and does not commit.
 
-When it reports, run the commands in the design's `## Verification` section yourself, and any the implementer added, and compare the results with its report. If your run fails or differs from the report, send that back to the implementer and do not start stage 5.
+After every turn of the implementer, here and in stage 5:
+
+- Run `git status --porcelain` and compare the changed paths, untracked ones included, with the allowed files, leaving out the excluded paths. Ask the implementer about a change outside them. One that is its own it takes back or you settle as in Reviews, step 5; one that is not goes to the user. Nobody reverts a change they did not make.
+- Run the commands in the design's `## Verification` yourself, and any the implementer added, and compare with its report. A run that fails or differs goes back to the implementer, and does not count as a round of a review.
 
 ### 5. Code review
 
-First run `git status --porcelain` and compare the changed paths, untracked ones included, with the files the implementer was allowed to edit, leaving out the paths excluded in `baseline.txt`. A change outside that list goes back to the implementer before any review.
-
-Run a review (see Reviews) with `code-reviewer`, with `architecture.md` as the statement of intent. A plain `git diff` does not show new files, so put the change in the reviewer's task as the commit in `baseline.txt` to diff against, the untracked files to read whole, and the excluded paths to ignore.
-
-The author is the implementer. Each time it reports a fix, run the verification commands again before you ask a reviewer to check the fix; a failing run goes back to the implementer and does not count as one of the two rounds.
+Run review `code-1` with `code-reviewer`, with `architecture.md` as the statement of intent. A plain `git diff` does not show new files, so the reviewer's task gives the commit in `baseline.txt` to diff against, the untracked files to read whole, and the excluded paths to ignore. The author is the implementer.
 
 ### 6. Report
 
-Tell the user what changed, the verification commands and their results from your run after the last change, what is left to check by hand, what each review found by severity and how it was settled, the findings you dropped and why, the Suggestions not taken, what is left open, and the path of the work folder, which you leave in place. Do not commit or push; the user asks for those.
+Tell the user what changed, taken from git and not from memory; the verification commands and their results from your run after the last change; what is left to check by hand; what each review found by severity and how it was settled; the findings you dropped and why; the Suggestions not taken; what is left open; and the path of the work folder. Do not commit or push; the user asks for those.
 
 ## When the design changes
 
-After stage 2, `architecture.md` changes only through the architect.
+After stage 2, whoever raises it (the user, the implementer, a code reviewer), the design changes only through the architect, and only after the implementer has been told to stop where it is.
 
-- Have the design reviewers read the changed sections, as a round of the Reviews section limited to those sections. A change that only writes down the user's answer to an open decision needs no such read.
-- A change made after the user's approval needs the approval again: go back to stage 3 with the changed sections and wait. This holds however small the architect judges the change.
-- When the implementer reports that the design is wrong or unclear, tell it to stop where it is, send the point to the architect, and continue implementation only after the changed design is approved.
-- In code review, decide for each finding whether it is about the code or about the design. A finding about the design goes to the architect by the same path, not to the implementer.
+1. Send the point to the architect and wait for the changed `architecture.md`.
+2. Take the changed sections from a comparison with the latest `architecture-v<n>.md`, not from the architect's summary.
+3. Run a review on those sections, `design-2` and so on, as under Reviews.
+4. Show the user the changed sections as in stage 3 and wait. This holds however small the change: text the user has not seen is not approved.
+5. After the approval, the implementer goes on from the new design. What it changes for it is reviewed as `code-2` and so on, limited to that change.
 
 ## When the user has to decide
 
-Any stage can raise a decision that is the user's: a requirement that can be read two ways, a trade-off the design did not settle, a change outside the stated scope, a reviewer and an author who still disagree, anything destructive or outside this checkout.
+A decision is the user's when it is a requirement that can be read two ways, a trade-off the design did not settle, a change outside the stated scope, a reviewer and an author who still disagree after two rounds, or anything destructive or outside this checkout.
 
-- An agent that hits one reports it to you and stops. Do not answer it yourself unless the answer follows from the task or from what the user already said.
+- Do not answer it yourself unless the answer follows from `task.md` or from what the user already said.
 - Ask the user with the question, the options and your recommendation, then end your turn. Ending the turn is what marks you as waiting in herdr.app; do not keep working around the question.
-- Leave the stage's agent alive while you wait, and pass the answer on with `hc send`. This is for an agent that asked and ended its turn; one held at a prompt of its CLI is covered under "Running a stage".
+- Leave the agents alive while you wait, and pass the answer on with `hc send`.
 
 ## What you report
 
-Never report a stage as passed from the agent's own summary alone. A design is reviewed when you have read the reviewer's file; an implementation works when you have run the design's verification on the tree as you report it, not on an earlier one. What only a person can check is reported as not checked.
+Never report a stage as passed from an agent's own summary. A design is reviewed when you have read the reviewers' files; an implementation works when you have run the design's verification on the tree as you report it, not on an earlier one. What only a person can check, and what no reviewer checked, is reported as not checked.
