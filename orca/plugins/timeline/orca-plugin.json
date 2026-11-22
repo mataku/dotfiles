@@ -1,0 +1,32 @@
+{
+  "manifestVersion": 2,
+  "id": "timeline",
+  "name": "Timeline",
+  "version": "0.1.0",
+  "description": "The task plan of the agents in the focused workspace, with their progress, in a sidebar panel.",
+  "engines": {
+    "orca": ">=1.4.248"
+  },
+  "execution": "trusted-worker",
+  "pluginApi": 1,
+  "main": "src/worker.ts",
+  "contributes": {
+    "panels": [
+      {
+        "id": "timeline",
+        "title": "Timeline",
+        "icon": "layers",
+        "entry": "src/panel.tsx",
+        "ui": "components"
+      }
+    ]
+  },
+  "capabilities": [
+    {
+      "kind": "workspace:read"
+    },
+    {
+      "kind": "agent:read"
+    }
+  ]
+}
