@@ -225,13 +225,6 @@
                       "size": {
                         "px": 36
                       }
-                    },
-                    {
-                      "id": "simulators-view",
-                      "type": "block",
-                      "content": {
-                        "terminal": "simulators-view"
-                      }
                     }
                   ],
                   "resizable": false
