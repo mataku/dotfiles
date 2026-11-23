@@ -3,9 +3,16 @@ onboarding = false
 # Docs: https://herdr.dev/docs/configuration/
 # Full defaults: `herdr --default-config`
 
+[theme.custom]
+overlay0 = "#9399b2"
+
 [update]
 # Herdr is installed via Homebrew, which owns updates.
 version_check = false
+
+[terminal]
+default_shell = "/opt/homebrew/bin/fish"
+shell_mode = "non_login"
 
 [keys]
 # Match tmux prefix (C-q) for muscle-memory continuity.
