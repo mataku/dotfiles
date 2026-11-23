@@ -55,6 +55,17 @@ The repository's [`mise.toml`](../mise.toml) has one `[dotfiles]` entry per dire
 - Each entry links a whole directory: a file added to `roles/` or `templates/` needs no new entry.
 - Only these two directories are linked. `~/.config/herdr-core/` itself is an ordinary directory, and this README is not linked.
 
+## Local rules
+
+A machine can have rules that belong in no repository, such as how a team writes specifications or what a review there has to check. They go into files that this repository neither holds nor links:
+
+| Path | Applies to |
+| --- | --- |
+| `~/.config/herdr-core/local/all.md` | Every repository on the machine. |
+| `~/.config/herdr-core/local/<repository>.md` | The repository of that name, the last part of its `origin` URL without `.git`. |
+
+Each role file tells its agent to read both when they exist, and the skill tells the coordinator the same. Text before the first heading is for everyone; text under `## architect`, `## architecture-reviewer`, `## implementer`, `## code-reviewer` or `## coordinator` is for that one. The files add rules and may make the role's own stricter, and they do not lift what a role file forbids. They sit outside every checkout, so a `git worktree` of a repository reads the same files.
+
 ## The architect-build-review skill
 
 [`claude/skills/architect-build-review/SKILL.md`](../claude/skills/architect-build-review/SKILL.md) is a Claude Code skill. Its folder is linked to `~/.claude/skills/architect-build-review` by its own `[dotfiles]` entry. The session that runs it, inside a herdr-core terminal, is the coordinator: it starts the agents of each stage with `hc`, reads what each one wrote, and decides the next step. It does not design, implement or review the change itself.

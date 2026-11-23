@@ -11,6 +11,7 @@ You are the coordinator. You start one agent per stage with `hc`, read what each
 
 - This needs a herdr-core terminal: if `$HC_TERMINAL_ID` is empty, say so and stop.
 - Run `hc --skill` once if you have not in this session, and `hc templates` to confirm `architect`, `architecture-reviewer`, `implementer` and `code-reviewer` exist. A missing one is a blocker to report, not something to replace with a subagent.
+- Read `~/.config/herdr-core/local/all.md` and `~/.config/herdr-core/local/<repository name>.md` if they exist. They hold rules of this machine's environment that no file in the repository has, and every role reads them too. Follow what stands before their first heading and under `## coordinator`: such a rule may add a step or a stop for the user, or name a file every task must point at, and it never removes the user's approval in stage 3.
 - Pick a kebab-case slug of at most 16 characters for the task, one that has no work folder yet (see Files). A request made after a run's report, or after a rejected design, is a new run with a new slug.
 - If the goal itself is unclear, ask the user before stage 1. Otherwise write `task.md` and go on; the user sees your reading of the task in stage 3.
 - Decide whether this is a light run (see below) and write the decision and its reason into `task.md`.
@@ -26,7 +27,7 @@ A run is light when the user asks for one, or when all of these hold: at most th
 
 ## Files
 
-The work folder is `~/.local/state/architect-build-review/<repository name>/<slug>/`. It has to outlast this session and a restart, because the wait in stage 3 can take days. Every file of a run has a fixed name:
+The work folder is `~/.local/state/architect-build-review/<repository name>/<slug>/`, where the repository name is the last part of the `origin` URL without `.git`, so that a worktree of the repository shares it. It has to outlast this session and a restart, because the wait in stage 3 can take days. Every file of a run has a fixed name:
 
 | File | Written by | Holds |
 | --- | --- | --- |
