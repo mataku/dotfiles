@@ -1,7 +1,7 @@
 {
   "name": "compact-large-idle-context",
   "version": "0.1.0",
-  "description": "Reports Claude Code's built-in idle compaction with the context size and the summary's cache hit rate",
+  "description": "Compacts a large idle context shortly before the prompt cache expires and posts a digest with the open decisions and TODOs",
   "author": {
     "name": "Takuma Homma"
   },

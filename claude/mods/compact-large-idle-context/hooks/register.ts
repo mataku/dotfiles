@@ -1,9 +1,28 @@
-import type { EngineInterface, ModelUsage, Register } from 'claude-code'
+import type { EngineInterface, ModelUsage, Register, SessionMessage, Timer } from 'claude-code'
 
-const IDLE_MS = 30 * 60 * 1000
+const DELAY_MS = 50 * 60 * 1000
+const LATEST_MS = 58 * 60 * 1000
+const MIN_TOKENS = 200_000
+const FALLBACK_CHARS = 1500
 
+const DIGEST_INSTRUCTIONS = [
+  'After the last section of the summary, add one more block wrapped in <digest> and </digest> tags.',
+  'It is shown to the human user, who reads it when scrolling back after this compaction to see where the work stands.',
+  'Write it in the language the user writes in, as plain text without Markdown headings or tables.',
+  'Start with a summary of the conversation so far in at most 5 lines.',
+  'Then list the decisions that are still open, each with what it is waiting on.',
+  'Then list the TODOs that remain.',
+  'Leave out a list that has no items.',
+].join(' ')
+
+const DIGEST = /<digest>([\s\S]*?)<\/digest>/g
+
+type Reservation = { timer: Timer; endedAt: number; sessionId: string; generation: number }
+
+let reservation: Reservation | null = null
+let generation = 0
 let isTurnRunning = false
-let lastTurnAt: number | null = null
+let isCompacting = false
 
 const formatCount = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
@@ -22,44 +41,114 @@ const describeCompaction = (tokens: number, usage?: ModelUsage) => {
   return `${head}; summary cache hit ${rate}% (read ${formatCount(read)} / write ${formatCount(write)} / uncached ${formatCount(uncached)})`
 }
 
-const describeTiming = (sinceTurn: number | null) => {
-  const turn = isTurnRunning ? 'a turn running' : 'no turn running'
-  const since = sinceTurn === null ? 'no turn yet' : `${formatMinutes(sinceTurn)} since the last turn`
-  return `${turn}, ${since}`
+const digestOf = (messages: readonly SessionMessage[]) => {
+  const text = messages[0]?.text ?? ''
+  const block = [...text.matchAll(DIGEST)].at(-1)
+  if (block) return (block[1] ?? '').trim()
+  const start = text.indexOf('Summary:\n')
+  if (start === -1) return ''
+  const summary = text.slice(start + 'Summary:\n'.length).trim()
+  return summary.length > FALLBACK_CHARS ? `${summary.slice(0, FALLBACK_CHARS)}…` : summary
 }
 
-async function log($: EngineInterface, text: string, to?: 'debug') {
+const isStale = (mine: Reservation) => generation !== mine.generation || isTurnRunning
+
+function debug($: EngineInterface, text: string) {
+  return $.ui.log(`compact-large-idle-context: ${text}`, { to: 'debug' })
+}
+
+function cancel($: EngineInterface, why: string) {
+  generation++
+  if (!reservation) return
+  reservation.timer.cancel()
+  reservation = null
+  debug($, `reservation cancelled (${why})`)
+}
+
+async function post($: EngineInterface, text: string) {
   try {
-    await $.ui.log(to ? `compact-large-idle-context: ${text}` : text, to ? { to } : undefined)
-  } catch {}
+    const stored = await $.session.append({ message: { type: 'system', content: [{ type: 'text', text }] } })
+    if (stored.deny === undefined) return
+    await debug($, `stored notice refused: ${stored.deny}`)
+  } catch (error) {
+    await debug($, `stored notice failed: ${error instanceof Error ? error.message : String(error)}`)
+  }
+  await $.ui.log(text)
 }
 
-async function markTurn($: EngineInterface, running: boolean) {
-  isTurnRunning = running
-  lastTurnAt = await $.clock.now()
+async function fire($: EngineInterface, mine: Reservation) {
+  if (reservation !== mine) return
+  reservation = null
+  try {
+    const now = await $.clock.now()
+    if (isStale(mine)) return debug($, 'skipped (a turn started during the check)')
+    const elapsed = now - mine.endedAt
+    if (elapsed < DELAY_MS || elapsed >= LATEST_MS) {
+      return debug($, `skipped (${formatMinutes(elapsed)} since the turn ended)`)
+    }
+    const sessionId = await $.session.id()
+    if (isStale(mine)) return debug($, 'skipped (a turn started during the check)')
+    if (sessionId !== mine.sessionId) return debug($, 'skipped (the session changed)')
+    const { context } = await $.session.usage()
+    if (isStale(mine)) return debug($, 'skipped (a turn started during the check)')
+    const tokens = context.tokens ?? 0
+    if (tokens < MIN_TOKENS) return debug($, `skipped (context is ${formatCount(tokens)} tokens)`)
+    isCompacting = true
+    const result = await $.session.compact({ instructions: DIGEST_INSTRUCTIONS }).finally(() => {
+      isCompacting = false
+    })
+    if (result.skip !== undefined) return debug($, `skipped (compaction vetoed: ${result.skip})`)
+    const line = describeCompaction(result.tokensBefore ?? tokens, result.usage)
+    const digest = digestOf(result.messages)
+    await post($, digest ? `${line}\n\n${digest}` : line)
+  } catch (error) {
+    await debug($, `compaction failed: ${error instanceof Error ? error.message : String(error)}`)
+  } finally {
+    isCompacting = false
+  }
+}
+
+async function reserve($: EngineInterface) {
+  cancel($, 'rescheduling')
+  const expected = generation
+  const endedAt = await $.clock.now()
+  const sessionId = await $.session.id()
+  if (generation !== expected || isTurnRunning) return
+  const mine: Reservation = { timer: { cancel: () => {} }, endedAt, sessionId, generation }
+  mine.timer = $.clock.after(DELAY_MS, () => void fire($, mine))
+  reservation = mine
+  await debug($, `compaction reserved in ${formatMinutes(DELAY_MS)}`)
 }
 
 export const register: Register = on => {
-  on('turn.start', async ($, e, next) => {
-    if (e.agentId === undefined) await markTurn($, true)
+  on('turn.start', ($, e, next) => {
+    isTurnRunning = true
+    cancel($, 'a turn started')
     return next(e)
   })
 
   on('turn.complete', async ($, e, next) => {
     const completed = await next(e)
-    if (e.agentId === undefined) await markTurn($, false)
+    if (e.agentId !== undefined) return completed
+    isTurnRunning = false
+    if (isCompacting) return completed
+    if (e.reason !== 'answer' || e.isAborted) {
+      cancel($, `the turn ended with ${e.reason}`)
+      return completed
+    }
+    await reserve($)
     return completed
   })
 
-  on('session.compact', async ($, e, next) => {
-    if (e.agentId !== undefined) return next(e)
-    const sinceTurn = lastTurnAt === null ? null : (await $.clock.now()) - lastTurnAt
-    await log($, `${e.trigger} compaction, ${describeTiming(sinceTurn)}`, 'debug')
-    const isIdle = e.trigger === 'auto' && !isTurnRunning && sinceTurn !== null && sinceTurn >= IDLE_MS
-    const result = await next(e)
-    if (isIdle && result.skip === undefined) {
-      await log($, describeCompaction(result.tokensBefore ?? 0, result.usage))
+  on('session.compact', ($, e, next) => {
+    if (e.agentId === undefined && (e.trigger === 'manual' || e.trigger === 'auto')) {
+      cancel($, `${e.trigger} compaction`)
     }
-    return result
+    return next(e)
+  })
+
+  on('session.end', ($, e, next) => {
+    cancel($, `session ended (${e.reason})`)
+    return next(e)
   })
 }
