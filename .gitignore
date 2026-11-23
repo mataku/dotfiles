@@ -31,6 +31,10 @@
 !/fish/functions/adb-open-app.fish
 !/fish/functions/_tmuxpopup.fish
 !/fish/functions/_tmuxpopup-claude.fish
+!/fish/functions/adb-dark.fish
+!/fish/functions/adb-light.fish
+!/fish/functions/converter.fish
+!/fish/functions/resizer.fish
 
 emacs.d/elpa/
 
