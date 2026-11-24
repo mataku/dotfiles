@@ -13,7 +13,7 @@ You are the coordinator. You start one agent per stage with `hc`, read what each
 - Run `hc --skill` once if you have not in this session, and `hc templates` to confirm `architect`, `architecture-reviewer`, `implementer` and `code-reviewer` exist. A missing one is a blocker to report, not something to replace with a subagent.
 - Read `~/.config/herdr-core/local/all.md` and `~/.config/herdr-core/local/<repository name>.md` if they exist. They hold rules of this machine's environment that no file in the repository has, and every role reads them too. Follow what stands before their first heading and under `## coordinator`: such a rule may add a step or a stop for the user, or name a file every task must point at, and it never removes the user's approval in stage 3.
 - Pick a kebab-case slug of at most 16 characters for the task, one that has no work folder yet (see Files). A request made after a run's report, or after a rejected design, is a new run with a new slug.
-- If the goal itself is unclear, ask the user before stage 1. Otherwise write `task.md` and go on; the user sees your reading of the task in stage 3.
+- Ask the user before stage 1 when the goal is unclear, or when `task.md` would rest on a guess of yours about what gets built: what is in scope, the form it takes (a popup or a side panel, a command or a hook), which features it needs. The user is still here at this point, and a wrong guess costs a design and its review. Ask everything in one message, each question with its options and what each changes. Do not ask what reading the repository answers, or a question whose options only the code can show: those are the architect's. Otherwise write `task.md` and go on; the user sees your reading of the task in stage 3.
 - Decide whether this is a light run (see below) and write the decision and its reason into `task.md`.
 
 ## Light runs
@@ -180,7 +180,7 @@ After stage 2, whoever raises it (the user, the implementer, a code reviewer), t
 A decision is the user's when it is a requirement that can be read two ways, a trade-off the design did not settle, a change outside the stated scope, a reviewer and an author who still disagree after two rounds, or anything destructive or outside this checkout.
 
 - Do not answer it yourself unless the answer follows from `task.md` or from what the user already said.
-- Ask the user with the question, the options and your recommendation, then end your turn with the question as its last line (see Waiting); do not keep working around the question.
+- Ask the user with the question, the options, what each option costs, the facts an agent found that bear on the choice, and your recommendation, then end your turn with the question as its last line (see Waiting); do not keep working around the question.
 - Leave the agents alive while you wait, and pass the answer on with `hc send`.
 
 ## What you report
