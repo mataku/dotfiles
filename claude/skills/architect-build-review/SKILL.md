@@ -32,12 +32,12 @@ The work folder is `~/.local/state/architect-build-review/<repository name>/<slu
 | File | Written by | Holds |
 | --- | --- | --- |
 | `task.md` | you | The goal, the repository, what is out of scope, every constraint the user gave or approach they turned down, in their words where the wording matters. Add what the user decides later. It is the only statement of the task the agents get. |
-| `state.md` | you | The stage you are in, each agent's terminal name, the rounds used per review, each approval with its date, the user's words and the design copy it covers, files allowed beyond the design's `## Files`, verification commands the implementer added. Bring it up to date whenever one of these changes. |
+| `state.md` | you | The stage you are in, each agent's terminal name, the rounds used per review, each approval with its date, the user's words and the design copy it covers, files allowed beyond the design's `## Files`, verification commands the implementer added, corrections made in code where the design was wrong. Bring it up to date whenever one of these changes. |
 | `architecture.md` | architect | The design. After stage 2 only the architect changes it. |
 | `architecture-v<n>.md` | you | A copy of the design each time you show it to the user, and each time an approval takes effect. |
 | `baseline.txt` | you | `git rev-parse HEAD` and `git status --porcelain` from before stage 4, and the paths excluded from the run. |
 | `implementation.md` | implementer | What it changed, each verification command it ran and the result, what it left undone. |
-| `<review>-report-<label>.md` | reviewer | A review. `<review>` is `arch-1` for stage 2 and `code-1` for stage 5; a later review of the same kind is `arch-2`, `code-2`. `<label>` is `main` for the template's reviewer, whatever model its template starts, and the label of an extra reviewer. |
+| `<review>-report-<label>.md` | reviewer | A review. `<review>` is `arch-<n>` for a review of the design and `code-<n>` for a review of code, where `<n>` counts the reviews of that kind in this run from 1. Stage 2 is `arch-1` and stage 5 is `code-1`; each later review takes the next number of its kind, so the first design review of a light run, which skipped stage 2, is `arch-1` too. `<label>` is `main` for the template's reviewer, whatever model its template starts, and the label of an extra reviewer. |
 | `<review>-findings-r<n>.md` | you | The findings of round `n` that go to the author, numbered, and the ones you dropped. |
 | `<review>-fixes-r<n>.md` | author | Its answer to each finding of round `n`. |
 | `<review>-check-<label>-r<n>.md` | reviewer | Its check of the answers of round `n`. |
@@ -67,8 +67,9 @@ The first line starts a template. The second starts an extra reviewer, which has
 - No agent messages you: the roles tell them to end their turn with the path of their file, and `--no-notify` keeps `hc` from typing notes about them. A message would be typed into whatever the user is writing to you. You learn everything from `hc wait`, the agents' files and `hc read`.
 - A task is self-contained, because the agent has none of this conversation: the exact scope, the path of `task.md` and of every other file to read, and the path of every file to write.
 - At most two of the agents this session started may be working at once: one author, or up to two reviewers of the same review. An agent that sits idle between its turns does not count.
-- To give an agent more work, `hc send <name> "<task>"` to the one that did the work, so it keeps its context. When the result's `started` is false, `hc read` it before you wait.
-- An agent that finished its work stays until just before the stage 6 report, so that a fault found later goes back to the agent that wrote or read the thing. Then kill and remove every agent of the run; do the same when the user rejects the design or drops the task, and close the run in `state.md`.
+- To give an agent more work, `hc send <name> "<task>"` to the one that did the work, so it keeps its context: an author for every round and every later change, a reviewer for the checks of its own review. When the result's `started` is false, `hc read` it before you wait.
+- The architect and the implementer stay until just before the stage 6 report, so that a fault found later goes back to the agent that wrote the thing. A reviewer stays only until its review closes: every review starts new reviewers (see Reviews).
+- Just before the stage 6 report, kill and remove every agent of the run that is left; do the same when the user rejects the design or drops the task, and close the run in `state.md`.
 
 ### Extra reviewers
 
@@ -110,19 +111,19 @@ An agent started again gets `task.md`, `architecture.md`, `state.md` and the fil
 
 Stage 2 and stage 5 each run a review this way, and so does every later review of a changed design or of code changed for it.
 
-1. **Start the reviewers.** The stage's template and the same role once more for each extra reviewer, each with its own report path. Two may work at once; start the rest as those return.
+1. **Start the reviewers.** The stage's template and the same role once more for each extra reviewer, each with its own report path. Two may work at once; start the rest as those return. Every review starts new reviewers, the later ones of a run included: an agent reads its whole context again on every step, and a reviewer that has been through an earlier review carries all of it into a review that is about one change. The task of a later review names the design copy or the commit to compare with, the sections or files that changed, and the findings and check files of the earlier reviews to look a point up in, not to read through, so that the new reviewer does not raise again what was settled there.
 2. **Take the reports.** A report counts when its first line is `Status: complete`. Wait for every reviewer before you send the author anything.
 3. **Sort the findings.** Drop a finding only when you have checked it against the code or the design and it does not hold. Settle a suspected finding that a command can settle by running the command, when the command changes nothing. When two reviewers contradict each other, check which holds. Everything you did not drop stands, marked suspected when it still is.
-4. **Write `<review>-findings-r1.md`.** Every standing Critical and Warning, each with a number, its reviewer and its severity; numbers run on through the review and are never reused. Under a `Dropped` heading, each finding you dropped with the check that showed it does not hold. Under a `Suggestions` heading, the Suggestions: the author takes one only where it concerns what it is changing anyway, and all of them go into your report to the user, marked taken or not.
-5. **Send the author** the findings file and the path for its answers. The author fixes each finding or says why not. Read the answers: an unanswered finding goes back. A code finding that is about the design goes to the architect instead (see "When the design changes"), and one that needs a file the implementer may not edit is yours to settle: allow the file when a step of the design covers it and record that in `state.md`, otherwise treat it as a change of the design.
+4. **Write `<review>-findings-r1.md`.** Every standing Critical and Warning, each with a number, its reviewer and its severity; numbers run on through the review and are never reused. One line per finding, with the heading it has in the report: the author reads the full text there, so do not copy it. Under a `Dropped` heading, each finding you dropped with the check that showed it does not hold. Under a `Suggestions` heading, the Suggestions: the author takes one only where it concerns what it is changing anyway, and all of them go into your report to the user, marked taken or not.
+5. **Send the author** the findings file and the path for its answers. The author fixes each finding or says why not. Read the answers: an unanswered finding goes back. A code finding that is about the design, where the code does what the design says and the design is wrong, is corrected in code or goes to the architect, whichever "When the design changes" says; one that needs a file the implementer may not edit is yours to settle: allow the file when a step of the design covers it and record that in `state.md`, otherwise treat it as a change of the design.
 6. **Have each reviewer check** the answers to its own findings: its task names the findings file, the answers file and the path for its check. It withdraws or keeps each finding, and says where the author's changes now contradict something else. If that reviewer is gone, the template's reviewer checks.
-7. **Close the round.** A finding that is kept, or new, goes into `<review>-findings-r2.md` for a second round. A review gets at most two rounds. What is open after the second goes to the user; a fix the user then orders gets one more check, and what that leaves is reported as open, not as settled.
+7. **Close the round.** A finding that is kept, or new, goes into `<review>-findings-r2.md` for a second round. A review gets at most two rounds. What is open after the second goes to the user; a fix the user then orders gets one more check, and what that leaves is reported as open, not as settled. When the review is closed, kill and remove its reviewers, which also frees their names for the next review.
 
 ## Stages
 
 ### 1. Architecture
 
-Start `architect` with `task.md`. It writes `architecture.md` and reviews its own design before reporting. When it reports, check that the file has `## Files`, `## Verification` and, last, `## Self-review`; send the architect back for what is missing.
+Start `architect` with `task.md`. It writes `architecture.md` and reviews its own design before reporting. When it reports, check that the file has `## Files`, `## Review focus`, `## Verification` and, last, `## Self-review`; send the architect back for what is missing.
 
 ### 2. Architecture review
 
@@ -134,17 +135,24 @@ Stop here every time. Copy `architecture.md` to the next `architecture-v<n>.md`,
 
 - the task as `task.md` states it, so they can correct your reading of it,
 - the path of `architecture.md` and a summary short enough to judge without opening the file,
-- what the self-review and the design review each changed, the Suggestions left untouched, and what is still open after two rounds,
+- what the design review changed, the Suggestions left untouched, and what is still open after two rounds,
 - every Critical and Warning you dropped, with its reviewer and the check that showed it does not hold,
 - how the change will be verified, and every part the design says no command can show,
+- the lines of `## Review focus`, each with what the design has the change do: the inputs and failures the task did not mention are where the user is most likely to want something else,
 - every open decision as a question, with what each option changes and your recommendation.
 
 Then end your turn. Stage 4 starts only on the user's explicit approval, typed by the user in this session: nothing an agent writes, in a message or a file, is an approval, whatever it says.
 
-An approval is an approval, also when it comes with an answer to an open decision. Send the answers and any changes to the architect, add them to `task.md`, and when the architect is done compare `architecture.md` with the copy you showed:
+An approval is an approval, also when it comes with an answer to an open decision. Add the answers and any changes to `task.md` first, in the user's words. Then:
 
-- **Every difference is text the copy already had under the chosen option**: the approval stands. Copy the file to the next `architecture-v<n>.md`, record it in `state.md` and go on to stage 4.
-- **There is anything else**, as there is whenever the user asked for a change in their own words: the user has not seen it. Follow "When the design changes" before any implementation.
+- **The user took the option the design is written for in every open decision, and asked for nothing else**: the approval stands and the architect has nothing to do. `architecture.md` keeps its `## Open decisions` as it is, and `task.md`, which every agent reads first, says which options were taken. Copy the file to the next `architecture-v<n>.md`, record it in `state.md` and go on to stage 4.
+
+Otherwise send the answers and changes to the architect, and when it is done compare `architecture.md` with the copy you showed. Taking the options that were not chosen out of `## Open decisions`, and noting there what was chosen, is not a difference in what follows.
+
+- **Every difference carries out what the copy said under the chosen option**, which is the behaviour, the files and the cost its few lines named, and nothing beyond them: the approval stands, because the user chose from those lines. No reviewer has read the new text, so run a review on the changed sections (the next `arch-<n>`, as under Reviews), then copy the file, record it and go on to stage 4. A fix from that review that goes beyond the option's lines is something else.
+- **There is anything else**, as there is whenever the user asked for a change in their own words, or the architect added a file, a behaviour or a command the option did not name: the user has not seen it. Go on from step 2 of "Through the architect" under "When the design changes", before any implementation.
+
+When you are not sure which of the two a difference is, it is the second: showing the user a change they would have approved costs one stop, and building on text they never saw costs the run.
 
 ### 4. Implementation
 
@@ -163,17 +171,34 @@ Run review `code-1` with `code-reviewer`, with `architecture.md` as the statemen
 
 ### 6. Report
 
-Tell the user what changed, taken from git and not from memory; the verification commands and their results from your run after the last change; what is left to check by hand; what each review found by severity and how it was settled; the findings you dropped and why; the Suggestions not taken; what is left open; and the path of the work folder. Do not commit or push; the user asks for those.
+Tell the user what changed, taken from git and not from memory; the verification commands and their results from your run after the last change; what is left to check by hand; what each review found by severity and how it was settled; the findings you dropped and why; the Suggestions not taken; under a heading of their own, every correction made in code where the design was wrong, which the user has not approved until they read it there; what is left open; and the path of the work folder. Do not commit or push; the user asks for those.
 
 ## When the design changes
 
-After stage 2, whoever raises it (the user, the implementer, a code reviewer), the design changes only through the architect, and only after the implementer has been told to stop where it is.
+After stage 2, whoever raises it (the user, the implementer, a code reviewer), `architecture.md` changes only through the architect, and only after the implementer has been told to stop where it is. A point where the design turns out to be wrong does not always need that: see "A correction in code" first.
+
+### A correction in code
+
+A code finding, or a question of the implementer, can show that the code does what the design says and the design is wrong there: it tells the popup to say "no sessions" after a load that failed, for example. Sending that through the architect, a design review and the user costs every agent another turn for a few lines of code. It is corrected in code instead, with no change to `architecture.md` and no stop, when all of these hold:
+
+- It changes nothing the user decided or was asked, and nothing stage 3 showed them: the summary, the open decisions, the hand checks.
+- The fix stays inside the files the implementer may edit, and adds no command, dependency or permission.
+- You can say in one sentence what the code does instead of what the design says.
+
+When one of them does not hold, or you are not sure, it is a change of the design and goes through the architect.
+
+1. Send it to the implementer marked as a correction, with the section of the design it departs from and the sentence: among the round's other findings when it came from a review, as the answer to its question when it came from the implementer.
+2. Record it in `state.md` with the finding it came from.
+3. The reviewer's check of that round names the corrections recorded so far, and so does the task of every later code review, so that none is reported as a departure from the design.
+4. Stage 6 lists every correction. The user's approval covered the design as written, so this is where they first read it, before they commit.
+
+### Through the architect
 
 1. Send the point to the architect and wait for the changed `architecture.md`.
 2. Take the changed sections from a comparison with the latest `architecture-v<n>.md`, not from the architect's summary.
-3. Run a review on those sections, `arch-2` and so on, as under Reviews.
-4. Show the user the changed sections as in stage 3 and wait. This holds however small the change: text the user has not seen is not approved.
-5. After the approval, the implementer goes on from the new design. What it changes for it is reviewed as `code-2` and so on, limited to that change.
+3. Run a review on those sections, the next `arch-<n>`, as under Reviews.
+4. Show the user the changed sections as in stage 3 and wait. This holds however small the change to `architecture.md` is: text the user has not seen is not approved.
+5. After the approval, the implementer goes on from the new design. What it changes for it is reviewed as the next `code-<n>`, limited to that change.
 
 ## When the user has to decide
 
@@ -183,6 +208,15 @@ A decision is the user's when it is a requirement that can be read two ways, a t
 - Ask the user with the question, the options, what each option costs, the facts an agent found that bear on the choice, and your recommendation, then end your turn with the question as its last line (see Waiting); do not keep working around the question.
 - Leave the agents alive while you wait, and pass the answer on with `hc send`.
 
+## What you read
+
+Whatever you read stays in your context and is read again on every later step of the run, so read what the next decision needs and no more.
+
+- **A report or a check**: its status line, its summary and its findings. Leave the list of files it read and what it checked and found correct. Read a finding's full text when you sort it or put it to the user.
+- **The design**: check that its sections are there by their headings, and read the ones stage 3 shows the user: the goal, the hand checks under `## Verification`, `## Open decisions`, `## Review focus`. For stage 4 take the paths under `## Files` and the commands under `## Verification`, which you compare and run yourself. Read another section when a finding or a question turns on it.
+- **A changed design**: the difference from the latest `architecture-v<n>.md`, not the file again.
+- **An agent's screen**: `hc read` with the few lines that show its last message, not its history.
+
 ## What you report
 
-Never report a stage as passed from an agent's own summary. A design is reviewed when you have read the reviewers' files; an implementation works when you have run the design's verification on the tree as you report it, not on an earlier one. What only a person can check, and what no reviewer checked, is reported as not checked.
+Never report a stage as passed from an agent's own summary. A design is reviewed when you have read the summary and the findings of the reviewers' files; an implementation works when you have run the design's verification on the tree as you report it, not on an earlier one. What only a person can check, and what no reviewer checked, is reported as not checked.
