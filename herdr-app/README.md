@@ -22,6 +22,10 @@ A local Markdown file rendered in a pane. `cmd-shift-m` picks the file.
 
 ![markdown](./misc/markdown.png)
 
+### session-history
+
+Past Claude Code sessions of the focused terminal's repository in a popup, newest first. `cmd-shift-r` opens it; `ctrl-o` or a click on `Other folders` shows the sessions of all other folders too. Typing filters by title, folder and the first recorded prompt, and after a short pause also looks through the transcripts' text. Enter resumes the session in a new tab in its folder.
+
 ### simulators
 
 iOS simulators and Android emulators, with the running device's screen in a side panel.

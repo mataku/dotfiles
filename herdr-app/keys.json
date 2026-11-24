@@ -19,6 +19,7 @@
     "cmd-p": "mod.open:picker",
     "cmd-shift-m": "mod.open:markdown-preview",
     "cmd-shift-c": "mod.open:containers",
+    "cmd-shift-r": "mod.open:session-history",
     "cmd-shift-p": "app.palette",
     "cmd-,": "app.settings",
     "cmd-d": "pane.split:right",
