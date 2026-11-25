@@ -150,12 +150,12 @@ test('asks the summarizer for a digest block', async ($, on) => {
   expect(stub.instructions[0]).toContain('</digest>')
 })
 
-test('shows the digest under the compaction line as one log line', async ($, on) => {
+test('shows the compaction line and each digest line as separate log lines', async ($, on) => {
   const stub = await compactOnce($, on, {
     compact: summarized('Summary:\n1. Intent\n\n<digest>\nDid A and B.\n\nOpen\n- X or Y\n\nTODO\n- write Z\n</digest>\n\nContinue the conversation.'),
   })
 
-  expect(shown(stub)).toEqual([`${STATS}\n\nDid A and B.\n\nOpen\n- X or Y\n\nTODO\n- write Z`])
+  expect(shown(stub)).toEqual([STATS, 'Did A and B.', 'Open', '- X or Y', 'TODO', '- write Z'])
   expect(stub.posts).toEqual([])
 })
 
@@ -164,7 +164,7 @@ test('posts the last digest block when the summary quotes an earlier one', async
     compact: summarized('Summary:\nquoted <digest>old</digest>\n\n<digest>new</digest>'),
   })
 
-  expect(shown(stub)).toEqual([`${STATS}\n\nnew`])
+  expect(shown(stub)).toEqual([STATS, 'new'])
 })
 
 test('ignores a digest block quoted by a message kept after the summary', async ($, on) => {
@@ -179,7 +179,7 @@ test('ignores a digest block quoted by a message kept after the summary', async 
     }),
   })
 
-  expect(shown(stub)).toEqual([`${STATS}\n\nreal`])
+  expect(shown(stub)).toEqual([STATS, 'real'])
 })
 
 test('posts the start of the summary when it carries no digest block', async ($, on) => {
@@ -187,7 +187,7 @@ test('posts the start of the summary when it carries no digest block', async ($,
     compact: summarized(`Preamble.\n\nSummary:\n1. Intent: ${'x'.repeat(3000)}`),
   })
 
-  expect(shown(stub)).toEqual([`${STATS}\n\n1. Intent: ${'x'.repeat(1489)}…`])
+  expect(shown(stub)).toEqual([STATS, `1. Intent: ${'x'.repeat(1489)}…`])
 })
 
 test('posts the compaction line alone when an empty digest block is all there is', async ($, on) => {
@@ -533,3 +533,9 @@ for (const value of ['', '0', '-5', 'abc']) {
     expect(stub.logs.some(l => l.to === 'debug' && l.text.includes('context is 199,999 tokens'))).toBe(true)
   })
 }
+
+test('drops trailing spaces and carriage returns from digest lines', async ($, on) => {
+  const stub = await compactOnce($, on, { compact: summarized('<digest>\r\nDid A.  \r\n\r\nTODO\r\n- B\r\n</digest>') })
+
+  expect(shown(stub)).toEqual([STATS, 'Did A.', 'TODO', '- B'])
+})

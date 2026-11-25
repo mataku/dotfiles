@@ -18,18 +18,15 @@ A Claude Code mod (function hooks) that compacts a large context once, shortly b
 
   ```
   Compacted idle context of 250,000 tokens; summary cache hit 90.0% (read 180,000 / write 19,000 / uncached 1,000)
-
   Moved the idle compaction back into the mod and added a digest post.
-
   Open decisions
   - Whether threshold compactions should post a digest too (waiting on a week of use)
-
   TODO
   - Turn off the built-in idle compaction in settings.json
   ```
 
   The hit rate is `cache read / (cache read + cache write + uncached)` of the summarizer's own request, and is left out when the compaction reports no usage.
-- The notice is a `$.ui.log` line: drawn dim on screen, stored in the session's transcript, and never sent to the model. A `system` row added with `$.session.append` is stored too, but the running session does not draw it, so it is not used.
+- Each line of the notice is a `$.ui.log` row of its own, and blank lines are left out: a newline inside one row is drawn as `�` and the row runs on as one line. A row is drawn dim on screen, stored in the session's transcript, and never sent to the model. A `system` row added with `$.session.append` is stored too, but the running session does not draw it, so it is not used.
 - When the summary carries no `<digest>` block, the notice shows the first 1,500 characters of the summary instead.
 - Reservations, cancellations and skips go to the debug log only (`claude --debug`).
 

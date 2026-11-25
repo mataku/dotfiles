@@ -106,7 +106,10 @@ async function fire($: EngineInterface, mine: Reservation) {
     if (result.skip !== undefined) return debug($, `skipped (compaction vetoed: ${result.skip})`)
     const line = describeCompaction(result.tokensBefore ?? tokens, result.usage)
     const digest = digestOf(result.messages)
-    await $.ui.log(digest ? `${line}\n\n${digest}` : line)
+    for (const row of [line, ...digest.split(/\r?\n/)]) {
+      const text = row.trimEnd()
+      if (text) await $.ui.log(text)
+    }
   } catch (error) {
     await debug($, `compaction failed: ${error instanceof Error ? error.message : String(error)}`)
   } finally {
