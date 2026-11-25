@@ -74,8 +74,8 @@ ShowStatusBar = true
 
 [bootstrap.macos.defaults.NSGlobalDomain]
 AppleShowAllExtensions = true
-InitialKeyRepeat = 15
-KeyRepeat = 2
+InitialKeyRepeat = 15.0
+KeyRepeat = 2.0
 NSAutomaticCapitalizationEnabled = true
 NSAutomaticDashSubstitutionEnabled = false
 NSAutomaticPeriodSubstitutionEnabled = false
