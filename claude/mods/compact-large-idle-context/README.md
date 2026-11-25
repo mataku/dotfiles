@@ -14,15 +14,15 @@ A Claude Code mod (function hooks) that compacts a large context once, shortly b
   - No turn started while these checks ran.
 - The compaction runs once. It does not reserve another one by itself, and a failed or vetoed compaction is not retried.
 - The compaction asks the summarizer to end its summary with a `<digest>` block for the person: a summary of the conversation in at most 5 lines, the decisions still open, and the TODOs that remain, in the language the person writes in. The request rides on the summarizer's own request as `/compact <instructions>` does, so it costs no extra model call.
-- When the compaction succeeds, the mod posts one notice in the conversation: the context size and the summarizer's cache hit rate, then the digest. For example:
+- When the compaction succeeds, the mod posts one notice in the conversation: the context size and the summarizer's cache hit rate, then the digest. Claude Code puts the plugin's name, cut short, at the head of each line. For example:
 
   ```
-  Compacted idle context of 250,000 tokens; summary cache hit 90.0% (read 180,000 / write 19,000 / uncached 1,000)
-  Moved the idle compaction back into the mod and added a digest post.
-  Open decisions
-  - Whether threshold compactions should post a digest too (waiting on a week of use)
-  TODO
-  - Turn off the built-in idle compaction in settings.json
+  ⏺ compact-large-idle-cont…: Compacted idle context of 250,000 tokens; summary cache hit 90.0% (read 180,000 / write 19,000 / uncached 1,000)
+  ⏺ compact-large-idle-cont…: Moved the idle compaction back into the mod and added a digest post.
+  ⏺ compact-large-idle-cont…: Open decisions
+  ⏺ compact-large-idle-cont…: - Whether threshold compactions should post a digest too (waiting on a week of use)
+  ⏺ compact-large-idle-cont…: TODO
+  ⏺ compact-large-idle-cont…: - Turn off the built-in idle compaction in settings.json
   ```
 
   The hit rate is `cache read / (cache read + cache write + uncached)` of the summarizer's own request, and is left out when the compaction reports no usage.
