@@ -8,7 +8,6 @@ type Stub = {
   logs: { text: string; to: string }[]
   posts: string[]
   instructions: (string | undefined)[]
-  refuseAppend?: () => string
   compactCalls: (string | undefined)[]
   tokens: number | undefined
   sessionId: string
@@ -57,7 +56,6 @@ const stubEngine = (on: On, overrides: Partial<Stub> = {}): Stub => {
   })
   on('session.append', ($, e, next) => {
     const text = e.message.content.map(block => (block.type === 'text' ? block.text : '')).join('')
-    if (stub.refuseAppend) return { deny: stub.refuseAppend() }
     stub.posts.push(text)
     stub.onLog?.(text)
     return next(e)
@@ -81,7 +79,6 @@ const answered = (overrides: Partial<TurnCompleteInput> = {}): TurnCompleteInput
   }) as TurnCompleteInput
 
 const shown = (stub: Stub) => stub.logs.filter(l => l.to !== 'debug').map(l => l.text)
-const transcript = (stub: Stub) => [...stub.posts, ...shown(stub)]
 const reservations = (stub: Stub) => stub.logs.filter(l => l.to === 'debug' && l.text.includes('reserved')).length
 const TEST_TRIGGERS: (string | undefined)[] = ['manual', 'auto', 'precompute']
 const idleCompacts = (stub: Stub) => stub.compactCalls.filter(t => !TEST_TRIGGERS.includes(t)).length
@@ -115,7 +112,7 @@ test('shows one line with the token count and the cache hit breakdown', async ($
   await clock.advance(DELAY)
   await clock.settle()
 
-  expect(transcript(stub)).toEqual([
+  expect(shown(stub)).toEqual([
     'Compacted idle context of 250,000 tokens; summary cache hit 90.0% (read 180,000 / write 19,000 / uncached 1,000)',
   ])
 })
@@ -150,13 +147,13 @@ test('asks the summarizer for a digest block', async ($, on) => {
   expect(stub.instructions[0]).toContain('</digest>')
 })
 
-test('posts the digest under the compaction line as one stored notice', async ($, on) => {
+test('shows the digest under the compaction line as one log line', async ($, on) => {
   const stub = await compactOnce($, on, {
     compact: summarized('Summary:\n1. Intent\n\n<digest>\nDid A and B.\n\nOpen\n- X or Y\n\nTODO\n- write Z\n</digest>\n\nContinue the conversation.'),
   })
 
-  expect(stub.posts).toEqual([`${STATS}\n\nDid A and B.\n\nOpen\n- X or Y\n\nTODO\n- write Z`])
-  expect(shown(stub)).toEqual([])
+  expect(shown(stub)).toEqual([`${STATS}\n\nDid A and B.\n\nOpen\n- X or Y\n\nTODO\n- write Z`])
+  expect(stub.posts).toEqual([])
 })
 
 test('posts the last digest block when the summary quotes an earlier one', async ($, on) => {
@@ -164,7 +161,7 @@ test('posts the last digest block when the summary quotes an earlier one', async
     compact: summarized('Summary:\nquoted <digest>old</digest>\n\n<digest>new</digest>'),
   })
 
-  expect(stub.posts).toEqual([`${STATS}\n\nnew`])
+  expect(shown(stub)).toEqual([`${STATS}\n\nnew`])
 })
 
 test('ignores a digest block quoted by a message kept after the summary', async ($, on) => {
@@ -179,7 +176,7 @@ test('ignores a digest block quoted by a message kept after the summary', async 
     }),
   })
 
-  expect(stub.posts).toEqual([`${STATS}\n\nreal`])
+  expect(shown(stub)).toEqual([`${STATS}\n\nreal`])
 })
 
 test('posts the start of the summary when it carries no digest block', async ($, on) => {
@@ -187,20 +184,13 @@ test('posts the start of the summary when it carries no digest block', async ($,
     compact: summarized(`Preamble.\n\nSummary:\n1. Intent: ${'x'.repeat(3000)}`),
   })
 
-  expect(stub.posts).toEqual([`${STATS}\n\n1. Intent: ${'x'.repeat(1489)}…`])
+  expect(shown(stub)).toEqual([`${STATS}\n\n1. Intent: ${'x'.repeat(1489)}…`])
 })
 
 test('posts the compaction line alone when an empty digest block is all there is', async ($, on) => {
   const stub = await compactOnce($, on, { compact: summarized('<digest>\n \n</digest>') })
 
-  expect(stub.posts).toEqual([STATS])
-})
-
-test('shows the post as a log line when the stored notice is refused', async ($, on) => {
-  const stub = await compactOnce($, on, { compact: summarized('<digest>Did A.</digest>'), refuseAppend: () => 'no' })
-
-  expect(stub.posts).toEqual([])
-  expect(shown(stub)).toEqual([`${STATS}\n\nDid A.`])
+  expect(shown(stub)).toEqual([STATS])
 })
 
 test('omits the hit rate when the compaction reports no usage', async ($, on) => {
@@ -211,7 +201,7 @@ test('omits the hit rate when the compaction reports no usage', async ($, on) =>
   await clock.advance(DELAY)
   await clock.settle()
 
-  expect(transcript(stub)).toEqual(['Compacted idle context of 321,000 tokens'])
+  expect(shown(stub)).toEqual(['Compacted idle context of 321,000 tokens'])
 })
 
 const lateClock = (on: On, stub: Stub) => {
@@ -250,7 +240,7 @@ test('does nothing when the timer fires 58 minutes or more after the turn', asyn
   await clock.wakeAfter(58 * MINUTE, text => text.includes('skipped'))
 
   expect(idleCompacts(stub)).toBe(0)
-  expect(transcript(stub)).toEqual([])
+  expect(shown(stub)).toEqual([])
   expect(stub.logs.some(l => l.to === 'debug' && l.text.includes('58:00 since the turn ended'))).toBe(true)
 })
 
@@ -276,7 +266,7 @@ test('does nothing below 200,000 tokens and does not retry', async ($, on) => {
   await clock.settle()
 
   expect(idleCompacts(stub)).toBe(0)
-  expect(transcript(stub)).toEqual([])
+  expect(shown(stub)).toEqual([])
 })
 
 test('compacts at exactly 200,000 tokens', async ($, on) => {
@@ -449,7 +439,7 @@ test('a failed compaction is not retried', async ($, on) => {
 
   expect(idleCompacts(stub)).toBe(1)
   expect(reservations(stub)).toBe(1)
-  expect(transcript(stub)).toEqual([])
+  expect(shown(stub)).toEqual([])
   expect(stub.logs.some(l => l.to === 'debug' && l.text.includes('compaction failed'))).toBe(true)
 })
 
@@ -464,7 +454,7 @@ test('a vetoed compaction is not retried and shows nothing', async ($, on) => {
   await clock.settle()
 
   expect(idleCompacts(stub)).toBe(1)
-  expect(transcript(stub)).toEqual([])
+  expect(shown(stub)).toEqual([])
 })
 
 test('turns completing during the compaction do not reserve again', async ($, on) => {

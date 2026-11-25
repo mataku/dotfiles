@@ -29,7 +29,7 @@ A Claude Code mod (function hooks) that compacts a large context once, shortly b
   ```
 
   The hit rate is `cache read / (cache read + cache write + uncached)` of the summarizer's own request, and is left out when the compaction reports no usage.
-- The notice is stored in the session's transcript with `$.session.append` (a `system` row, never sent to the model). A `$.ui.log` line is not stored, and is used only when the stored notice is refused.
+- The notice is a `$.ui.log` line: drawn dim on screen, stored in the session's transcript, and never sent to the model. A `system` row added with `$.session.append` is stored too, but the running session does not draw it, so it is not used.
 - When the summary carries no `<digest>` block, the notice shows the first 1,500 characters of the summary instead.
 - Reservations, cancellations and skips go to the debug log only (`claude --debug`).
 

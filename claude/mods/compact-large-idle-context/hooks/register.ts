@@ -65,17 +65,6 @@ function cancel($: EngineInterface, why: string) {
   debug($, `reservation cancelled (${why})`)
 }
 
-async function post($: EngineInterface, text: string) {
-  try {
-    const stored = await $.session.append({ message: { type: 'system', content: [{ type: 'text', text }] } })
-    if (stored.deny === undefined) return
-    await debug($, `stored notice refused: ${stored.deny}`)
-  } catch (error) {
-    await debug($, `stored notice failed: ${error instanceof Error ? error.message : String(error)}`)
-  }
-  await $.ui.log(text)
-}
-
 async function fire($: EngineInterface, mine: Reservation) {
   if (reservation !== mine) return
   reservation = null
@@ -100,7 +89,7 @@ async function fire($: EngineInterface, mine: Reservation) {
     if (result.skip !== undefined) return debug($, `skipped (compaction vetoed: ${result.skip})`)
     const line = describeCompaction(result.tokensBefore ?? tokens, result.usage)
     const digest = digestOf(result.messages)
-    await post($, digest ? `${line}\n\n${digest}` : line)
+    await $.ui.log(digest ? `${line}\n\n${digest}` : line)
   } catch (error) {
     await debug($, `compaction failed: ${error instanceof Error ? error.message : String(error)}`)
   } finally {
