@@ -19,7 +19,7 @@ concurrency:
 
 env:
   # renovate: datasource=github-tags depName=herdrdev/herdr-app
-  HERDR_APP_VERSION: 0.1.17
+  HERDR_APP_VERSION: 0.1.18
 
 jobs:
   test:
