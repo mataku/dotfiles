@@ -5,10 +5,6 @@ end
 . ~/.config/fish/alias.fish
 . ~/.config/fish/env.fish
 
-if type -q rbenv
-  rbenv init - | .
-end
-# pyenv init - | .
 if type -q nodenv
   nodenv init - | .
 end
@@ -42,10 +38,10 @@ function fish_user_key_bindings
   bind \cr fzf_select_history
 end
 
-# if not [ $TMUX ]
-  # tmux
-# end
-
 # bun
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH
+
+if type -q rbenv
+  rbenv init - | .
+end
