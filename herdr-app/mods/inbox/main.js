@@ -185,6 +185,15 @@ export async function loadWhenOnline(sources, host) {
 
 export const isEnabled = (value) => value === true;
 
+export async function pollWhileOn({ isOn, changed, start }) {
+  for (;;) {
+    while (!isOn()) await changed();
+    const timer = start();
+    while (isOn()) await changed();
+    timer.cancel();
+  }
+}
+
 export const enabledAfter = (command, enabled) => (command === "on" ? true : command === "off" ? false : enabled);
 
 const WIDE = /[\u1100-\u115F\u2E80-\uA4CF\uAC00-\uD7A3\uF900-\uFAFF\uFE30-\uFE4F\uFF00-\uFF60\uFFE0-\uFFE6]|\p{Extended_Pictographic}/u;
@@ -268,13 +277,18 @@ export default class Inbox extends View {
     this.role = props()?.button ? "button" : "list";
     this.loading = false;
     this.copied = null;
+    this.wake = null;
     this.width = DEFAULT_PANEL_WIDTH;
     // Why undefined and not null: the Dock badge outlives a reload of this mod, so the first render must set it even when nothing is waiting.
     this.badge = undefined;
     // Why the button polls: a copy starts only once it has been shown, and the panel's copy stays hidden until someone opens it.
     if (this.role !== "button" || checking()) return;
     this.reload(cx);
-    cx.timer.every(POLL_MS, (cx) => this.reload(cx));
+    cx.spawn((cx) => pollWhileOn({
+      isOn: enabled,
+      changed: () => new Promise((resolve) => { this.wake = resolve; }),
+      start: () => cx.timer.every(POLL_MS, (cx) => this.reload(cx)),
+    }));
     cx.spawn(async (cx) => {
       for (;;) {
         this.switchTo(enabledAfter(await nextCommand(), enabled()), cx);
@@ -331,6 +345,7 @@ export default class Inbox extends View {
   }
 
   renderButton(t) {
+    this.wake?.();
     const count = enabled() ? waiting().length : 0;
     this.showCount(count);
     const selected = isPanelOpen();

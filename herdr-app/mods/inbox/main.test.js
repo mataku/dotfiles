@@ -15,7 +15,7 @@ register(`data:text/javascript,${encodeURIComponent(
      stubs[specifier] ? { url: stubs[specifier], shortCircuit: true } : next(specifier, context);`,
 )}`);
 
-const { SOURCES, ageOf, clampText, enabledAfter, forSources, htmlUrlOf, titleBudget, isEnabled, isOnline, isReachable, keyOf, loadAll, loadWhenOnline, mergeResults, parseNotifications, pending, pruneDone, readDone, readState, toItem } = await import("./main.js");
+const { SOURCES, ageOf, clampText, enabledAfter, forSources, htmlUrlOf, titleBudget, isEnabled, isOnline, isReachable, keyOf, loadAll, loadWhenOnline, mergeResults, parseNotifications, pending, pollWhileOn, pruneDone, readDone, readState, toItem } = await import("./main.js");
 const github = SOURCES.find((source) => source.id === "github");
 
 const fields = (over = {}) => ({
@@ -371,4 +371,59 @@ test("forgets items and errors of a source that is no longer registered", () => 
   const gone = toItem("retired", { id: "a", title: "Old" });
   const state = { items: [kept, gone], errors: { github: "boom", retired: "old" }, fetchedAt: 9 };
   assert.deepEqual(forSources(state, ["github"]), { items: [kept], errors: { github: "boom" }, fetchedAt: 9 });
+});
+
+const settle = () => new Promise((resolve) => setImmediate(resolve));
+
+function pollHost(isOn) {
+  const host = { on: isOn, log: [], wake: null };
+  host.set = async (value) => {
+    host.on = value;
+    host.wake?.();
+    await settle();
+  };
+  host.args = {
+    isOn: () => host.on,
+    changed: () => new Promise((resolve) => { host.wake = resolve; }),
+    start: () => {
+      host.log.push("start");
+      return { cancel: () => host.log.push("cancel") };
+    },
+  };
+  return host;
+}
+
+test("has no timer until it is turned on", async () => {
+  const host = pollHost(false);
+  pollWhileOn(host.args);
+  await settle();
+  assert.deepEqual(host.log, []);
+  await host.set(true);
+  assert.deepEqual(host.log, ["start"]);
+});
+
+test("starts its timer at once when it is already on", async () => {
+  const host = pollHost(true);
+  pollWhileOn(host.args);
+  await settle();
+  assert.deepEqual(host.log, ["start"]);
+});
+
+test("cancels its timer when it is turned off and starts a new one when turned on again", async () => {
+  const host = pollHost(true);
+  pollWhileOn(host.args);
+  await settle();
+  await host.set(false);
+  assert.deepEqual(host.log, ["start", "cancel"]);
+  await host.set(true);
+  assert.deepEqual(host.log, ["start", "cancel", "start"]);
+});
+
+test("keeps one timer through redraws that change nothing", async () => {
+  const host = pollHost(true);
+  pollWhileOn(host.args);
+  await settle();
+  await host.set(true);
+  await host.set(true);
+  assert.deepEqual(host.log, ["start"]);
 });
