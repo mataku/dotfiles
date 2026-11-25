@@ -8,6 +8,7 @@ type Stub = {
   logs: { text: string; to: string }[]
   posts: string[]
   instructions: (string | undefined)[]
+  env: Record<string, string>
   compactCalls: (string | undefined)[]
   tokens: number | undefined
   sessionId: string
@@ -31,12 +32,14 @@ const stubEngine = (on: On, overrides: Partial<Stub> = {}): Stub => {
     logs: [],
     posts: [],
     instructions: [],
+    env: {},
     compactCalls: [],
     tokens: 250_000,
     sessionId: 'session-1',
     compact: () => ({ messages: MESSAGES, tokensBefore: 250_000, tokensAfter: 20_000, usage: USAGE }),
     ...overrides,
   }
+  mock.env(on, stub.env)
   on('turn.start', ($, e) => ({ turnId: e.turnId }))
   on('turn.complete', ($, e) => ({ text: e.answer }))
   on('session.end', ($, e) => ({ sessionId: e.sessionId }))
@@ -475,3 +478,58 @@ test('turns completing during the compaction do not reserve again', async ($, on
   expect(idleCompacts(stub)).toBe(1)
   expect(reservations(stub)).toBe(1)
 })
+
+test('the delay and the token floor can be lowered for a manual check', async ($, on) => {
+  const clock = mock.clock(on)
+  const stub = stubEngine(on, {
+    tokens: 1_000,
+    env: { COMPACT_LARGE_IDLE_CONTEXT_DELAY_MINUTES: '1', COMPACT_LARGE_IDLE_CONTEXT_MIN_TOKENS: '1000' },
+  })
+
+  await $.turn.complete(answered())
+  await clock.advance(MINUTE - 1000)
+  await clock.settle()
+  expect(idleCompacts(stub)).toBe(0)
+
+  await clock.advance(1000)
+  await clock.settle()
+  expect(idleCompacts(stub)).toBe(1)
+})
+
+test('a lowered delay still compacts just under 8 minutes after it is due', async ($, on) => {
+  const stub = stubEngine(on, { env: { COMPACT_LARGE_IDLE_CONTEXT_DELAY_MINUTES: '1' } })
+  const clock = lateClock(on, stub)
+
+  await $.turn.complete(answered())
+  await clock.wakeAfter(9 * MINUTE - 1000, text => text.startsWith('Compacted'))
+
+  expect(idleCompacts(stub)).toBe(1)
+})
+
+test('a lowered delay gives up 8 minutes after it is due', async ($, on) => {
+  const stub = stubEngine(on, { env: { COMPACT_LARGE_IDLE_CONTEXT_DELAY_MINUTES: '1' } })
+  const clock = lateClock(on, stub)
+
+  await $.turn.complete(answered())
+  await clock.wakeAfter(9 * MINUTE, text => text.includes('skipped'))
+
+  expect(idleCompacts(stub)).toBe(0)
+  expect(stub.logs.some(l => l.to === 'debug' && l.text.includes('9:00 since the turn ended'))).toBe(true)
+})
+
+for (const value of ['', '0', '-5', 'abc']) {
+  test(`an unusable override (${JSON.stringify(value)}) keeps the defaults`, async ($, on) => {
+    const clock = mock.clock(on)
+    const stub = stubEngine(on, {
+      tokens: 199_999,
+      env: { COMPACT_LARGE_IDLE_CONTEXT_DELAY_MINUTES: value, COMPACT_LARGE_IDLE_CONTEXT_MIN_TOKENS: value },
+    })
+
+    await $.turn.complete(answered())
+    await clock.advance(DELAY)
+    await clock.settle()
+
+    expect(idleCompacts(stub)).toBe(0)
+    expect(stub.logs.some(l => l.to === 'debug' && l.text.includes('context is 199,999 tokens'))).toBe(true)
+  })
+}

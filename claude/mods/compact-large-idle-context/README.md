@@ -33,6 +33,17 @@ A Claude Code mod (function hooks) that compacts a large context once, shortly b
 - When the summary carries no `<digest>` block, the notice shows the first 1,500 characters of the summary instead.
 - Reservations, cancellations and skips go to the debug log only (`claude --debug`).
 
+## Checking it by hand
+
+Two environment variables lower the thresholds so the notice can be seen without waiting 50 minutes. Set them when starting `claude`; an empty, zero, negative or non-numeric value keeps the default.
+
+- `COMPACT_LARGE_IDLE_CONTEXT_DELAY_MINUTES`: minutes from the end of a turn to the compaction (default 50). The timer still gives up 8 minutes after it is due.
+- `COMPACT_LARGE_IDLE_CONTEXT_MIN_TOKENS`: the smallest context that is compacted (default 200,000).
+
+```sh
+COMPACT_LARGE_IDLE_CONTEXT_DELAY_MINUTES=1 COMPACT_LARGE_IDLE_CONTEXT_MIN_TOKENS=1000 claude
+```
+
 ## Setup
 
 Turn off the built-in idle compaction with `"idleCompaction": false` in `~/.claude/settings.json`. Left on, it compacts about 54 minutes after the last request whenever this mod skipped, and that compaction posts no digest.
