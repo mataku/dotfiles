@@ -1,8 +1,9 @@
 import type { EngineInterface, ModelUsage, Register, SessionMessage, Timer } from 'claude-code'
 
-const DELAY_MS = 50 * 60 * 1000
-const LATEST_MS = 58 * 60 * 1000
-const MIN_TOKENS = 200_000
+const MINUTE_MS = 60 * 1000
+const DEFAULT_DELAY_MINUTES = 50
+const GRACE_MS = 8 * MINUTE_MS
+const DEFAULT_MIN_TOKENS = 200_000
 const FALLBACK_CHARS = 1500
 
 const DIGEST_INSTRUCTIONS = [
@@ -17,7 +18,7 @@ const DIGEST_INSTRUCTIONS = [
 
 const DIGEST = /<digest>([\s\S]*?)<\/digest>/g
 
-type Reservation = { timer: Timer; endedAt: number; sessionId: string; generation: number }
+type Reservation = { timer: Timer; endedAt: number; delayMs: number; sessionId: string; generation: number }
 
 let reservation: Reservation | null = null
 let generation = 0
@@ -51,6 +52,20 @@ const digestOf = (messages: readonly SessionMessage[]) => {
   return summary.length > FALLBACK_CHARS ? `${summary.slice(0, FALLBACK_CHARS)}…` : summary
 }
 
+const positiveNumber = (value: string | undefined) => {
+  const n = Number(value)
+  return value !== undefined && value.trim() !== '' && Number.isFinite(n) && n > 0 ? n : undefined
+}
+
+async function delayMs($: EngineInterface) {
+  const minutes = positiveNumber(await $.env.get('COMPACT_LARGE_IDLE_CONTEXT_DELAY_MINUTES'))
+  return (minutes ?? DEFAULT_DELAY_MINUTES) * MINUTE_MS
+}
+
+async function minTokens($: EngineInterface) {
+  return positiveNumber(await $.env.get('COMPACT_LARGE_IDLE_CONTEXT_MIN_TOKENS')) ?? DEFAULT_MIN_TOKENS
+}
+
 const isStale = (mine: Reservation) => generation !== mine.generation || isTurnRunning
 
 function debug($: EngineInterface, text: string) {
@@ -65,17 +80,6 @@ function cancel($: EngineInterface, why: string) {
   debug($, `reservation cancelled (${why})`)
 }
 
-async function post($: EngineInterface, text: string) {
-  try {
-    const stored = await $.session.append({ message: { type: 'system', content: [{ type: 'text', text }] } })
-    if (stored.deny === undefined) return
-    await debug($, `stored notice refused: ${stored.deny}`)
-  } catch (error) {
-    await debug($, `stored notice failed: ${error instanceof Error ? error.message : String(error)}`)
-  }
-  await $.ui.log(text)
-}
-
 async function fire($: EngineInterface, mine: Reservation) {
   if (reservation !== mine) return
   reservation = null
@@ -83,7 +87,7 @@ async function fire($: EngineInterface, mine: Reservation) {
     const now = await $.clock.now()
     if (isStale(mine)) return debug($, 'skipped (a turn started during the check)')
     const elapsed = now - mine.endedAt
-    if (elapsed < DELAY_MS || elapsed >= LATEST_MS) {
+    if (elapsed < mine.delayMs || elapsed >= mine.delayMs + GRACE_MS) {
       return debug($, `skipped (${formatMinutes(elapsed)} since the turn ended)`)
     }
     const sessionId = await $.session.id()
@@ -92,7 +96,9 @@ async function fire($: EngineInterface, mine: Reservation) {
     const { context } = await $.session.usage()
     if (isStale(mine)) return debug($, 'skipped (a turn started during the check)')
     const tokens = context.tokens ?? 0
-    if (tokens < MIN_TOKENS) return debug($, `skipped (context is ${formatCount(tokens)} tokens)`)
+    const floor = await minTokens($)
+    if (isStale(mine)) return debug($, 'skipped (a turn started during the check)')
+    if (tokens < floor) return debug($, `skipped (context is ${formatCount(tokens)} tokens)`)
     isCompacting = true
     const result = await $.session.compact({ instructions: DIGEST_INSTRUCTIONS }).finally(() => {
       isCompacting = false
@@ -100,7 +106,10 @@ async function fire($: EngineInterface, mine: Reservation) {
     if (result.skip !== undefined) return debug($, `skipped (compaction vetoed: ${result.skip})`)
     const line = describeCompaction(result.tokensBefore ?? tokens, result.usage)
     const digest = digestOf(result.messages)
-    await post($, digest ? `${line}\n\n${digest}` : line)
+    for (const row of [line, ...digest.split(/\r?\n/)]) {
+      const text = row.trimEnd()
+      if (text) await $.ui.log(text)
+    }
   } catch (error) {
     await debug($, `compaction failed: ${error instanceof Error ? error.message : String(error)}`)
   } finally {
@@ -113,11 +122,12 @@ async function reserve($: EngineInterface) {
   const expected = generation
   const endedAt = await $.clock.now()
   const sessionId = await $.session.id()
+  const delay = await delayMs($)
   if (generation !== expected || isTurnRunning) return
-  const mine: Reservation = { timer: { cancel: () => {} }, endedAt, sessionId, generation }
-  mine.timer = $.clock.after(DELAY_MS, () => void fire($, mine))
+  const mine: Reservation = { timer: { cancel: () => {} }, endedAt, delayMs: delay, sessionId, generation }
+  mine.timer = $.clock.after(delay, () => void fire($, mine))
   reservation = mine
-  await debug($, `compaction reserved in ${formatMinutes(DELAY_MS)}`)
+  await debug($, `compaction reserved in ${formatMinutes(delay)}`)
 }
 
 export const register: Register = on => {
