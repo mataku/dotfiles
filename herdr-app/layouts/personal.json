@@ -88,6 +88,19 @@
               "window_drag": true
             },
             {
+              "id": "scheduled-tasks-toggle",
+              "type": "block",
+              "content": {
+                "mod": "scheduled-tasks",
+                "props": {
+                  "button": true
+                }
+              },
+              "size": {
+                "px": 70
+              }
+            },
+            {
               "id": "inbox-toggle",
               "type": "block",
               "content": {
@@ -97,7 +110,7 @@
                 }
               },
               "size": {
-                "px": 88
+                "px": 70
               }
             },
             {
