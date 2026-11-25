@@ -9,14 +9,16 @@ curl -fsSL https://raw.githubusercontent.com/mataku/dotfiles/develop/setup.sh | 
 <table width="100%">
   <thead>
     <tr>
+      <th align="center">Herdr.app</th>
       <th align="center">WezTerm</th>
       <th align="center">Neovim</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td width="50%"><img src="./misc/wezterm.png"/></td>
-      <td width="50%"><img src="./misc/neovim.png"/></td>
+      <td width="33%"><img src="./herdr-app/misc/timeline.png"/></td>
+      <td width="33%"><img src="./misc/wezterm.png"/></td>
+      <td width="33%"><img src="./misc/neovim.png"/></td>
     </tr>
   </tbody>
 </table>
