@@ -1,0 +1,10 @@
+{
+  "name": "reply-language-guard",
+  "version": "0.1.0",
+  "description": "Sends the main session back once when its reply is mostly English, asking for the whole reply in Japanese, and hides the English reply",
+  "author": {
+    "name": "Takuma Homma"
+  },
+  "license": "MIT",
+  "types": "./types/index.d.ts"
+}
