@@ -98,10 +98,13 @@ const HEADING = 'Idle compaction digest (cleared when you send a message)'
 
 const band = async ($: Engine, props = BAND) => {
   const ui = await $.ui.mount({ plugin: 'compact-large-idle-context', surface: 'terminal', component: 'AbovePrompt', props })
-  const texts = (await ui.findAll({ type: 'Text' })).map(t => t.text)
+  const heading = (await ui.find({ type: 'Text', text: HEADING }))?.text
+  const rows = (await ui.findAll({ type: 'Box' })).filter(b => b.key?.startsWith('line-')).map(b => b.text)
   await ui.unmount()
-  return texts
+  return heading === undefined ? rows : [heading, ...rows]
 }
+
+const nested = (...lines: string[]) => [HEADING, ...lines.map((line, i) => `${i === 0 ? '  ⎿ ' : '    '}${line}`)]
 
 const shown = (stub: Stub) => stub.logs.filter(l => l.to !== 'debug').map(l => l.text)
 const reservations = (stub: Stub) => stub.logs.filter(l => l.to === 'debug' && l.text.includes('reserved')).length
@@ -179,7 +182,7 @@ test('logs only the compaction line and shows the digest above the prompt withou
 
   expect(shown(stub)).toEqual([STATS])
   expect(stub.posts).toEqual([])
-  expect(await band($)).toEqual([HEADING, 'Did A and B.', 'Open', '- X or Y', 'TODO', '- write Z'])
+  expect(await band($)).toEqual(nested('Did A and B.', 'Open', '- X or Y', 'TODO', '- write Z'))
 })
 
 test('shows the last digest block when the summary quotes an earlier one', async ($, on) => {
@@ -187,7 +190,7 @@ test('shows the last digest block when the summary quotes an earlier one', async
     compact: summarized('Summary:\nquoted <digest>old</digest>\n\n<digest>new</digest>'),
   })
 
-  expect(await band($)).toEqual([HEADING, 'new'])
+  expect(await band($)).toEqual(nested('new'))
 })
 
 test('ignores a digest block quoted by a message kept after the summary', async ($, on) => {
@@ -202,7 +205,7 @@ test('ignores a digest block quoted by a message kept after the summary', async 
     }),
   })
 
-  expect(await band($)).toEqual([HEADING, 'real'])
+  expect(await band($)).toEqual(nested('real'))
 })
 
 test('shows the start of the summary when it carries no digest block', async ($, on) => {
@@ -210,7 +213,7 @@ test('shows the start of the summary when it carries no digest block', async ($,
     compact: summarized(`Preamble.\n\nSummary:\n1. Intent: ${'x'.repeat(3000)}`),
   })
 
-  expect(await band($)).toEqual([HEADING, `1. Intent: ${'x'.repeat(1489)}…`])
+  expect(await band($)).toEqual(nested(`1. Intent: ${'x'.repeat(1489)}…`))
 })
 
 test('shows no band when an empty digest block is all there is', async ($, on) => {
@@ -224,7 +227,7 @@ test('shows every line of a long digest', async ($, on) => {
   const lines = Array.from({ length: 30 }, (_, i) => `・項目 ${i}: ${'再認証の有効期限と締め出しの解除条件を決めた。'.repeat(4)}`)
   await compactOnce($, on, { compact: summarized(`<digest>\n${lines.join('\n\n')}\n</digest>`) })
 
-  expect(await band($)).toEqual([HEADING, ...lines])
+  expect(await band($)).toEqual(nested(...lines))
 })
 
 test('a band already on screen shows the digest once the compaction finishes', async ($, on) => {
@@ -237,8 +240,31 @@ test('a band already on screen shows the digest once the compaction finishes', a
   await clock.advance(DELAY)
   await clock.settle()
 
-  expect((await held.findAll({ type: 'Text' })).map(t => t.text)).toEqual([HEADING, 'Did A.'])
+  expect((await held.findAll({ type: 'Box' })).filter(b => b.key?.startsWith('line-')).map(b => b.text)).toEqual(['  ⎿ Did A.'])
   await held.unmount()
+})
+
+test('draws every digest line dim, as a log row is', async ($, on) => {
+  await compactOnce($, on, { compact: summarized('<digest>Did A.\nTODO\n- B</digest>') })
+  const ui = await $.ui.mount({ plugin: 'compact-large-idle-context', surface: 'terminal', component: 'AbovePrompt', props: BAND })
+
+  const texts = await ui.findAll({ type: 'Text' })
+  expect(texts.length).toBe(7)
+  expect(texts.every(t => t.props.dimColor === true)).toBe(true)
+  await ui.unmount()
+})
+
+test('keeps a wrapped digest line under its own text, not under the branch', async ($, on) => {
+  await compactOnce($, on, { compact: summarized('<digest>Did A.\nTODO</digest>') })
+  const ui = await $.ui.mount({ plugin: 'compact-large-idle-context', surface: 'terminal', component: 'AbovePrompt', props: BAND })
+
+  const marks = (await ui.findAll({ type: 'Box' })).filter(b => b.key?.startsWith('mark-'))
+  expect(marks.map(b => [b.text, b.props.width, b.props.flexShrink])).toEqual([
+    ['  ⎿ ', 4, 0],
+    ['    ', 4, 0],
+  ])
+  expect((await ui.find({ type: 'Text', text: 'Did A.' }))?.props.wrap).toBe('wrap')
+  await ui.unmount()
 })
 
 test('draws no band before any compaction', async ($, on) => {
@@ -266,7 +292,7 @@ test('a background task notification keeps the digest', async ($, on) => {
 
   await $.prompt.submit({ text: '<task-notification></task-notification>', wait: false, origin: { kind: 'task-notification' } })
 
-  expect(await band($)).toEqual([HEADING, 'Did A.'])
+  expect(await band($)).toEqual(nested('Did A.'))
 })
 
 test('the session ending clears the digest', async ($, on) => {
@@ -618,5 +644,5 @@ for (const value of ['', '0', '-5', 'abc']) {
 test('drops trailing spaces and carriage returns from digest lines', async ($, on) => {
   await compactOnce($, on, { compact: summarized('<digest>\r\nDid A.  \r\n\r\nTODO\r\n- B\r\n</digest>') })
 
-  expect(await band($)).toEqual([HEADING, 'Did A.', 'TODO', '- B'])
+  expect(await band($)).toEqual(nested('Did A.', 'TODO', '- B'))
 })

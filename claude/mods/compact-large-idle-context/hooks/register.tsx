@@ -19,6 +19,7 @@ const DIGEST_INSTRUCTIONS = [
 
 const DIGEST = /<digest>([\s\S]*?)<\/digest>/g
 const HEADING = 'Idle compaction digest (cleared when you send a message)'
+const BRANCH = '  ⎿ '
 const PERSON_ORIGINS = ['composer', 'bridge', 'sdk']
 
 const digestLines = atom({ plugin: 'compact-large-idle-context', key: 'digest' } as const, [] as string[])
@@ -186,9 +187,14 @@ export const register: Register = on => {
       <Box flexDirection="column">
         <Text dimColor>{HEADING}</Text>
         {lines.map((line, i) => (
-          <Text key={String(i)} wrap="wrap">
-            {line}
-          </Text>
+          <Box key={`line-${i}`} flexDirection="row">
+            <Box key={`mark-${i}`} width={BRANCH.length} flexShrink={0}>
+              <Text dimColor>{i === 0 ? BRANCH : ' '.repeat(BRANCH.length)}</Text>
+            </Box>
+            <Text dimColor wrap="wrap">
+              {line}
+            </Text>
+          </Box>
         ))}
       </Box>
     )

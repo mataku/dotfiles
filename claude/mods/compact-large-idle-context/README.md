@@ -20,17 +20,17 @@ A Claude Code mod (function hooks) that compacts a large context once, shortly b
   ⏺ compact-large-idle-cont…: Compacted idle context of 250,000 tokens; summary cache hit 90.0% (read 180,000 / write 19,000 / uncached 1,000)
 
   Idle compaction digest (cleared when you send a message)
-  Moved the idle compaction back into the mod and added a digest post.
-  Open decisions
-  - Whether threshold compactions should post a digest too (waiting on a week of use)
-  TODO
-  - Turn off the built-in idle compaction in settings.json
+    ⎿ Moved the idle compaction back into the mod and added a digest post.
+      Open decisions
+      - Whether threshold compactions should post a digest too (waiting on a week of use)
+      TODO
+      - Turn off the built-in idle compaction in settings.json
   > (prompt)
   ```
 
   The hit rate is `cache read / (cache read + cache write + uncached)` of the summarizer's own request, and is left out when the compaction reports no usage.
 - The line is a `$.ui.log` row: drawn dim, stored in the session's transcript, and never sent to the model. The digest is not put in the transcript because a `$.ui.log` row is drawn as one line: a newline inside it is drawn as `�`, and one row per digest line puts the plugin's name and a blank line between every line. A `system` row added with `$.session.append` is stored, but the running session does not draw it.
-- The band leaves out blank lines and wraps long lines. It is cleared when the person sends a message or the session ends (including `/clear`); a background task notification keeps it. It is not stored, so the digest is gone after a restart, and it yields to a survey.
+- The band is drawn dim like the logged line, so it does not read as part of the conversation. The digest hangs under its heading from a `⎿` branch, as Claude Code's recap does, and a wrapped line stays under the digest's text. It leaves out blank lines. It is cleared when the person sends a message or the session ends (including `/clear`); a background task notification keeps it. It is not stored, so the digest is gone after a restart, and it yields to a survey.
 - When the summary carries no `<digest>` block, the band shows the first 1,500 characters of the summary instead.
 - Reservations, cancellations and skips go to the debug log only (`claude --debug`).
 
