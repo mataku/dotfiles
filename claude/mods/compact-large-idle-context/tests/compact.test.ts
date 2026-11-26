@@ -1,4 +1,5 @@
-import type { ModelUsage, On, SessionCompactResult, SessionMessage, TurnCompleteInput } from 'claude-code'
+import type { ModelUsage, On, RenderPropsOf, SessionCompactResult, SessionMessage, TurnCompleteInput } from 'claude-code'
+import type { Engine } from 'claude-code/testing'
 import { expect, mock, test } from 'claude-code/testing'
 
 const MINUTE = 60 * 1000
@@ -42,6 +43,8 @@ const stubEngine = (on: On, overrides: Partial<Stub> = {}): Stub => {
   mock.env(on, stub.env)
   on('turn.start', ($, e) => ({ turnId: e.turnId }))
   on('turn.complete', ($, e) => ({ text: e.answer }))
+  on('prompt.submit', ($, e) => ({ text: e.text }))
+  on('ui.render', { component: 'AbovePrompt' }, ($, e) => $.ui.resolve(e).Box({ key: 'engine' }))
   on('session.end', ($, e) => ({ sessionId: e.sessionId }))
   on('session.id', () => ({ value: stub.sessionId }))
   on('session.messages', () => ({ value: MESSAGES }))
@@ -80,6 +83,25 @@ const answered = (overrides: Partial<TurnCompleteInput> = {}): TurnCompleteInput
     reason: 'answer',
     ...overrides,
   }) as TurnCompleteInput
+
+const BAND: RenderPropsOf['AbovePrompt'] = {
+  hasSurvey: false,
+  isCollapsed: false,
+  isWorking: false,
+  maxRows: 20,
+  bodyColumns: 120,
+  scroll: { offset: 0, bodyRows: 20 },
+  view: {},
+}
+
+const HEADING = 'Idle compaction digest (cleared when you send a message)'
+
+const band = async ($: Engine, props = BAND) => {
+  const ui = await $.ui.mount({ plugin: 'compact-large-idle-context', surface: 'terminal', component: 'AbovePrompt', props })
+  const texts = (await ui.findAll({ type: 'Text' })).map(t => t.text)
+  await ui.unmount()
+  return texts
+}
 
 const shown = (stub: Stub) => stub.logs.filter(l => l.to !== 'debug').map(l => l.text)
 const reservations = (stub: Stub) => stub.logs.filter(l => l.to === 'debug' && l.text.includes('reserved')).length
@@ -150,25 +172,26 @@ test('asks the summarizer for a digest block', async ($, on) => {
   expect(stub.instructions[0]).toContain('</digest>')
 })
 
-test('shows the compaction line and each digest line as separate log lines', async ($, on) => {
+test('logs only the compaction line and shows the digest above the prompt without blank lines', async ($, on) => {
   const stub = await compactOnce($, on, {
     compact: summarized('Summary:\n1. Intent\n\n<digest>\nDid A and B.\n\nOpen\n- X or Y\n\nTODO\n- write Z\n</digest>\n\nContinue the conversation.'),
   })
 
-  expect(shown(stub)).toEqual([STATS, 'Did A and B.', 'Open', '- X or Y', 'TODO', '- write Z'])
+  expect(shown(stub)).toEqual([STATS])
   expect(stub.posts).toEqual([])
+  expect(await band($)).toEqual([HEADING, 'Did A and B.', 'Open', '- X or Y', 'TODO', '- write Z'])
 })
 
-test('posts the last digest block when the summary quotes an earlier one', async ($, on) => {
-  const stub = await compactOnce($, on, {
+test('shows the last digest block when the summary quotes an earlier one', async ($, on) => {
+  await compactOnce($, on, {
     compact: summarized('Summary:\nquoted <digest>old</digest>\n\n<digest>new</digest>'),
   })
 
-  expect(shown(stub)).toEqual([STATS, 'new'])
+  expect(await band($)).toEqual([HEADING, 'new'])
 })
 
 test('ignores a digest block quoted by a message kept after the summary', async ($, on) => {
-  const stub = await compactOnce($, on, {
+  await compactOnce($, on, {
     compact: () => ({
       messages: [
         { role: 'user', text: 'Summary:\n<digest>real</digest>', toolUses: [] },
@@ -179,21 +202,79 @@ test('ignores a digest block quoted by a message kept after the summary', async 
     }),
   })
 
-  expect(shown(stub)).toEqual([STATS, 'real'])
+  expect(await band($)).toEqual([HEADING, 'real'])
 })
 
-test('posts the start of the summary when it carries no digest block', async ($, on) => {
-  const stub = await compactOnce($, on, {
+test('shows the start of the summary when it carries no digest block', async ($, on) => {
+  await compactOnce($, on, {
     compact: summarized(`Preamble.\n\nSummary:\n1. Intent: ${'x'.repeat(3000)}`),
   })
 
-  expect(shown(stub)).toEqual([STATS, `1. Intent: ${'x'.repeat(1489)}…`])
+  expect(await band($)).toEqual([HEADING, `1. Intent: ${'x'.repeat(1489)}…`])
 })
 
-test('posts the compaction line alone when an empty digest block is all there is', async ($, on) => {
+test('shows no band when an empty digest block is all there is', async ($, on) => {
   const stub = await compactOnce($, on, { compact: summarized('<digest>\n \n</digest>') })
 
   expect(shown(stub)).toEqual([STATS])
+  expect(await band($)).toEqual([])
+})
+
+test('shows every line of a long digest', async ($, on) => {
+  const lines = Array.from({ length: 30 }, (_, i) => `・項目 ${i}: ${'再認証の有効期限と締め出しの解除条件を決めた。'.repeat(4)}`)
+  await compactOnce($, on, { compact: summarized(`<digest>\n${lines.join('\n\n')}\n</digest>`) })
+
+  expect(await band($)).toEqual([HEADING, ...lines])
+})
+
+test('a band already on screen shows the digest once the compaction finishes', async ($, on) => {
+  const clock = mock.clock(on)
+  stubEngine(on, { compact: summarized('<digest>Did A.</digest>') })
+  const held = await $.ui.mount({ plugin: 'compact-large-idle-context', surface: 'terminal', component: 'AbovePrompt', props: BAND })
+  expect(await held.find({ type: 'Text' })).toBeUndefined()
+
+  await $.turn.complete(answered())
+  await clock.advance(DELAY)
+  await clock.settle()
+
+  expect((await held.findAll({ type: 'Text' })).map(t => t.text)).toEqual([HEADING, 'Did A.'])
+  await held.unmount()
+})
+
+test('draws no band before any compaction', async ($, on) => {
+  stubEngine(on)
+
+  expect(await band($)).toEqual([])
+})
+
+test('yields the band to a survey', async ($, on) => {
+  await compactOnce($, on, { compact: summarized('<digest>Did A.</digest>') })
+
+  expect(await band($, { ...BAND, hasSurvey: true })).toEqual([])
+})
+
+test('a message the person sends clears the digest', async ($, on) => {
+  await compactOnce($, on, { compact: summarized('<digest>Did A.</digest>') })
+
+  await $.prompt.submit({ text: 'next', wait: false, origin: { kind: 'composer' } })
+
+  expect(await band($)).toEqual([])
+})
+
+test('a background task notification keeps the digest', async ($, on) => {
+  await compactOnce($, on, { compact: summarized('<digest>Did A.</digest>') })
+
+  await $.prompt.submit({ text: '<task-notification></task-notification>', wait: false, origin: { kind: 'task-notification' } })
+
+  expect(await band($)).toEqual([HEADING, 'Did A.'])
+})
+
+test('the session ending clears the digest', async ($, on) => {
+  await compactOnce($, on, { compact: summarized('<digest>Did A.</digest>') })
+
+  await $.session.end({ reason: 'clear', sessionId: 'session-1', resume: { id: 'session-1' } })
+
+  expect(await band($)).toEqual([])
 })
 
 test('omits the hit rate when the compaction reports no usage', async ($, on) => {
@@ -535,7 +616,7 @@ for (const value of ['', '0', '-5', 'abc']) {
 }
 
 test('drops trailing spaces and carriage returns from digest lines', async ($, on) => {
-  const stub = await compactOnce($, on, { compact: summarized('<digest>\r\nDid A.  \r\n\r\nTODO\r\n- B\r\n</digest>') })
+  await compactOnce($, on, { compact: summarized('<digest>\r\nDid A.  \r\n\r\nTODO\r\n- B\r\n</digest>') })
 
-  expect(shown(stub)).toEqual([STATS, 'Did A.', 'TODO', '- B'])
+  expect(await band($)).toEqual([HEADING, 'Did A.', 'TODO', '- B'])
 })

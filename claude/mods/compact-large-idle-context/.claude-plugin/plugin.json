@@ -1,9 +1,10 @@
 {
   "name": "compact-large-idle-context",
   "version": "0.1.0",
-  "description": "Compacts a large idle context shortly before the prompt cache expires and posts a digest with the open decisions and TODOs",
+  "description": "Compacts a large idle context shortly before the prompt cache expires and shows a digest with the open decisions and TODOs above the prompt",
   "author": {
     "name": "Takuma Homma"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "types": "./types/index.d.ts"
 }

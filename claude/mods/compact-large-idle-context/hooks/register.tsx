@@ -1,3 +1,4 @@
+import { atom, read, update } from 'claude-code'
 import type { EngineInterface, ModelUsage, Register, SessionMessage, Timer } from 'claude-code'
 
 const MINUTE_MS = 60 * 1000
@@ -17,6 +18,10 @@ const DIGEST_INSTRUCTIONS = [
 ].join(' ')
 
 const DIGEST = /<digest>([\s\S]*?)<\/digest>/g
+const HEADING = 'Idle compaction digest (cleared when you send a message)'
+const PERSON_ORIGINS = ['composer', 'bridge', 'sdk']
+
+const digestLines = atom({ plugin: 'compact-large-idle-context', key: 'digest' } as const, [] as string[])
 
 type Reservation = { timer: Timer; endedAt: number; delayMs: number; sessionId: string; generation: number }
 
@@ -104,17 +109,21 @@ async function fire($: EngineInterface, mine: Reservation) {
       isCompacting = false
     })
     if (result.skip !== undefined) return debug($, `skipped (compaction vetoed: ${result.skip})`)
-    const line = describeCompaction(result.tokensBefore ?? tokens, result.usage)
-    const digest = digestOf(result.messages)
-    for (const row of [line, ...digest.split(/\r?\n/)]) {
-      const text = row.trimEnd()
-      if (text) await $.ui.log(text)
-    }
+    await $.ui.log(describeCompaction(result.tokensBefore ?? tokens, result.usage))
+    const lines = digestOf(result.messages)
+      .split(/\r?\n/)
+      .map(row => row.trimEnd())
+      .filter(row => row.trim() !== '')
+    await update($, digestLines, () => lines)
   } catch (error) {
     await debug($, `compaction failed: ${error instanceof Error ? error.message : String(error)}`)
   } finally {
     isCompacting = false
   }
+}
+
+async function clearDigest($: EngineInterface) {
+  if ((await read($, digestLines)).length > 0) await update($, digestLines, () => [])
 }
 
 async function reserve($: EngineInterface) {
@@ -157,8 +166,31 @@ export const register: Register = on => {
     return next(e)
   })
 
-  on('session.end', ($, e, next) => {
+  on('session.end', async ($, e, next) => {
     cancel($, `session ended (${e.reason})`)
+    await clearDigest($).catch(() => {})
     return next(e)
+  })
+
+  on('prompt.submit', async ($, e, next) => {
+    if (PERSON_ORIGINS.includes(e.origin.kind)) await clearDigest($).catch(() => {})
+    return next(e)
+  })
+
+  on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
+    if (e.props.hasSurvey) return next(e)
+    const lines = await read($, digestLines)
+    if (lines.length === 0) return next(e)
+    const { Box, Text } = $.ui.resolve(e)
+    return (
+      <Box flexDirection="column">
+        <Text dimColor>{HEADING}</Text>
+        {lines.map((line, i) => (
+          <Text key={String(i)} wrap="wrap">
+            {line}
+          </Text>
+        ))}
+      </Box>
+    )
   })
 }
