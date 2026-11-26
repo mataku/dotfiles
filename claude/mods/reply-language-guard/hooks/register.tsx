@@ -12,7 +12,31 @@ const sendBackReason = (reply: string): string =>
     '謝罪や経緯の説明は不要です。以降も日本語で回答してください。',
   ].join('\n')
 
+const QUESTION_REASON = [
+  '質問が英語で書かれていたので、表示する前に止めました。',
+  '質問文、header、選択肢の label と description を日本語で書き直して、もう一度 AskUserQuestion を呼んでください。',
+  '英語の文面そのものを選ばせたい場合は、それを preview に入れてください。',
+].join('\n')
+
+type Question = { question: string; header: string; options: readonly { label: string; description: string }[] }
+
+const questionText = (questions: readonly Question[]): string =>
+  questions.flatMap(q => [q.question, q.header, ...q.options.flatMap(o => [o.label, o.description])]).join('\n')
+
 export const register: Register = on => {
+  let hasDeniedQuestionThisTurn = false
+
+  on('turn.start', ($, e, next) => {
+    if (e.agentId === undefined) hasDeniedQuestionThisTurn = false
+    return next(e)
+  })
+
+  on('tool.call', { tool: 'AskUserQuestion' }, ($, e, next) => {
+    if (hasDeniedQuestionThisTurn || !isMostlyEnglish(questionText(e.questions))) return next(e)
+    hasDeniedQuestionThisTurn = true
+    return { deny: QUESTION_REASON }
+  })
+
   on('classic.Stop', async ($, e, next) => {
     const reply = e.last_assistant_message
     if (e.stop_hook_active || e.agent_id !== undefined || reply === undefined || !isMostlyEnglish(reply)) {

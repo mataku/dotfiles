@@ -13,6 +13,7 @@ A Claude Code mod (function hooks) that sends the main session back when its fin
   - `stop_hook_active` is set, so a turn is sent back at most once and an English rewrite cannot loop.
   - The stop belongs to a subagent (`agent_id` is set).
   - The reply is a JSON object or array, optionally in a `json` fence, because a send-back would corrupt machine-read output.
+- An `AskUserQuestion` call whose question, headers, option labels and descriptions are mostly English is denied before the dialog is shown, asking for the question in Japanese. Previews are not counted, so English text to choose from can go there. At most one question is denied per main-loop turn (reset on `turn.start` without `agentId`), so an English rewrite is shown rather than denied again.
 - Sending back costs one more model response for the rewrite; detection itself makes no model call.
 
 ## Development
