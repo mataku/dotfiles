@@ -16,14 +16,38 @@ const BAND: RenderPropsOf['AbovePrompt'] = {
   view: {},
 }
 
-type Stub = { agents: AgentInfo[]; nextAgentId: number; listCalls: number; engineDraws: number }
+type AgentStub = Pick<AgentInfo, 'id' | 'description' | 'type' | 'status'>
+
+type Stub = { agents: AgentStub[]; nextAgentId: number; listCalls: number; engineDraws: number }
+
+const TASK_STATUS: Record<AgentInfo['status'], AgentInfo['taskStatus']> = {
+  pending: 'pending',
+  running: 'running',
+  waiting: 'running',
+  idle: 'running',
+  completed: 'completed',
+  failed: 'failed',
+  killed: 'killed',
+}
+
+const agentInfo = (agent: AgentStub): AgentInfo => ({
+  kind: 'local_agent',
+  taskStatus: TASK_STATUS[agent.status],
+  label: agent.description,
+  startTime: 0,
+  cwd: '/repo',
+  tokenCount: 0,
+  tokenSamples: [],
+  hasRow: true,
+  ...agent,
+})
 
 const stubEngine = (on: On): Stub => {
   const stub: Stub = { agents: [], nextAgentId: 1, listCalls: 0, engineDraws: 0 }
   on('session.start', ($, e) => ({ cwd: e.cwd }))
   on('agent.list', () => {
     stub.listCalls++
-    return { value: stub.agents }
+    return { value: stub.agents.map(agentInfo) }
   })
   on('agent.spawn', () => ({ model: 'claude-opus-5-5', agentId: `a${stub.nextAgentId++}` }))
   on('prompt.submit', ($, e) => ({ text: e.text }))
@@ -51,7 +75,7 @@ const stubEngine = (on: On): Stub => {
   return stub
 }
 
-const start = async ($: Engine, on: On, agents: AgentInfo[] = []) => {
+const start = async ($: Engine, on: On, agents: AgentStub[] = []) => {
   const clock = mock.clock(on, { now: 10 * MINUTE })
   const stub = stubEngine(on)
   stub.agents = agents
