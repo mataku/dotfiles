@@ -28,14 +28,14 @@ A Claude Code mod (function hooks) that lets the agent keep a weighted task plan
 - When the plan has unfinished tasks and the agent makes 24 tool calls without updating it, the mod adds a reminder after the next tool result. Set **Task update reminder** (`nudgeAfter`) to change the count; 0 turns the reminder off.
 - Subagents cannot call either tool: the main agent owns the plan and records what they report.
 - In a herdr-core terminal (`HC_TERMINAL_ID` is set) the plan is also written to a file for the herdr.app `timeline` mod (`herdr-app/mods/timeline` in this repository), which draws it in a panel on the right of the window. There the pane opens only when you run `/timeline`.
-- In an Orca terminal (`ORCA_TERMINAL_HANDLE` is set) the plan is written to the same kind of file for the Orca `timeline` plugin (`orca/plugins/timeline` in this repository). In an Orca chat, which has no terminal (`ORCA_AGENT_SESSION_ID` is set), the file is named after the session id instead. The pane opens as usual in both, because an Orca panel opens only by hand.
+- In nikol (`TERM_PROGRAM` is `nikol`) the plan is written to the same kind of file, named after the session id, for nikol's `timeline` mod: nikol has no terminal id to give, and finds the session of the agent in each tab itself. As in herdr.app, the pane opens only when you run `/timeline`. nikol wins over `HC_TERMINAL_ID`, which nikol inherits when opened from a herdr terminal, so a plan is written to one file only. tmux inside nikol sets its own `TERM_PROGRAM`, and there nikol cannot see the agent's session anyway, so nothing is written.
 
 ## Data
 
 - The plan lives in `$.state` for the session and is copied to `$.store` under the session id, so a restarted or resumed session with the same id gets its plan back. Stored plans older than 30 days are removed at session start.
 - Text from the agent is drawn in the terminal, so control characters and bidi overrides are replaced with spaces before a title, an id or a note is kept.
-- In a herdr-core or Orca terminal the mod writes `~/.local/state/agent-timeline/<terminal id>.json` on every change (`<session id>.json` in an Orca chat, with the session id as `terminal`): `{ version, terminal, agent, updatedAt, plan }`, where `plan` holds the title, the percentage, the task counts and the tree with each task's status and its share of the whole, or `null` once the plan is gone or the session has ended. A terminal id that is not a plain name writes nothing.
-- Apart from that file the mod touches nothing outside `$.state` and `$.store`: no processes or network. It reads `HC_TERMINAL_ID`, `ORCA_TERMINAL_HANDLE`, `ORCA_AGENT_SESSION_ID` and `HOME`.
+- In a herdr-core terminal the mod writes `~/.local/state/agent-timeline/<terminal id>.json` on every change (`<session id>.json` in nikol, with the session id as `terminal`): `{ version, terminal, agent, updatedAt, plan }`, where `plan` holds the title, the percentage, the task counts and the tree with each task's status and its share of the whole, or `null` once the plan is gone or the session has ended. A terminal id that is not a plain name writes nothing.
+- Apart from that file the mod touches nothing outside `$.state` and `$.store`: no processes or network. It reads `HC_TERMINAL_ID`, `TERM_PROGRAM` and `HOME`.
 
 ## Limitations
 
