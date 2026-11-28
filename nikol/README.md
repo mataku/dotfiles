@@ -22,3 +22,22 @@ A popup of the Docker containers, grouped by compose project, with their state, 
 - It reads the containers while the popup is open and stops when it closes, since nikol drops a popup mod on close.
 
 Test it with `node --test nikol/mods/containers/main.test.js`.
+
+### inbox
+
+Unread GitHub notifications beside the terminal, opened from the Inbox button in the tab bar. It is the herdr.app mod `herdr-app/mods/inbox` moved to nikol's side slot, with its SVG icons copied as they are.
+
+- It is off until turned on; while on, it runs in the background (`"side": { "background": true }`), loads `gh api notifications` every 5 minutes after `scutil --nwi` says the network is up, and puts a dot on its button while anything waits.
+- A click on a row copies the notification's link; Done hides it until it is updated. The on/off switch, the last load and the done marks are kept with nikol's `data` API in `~/Library/Application Support/nikol/mod-data/inbox/`.
+
+Test it with `node --test nikol/mods/inbox/main.test.js`.
+
+### simulators
+
+iOS simulators and Android emulators beside the terminal, opened from the Simulator button in the tab bar: boot and stop them, and show a running one's screen in the panel, where clicks and drags become taps and swipes. It is the herdr.app mod `herdr-app/mods/simulators` moved to nikol's side slot.
+
+- The screen is drawn by the herdr mod's viewer (`herdr-app/mods/simulators/viewer`), which nikol runs with `exec` and hands the tty of a `ui.terminal`; it is not copied here, since nikol would watch every file of its `node_modules`. Its log goes to `~/Library/Logs/nikol/simulators-viewer.log`.
+- Going back to the list or closing the panel stops the viewer and shuts the device down. A boot waits 120 seconds at most, nikol's limit for a program.
+- It stops the adb server after each Android CLI run, unless an Android screen is shown, since the server outlives nikol and keeps it in the Dock as running in the background.
+
+Test it with `node --test nikol/mods/simulators/main.test.js`.

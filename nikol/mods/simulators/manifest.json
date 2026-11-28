@@ -1,0 +1,1 @@
+{ "name": "Simulators", "slot": "side", "button": { "icon": "icons/device.svg", "label": "Simulator", "tooltip": "iOS simulators and Android emulators" } }

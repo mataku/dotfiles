@@ -1,0 +1,1 @@
+{ "name": "Inbox", "slot": "side", "side": { "background": true }, "button": { "icon": "inbox.svg", "label": "Inbox", "tooltip": "GitHub notifications" } }
