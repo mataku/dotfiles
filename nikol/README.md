@@ -13,3 +13,12 @@ The task plan of the coding agent in the shown tab, with its progress, in the pa
 - Only the first child of a task branches off its parent's line; the others hang from the child before them.
 
 Test it with `node --test nikol/mods/timeline/main.test.js`.
+
+### containers
+
+A popup of the Docker containers, grouped by compose project, with their state, CPU, memory and ports; ↑↓ select, Enter starts or stops the selected one, `r` reads them again. It is the herdr.app mod `herdr-app/mods/containers` moved to nikol's API: `docker` runs through `exec`, and the polling loop became `exec` events and a 30-second `timer.after`.
+
+- nikol opens it with the key set for "Open Containers" in Settings, Keyboard Shortcuts (⌘⇧C in herdr.app), which is stored in `~/.config/nikol/settings.json`.
+- It reads the containers while the popup is open and stops when it closes, since nikol drops a popup mod on close.
+
+Test it with `node --test nikol/mods/containers/main.test.js`.
